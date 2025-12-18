@@ -482,11 +482,12 @@ exploration,comfort_first,playful,2,"Stays where it’s safe.",""
 playlist_naming,emotional,playful,1,"Names feelings instead of discussing them.",""
 popularity_contradiction,contradiction,sharp,1,"Gatekeeps music. Dates broadly.",""
 main_character,full_montage,playful,1,"Lives like a montage.","headline"
-combo,sad_late_repeat,playful,1,"Processes feelings privately and repeatedly.","combo
-combo,deepcut_main_character,sharp,1,"Wants attention without being mainstream.","combo
-combo,high_energy_comfort,playful,1,"Intense but emotionally routine.","combo
-combo,omnivore_novelty,playful,1,"Loves options. Hates decisions.","combo
-combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","combo`;
+combo,sad_late_repeat,playful,1,"Processes feelings privately and repeatedly.","combo"
+combo,deepcut_main_character,sharp,1,"Wants attention without being mainstream.","combo"
+combo,high_energy_comfort,playful,1,"Intense but emotionally routine.","combo"
+combo,omnivore_novelty,playful,1,"Loves options. Hates decisions.","combo"
+combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","combo"`;
+
 
     /******************************************************************
      * 2) DOM
@@ -858,9 +859,12 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
 
   // Insight line: last flag text
   // Insight line: derived from buckets (not a repeat of a flag)
-const insight = insightFromBuckets(userBuckets);
+  // Insight line: derived from buckets (never repeats a flag verbatim)
+  const insight = insightFromBuckets(userBuckets);
 
-return { ordered, insight };
+  return { ordered, insight };
+}
+
 
     /******************************************************************
      * 7) RENDER + PACING
