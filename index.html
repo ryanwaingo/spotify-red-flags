@@ -925,20 +925,23 @@ if (recentPlaysCount >= 15) {
   }
 
   // Cap + ensure minimum
-  // Cap + ensure minimum
+
 let ordered = picks.slice(0, MAX_FLAGS);
 
-// Repetition fallback: if repetition is computed but didn’t show up, force it in
-const hasRepetitionBucket = !!userBuckets.repetition;
-const usedRepetition = ordered.some(j => j.parameter === "repetition");
+// FORCE repetition to appear if it exists but was crowded out
+const hasRepetition = !!userBuckets.repetition;
+const repetitionShown = ordered.some(j => j.parameter === "repetition");
 
-if (hasRepetitionBucket && !usedRepetition) {
-  const rep = pickAnyPriority("repetition", userBuckets.repetition, [1, 2, 3]);
+if (hasRepetition && !repetitionShown) {
+  const rep =
+    pickAnyPriority("repetition", userBuckets.repetition, [1, 2, 3]);
+
   if (rep) {
-    // Replace the last item to keep length stable
+    // Replace the last flag so total count stays the same
     ordered[ordered.length - 1] = rep;
   }
 }
+
 
 
   // Track which parameters actually contributed jokes
