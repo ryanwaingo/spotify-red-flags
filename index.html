@@ -2,71 +2,62 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Spotify Dating Red Flags</title>
   <style>
     :root{
-      --bg: #FFF7E6;
-      --paper: #FFFFFF;
-      --ink: #111111;
-      --muted: #4D4D4D;
-
-      --red: #E10600;
-      --blue: #0057FF;
+      --bg: #F6F7FB;
+      --ink: #111;
+      --muted: #444;
+      --pink: #FF6FB3;
       --yellow: #FFE600;
       --green: #00C853;
-      --pink: #FF3EB5;
-      --purple: #7C4DFF;
+      --pin2: #FF3D8D;
 
       --b: 3px solid var(--ink);
       --pad: 22px;
 
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
 
     *{ box-sizing:border-box; }
-    html, body{ height:100%; }
     body{
       margin:0;
+      font-family: var(--sans);
       background: var(--bg);
       color: var(--ink);
-      font-family: var(--sans);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
     }
 
     .wrap{
-      min-height: 100%;
+      min-height:100vh;
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       justify-content:center;
-      padding: 28px 14px;
+      padding: 26px 16px;
     }
 
     .frame{
-      width: min(560px, 100%);
+      width:min(720px, 100%);
       border: var(--b);
-      background: var(--paper);
-      position: relative;
+      background:#fff;
       padding: var(--pad);
-      transform: translateX(-2px) translateY(1px);
+      box-shadow: 10px 10px 0 #000;
+      position:relative;
     }
 
     .stamp{
       position:absolute;
-      top:-16px;
-      right:14px;
+      top: -12px;
+      left: 18px;
+      background: var(--yellow);
       border: var(--b);
-      background: var(--pink);
-      color: var(--ink);
-      padding: 8px 10px;
+      padding: 6px 10px;
       font-family: var(--mono);
       font-weight: 900;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      font-size: 12px;
-      transform: rotate(2deg);
+      transform: rotate(-2deg);
       user-select:none;
     }
 
@@ -74,206 +65,152 @@
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:12px;
-      margin-bottom: 14px;
+      gap: 12px;
     }
 
     .title{
-      font-weight: 950;
-      letter-spacing: -0.03em;
-      line-height: 1.02;
-      font-size: 24px;
-      margin: 0;
+      margin:0;
+      font-size: 26px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
     }
 
     .subtitle{
-      margin-top: 8px;
+      margin-top: 6px;
       font-family: var(--mono);
       font-size: 12px;
-      color: var(--muted);
-      line-height: 1.25;
+      opacity: 0.85;
+      letter-spacing: 0.02em;
     }
 
     .bar{
-      height: 10px;
+      height: 8px;
       border: var(--b);
-      background: var(--yellow);
-      margin: 10px 0 18px;
-      transform: translateX(1px);
+      background: linear-gradient(90deg, var(--pink), var(--yellow), var(--green));
+      margin: 16px 0;
     }
 
-    button{
-      font-family: var(--mono);
-      font-weight: 900;
-      letter-spacing: 0.02em;
-      padding: 12px 12px;
+    button, .btn{
       border: var(--b);
       background: #fff;
       color: var(--ink);
+      padding: 12px 14px;
+      font-weight: 900;
       cursor:pointer;
+      font-family: var(--mono);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: transform .05s ease;
+      user-select:none;
     }
-    button:active{ transform: translateY(1px); }
-
-    .primary{
-      background: var(--ink);
-      color: #fff;
+    button:active, .btn:active{
+      transform: translate(1px, 1px);
     }
-    .primary:hover{
-      background: var(--yellow);
-      color: var(--ink);
-    }
-
-    .secondary:hover{
-      background: var(--blue);
-      color: #fff;
-    }
+    .primary{ background: var(--pink); }
+    .secondary{ background: var(--yellow); }
+    .hidden{ display:none !important; }
 
     .note{
       border: var(--b);
-      background: var(--yellow);
-      padding: 10px 12px;
+      background: #fff;
+      padding: 12px;
+      margin-top: 14px;
       font-family: var(--mono);
       font-size: 12px;
-      margin-top: 12px;
+      color: var(--muted);
     }
 
     .toast{
       margin-top: 10px;
       font-family: var(--mono);
       font-size: 12px;
-      color: var(--ink);
-      border: var(--b);
-      padding: 8px 10px;
-      background: var(--yellow);
-      display:none;
+      color: var(--muted);
     }
 
-    .hidden{ display:none !important; }
-
-    .fadeIn{
-      animation: fadeIn 180ms ease-out both;
-    }
-    @keyframes fadeIn{
-      from{ opacity:0; transform: translateY(6px); }
-      to{ opacity:1; transform: translateY(0); }
-    }
-
-    /* RESULTS UI */
     .openerPanel{
       border: var(--b);
-      background: var(--blue);
-      color: #fff;
-      padding: 16px 14px;
-      position: relative;
-      transform: translateX(-1px);
-      overflow:hidden;
-    }
-    .openerPanel::before{
-      content:"";
-      position:absolute;
-      left:-10px;
-      top:-10px;
-      width:18px;
-      height:18px;
-      border: var(--b);
-      background: var(--yellow);
+      background: #fff;
+      padding: 14px;
+      margin-top: 14px;
     }
     .opener{
-      font-weight: 950;
-      letter-spacing: -0.05em;
+      font-size: 36px;
+      font-weight: 900;
       line-height: 1.05;
-      font-size: 38px;
-      margin: 0;
-    }
-    .flag{
-      margin-right: 10px;
-      color: var(--yellow);
+      letter-spacing: -0.03em;
     }
 
     .rule{
-      height:0;
-      border:none;
+      margin: 18px 0 12px 0;
+      border: none;
       border-top: var(--b);
-      margin: 16px 0;
     }
 
     .list{
-      margin:0;
-      padding:0;
       list-style:none;
-      display:flex;
-      flex-direction:column;
+      padding:0;
+      margin:0;
+      display:grid;
       gap: 10px;
     }
     .list li{
       border: var(--b);
-      padding: 10px 10px;
+      padding: 12px 14px;
+      font-weight: 900;
       font-size: 18px;
-      line-height: 1.22;
+      line-height: 1.15;
       letter-spacing: -0.01em;
+      position:relative;
       background: #fff;
-      transform: translateX(1px);
     }
-    .list li:nth-child(2n){ transform: translateX(-1px); }
 
-    .list li:nth-child(1){ background: var(--yellow); }
-    .list li:nth-child(2){ background: var(--green); color: var(--ink); }
-    .list li:nth-child(3){ background: var(--paper); }
-    .list li:nth-child(4){ background: var(--purple); color: #fff; }
-    .list li:nth-child(5){ background: var(--pink); color: var(--ink); }
-    .list li:nth-child(6){ background: var(--yellow); }
-.list li:nth-child(7){ background: var(--green); color: var(--ink); }
+    .list li.role-core{ background: var(--yellow); }
+    .list li.role-core.alt{ background: var(--green); }
+    .list li.role-close{ background: var(--pink); }
 
-/* Evidence line */
-.because{
-  margin-top: 6px;
-  font-family: var(--mono);
-  font-size: 12px;
-  line-height: 1.25;
-  opacity: 0.9;
-}
-
-/* Role-based colors (override nth-child chaos) */
-.list li.role-core { background: var(--yellow) !important; color: var(--ink) !important; }
-.list li.role-core.alt { background: var(--green) !important; color: var(--ink) !important; }
-.list li.role-close { background: var(--pink) !important; color: var(--ink) !important; }
-
-
-    .list .flag{ color: var(--red); }
-    .list li:nth-child(4) .flag{ color: var(--yellow); }
-
-    .insight{
-      margin-top: 16px;
-      border: var(--b);
-      background: var(--yellow);
-      padding: 14px;
-      position: relative;
-      transform: translateX(1px);
+    .flag{
+      margin-right: 10px;
     }
-    .insight::after{
-      content:"";
-      position:absolute;
-      right:-10px;
-      bottom:-10px;
-      width:18px;
-      height:18px;
-      border: var(--b);
-      background: var(--red);
-    }
-    .insight .label{
+
+    .because{
+      margin-top: 8px;
+      border-top: var(--b);
+      padding-top: 8px;
       font-family: var(--mono);
       font-size: 12px;
       font-weight: 900;
-      letter-spacing: 0.10em;
+      text-transform: none;
+      letter-spacing: 0.02em;
+      opacity: 0.85;
+    }
+
+    .insight{
+      margin-top: 14px;
+      border: var(--b);
+      background: #fff;
+      padding: 12px 14px;
+    }
+    .insight .label{
+      font-family: var(--mono);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--ink);
-      margin-bottom: 10px;
+      opacity: 0.8;
     }
     .insight .line{
-      font-size: 20px;
+      margin-top: 8px;
       font-weight: 900;
-      letter-spacing: -0.02em;
-      line-height: 1.15;
+      font-size: 18px;
+      letter-spacing: -0.01em;
+    }
+
+    .fadeIn{
+      animation: pop .22s ease both;
+    }
+    @keyframes pop{
+      from{ transform: translateY(6px); opacity:0; }
+      to{ transform: translateY(0); opacity:1; }
     }
 
     .actions{
@@ -338,6 +275,77 @@
       user-select:none;
     }
 
+    .shareCard{
+      border: var(--b);
+      background:#fff;
+      padding: 14px;
+      margin-top: 14px;
+    }
+    .shareMeta{
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      border-bottom: var(--b);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      align-items:flex-start;
+    }
+    .shareBrand{
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    .shareHint{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.75;
+      text-align:right;
+      max-width: 240px;
+    }
+    .shareFooter{
+      margin-top: 12px;
+      border-top: var(--b);
+      padding-top: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.85;
+      display:flex;
+      justify-content:flex-end;
+    }
+
+    .shareKit{
+      border: var(--b);
+      background:#fff;
+      padding: 12px;
+      display:grid;
+      gap: 10px;
+    }
+    .shareRow{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .shareNote{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    .shareRow a.secondary{
+      text-align:center;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+    }
+    @media (max-width:520px){
+      .shareRow{ grid-template-columns: 1fr; }
+      .shareHint{ text-align:left; max-width:none; }
+      .shareMeta{ flex-direction:column; }
+      .shareFooter{ justify-content:flex-start; }
+    }
+
     @media (max-width:420px){
       .frame{ padding:18px; }
       .opener{ font-size: 32px; }
@@ -384,22 +392,43 @@
 
         <div class="bar" aria-hidden="true"></div>
 
-        <div id="openerPanel" class="openerPanel">
-          <div id="openerText" class="opener"><span class="flag">🚩</span>Loading…</div>
-        </div>
+        <div id="shareCard" class="shareCard" aria-label="Share card">
+          <div class="shareMeta">
+            <div class="shareBrand">Spotify Dating Red Flags 🚩</div>
+            <div class="shareHint" id="shareHint">Generated from your listening history</div>
+          </div>
 
-        <hr id="rule" class="rule" />
+          <div id="openerPanel" class="openerPanel">
+            <div id="openerText" class="opener"><span class="flag">🚩</span>Loading…</div>
+          </div>
 
-        <ul id="flagsList" class="list" aria-label="Red flags"></ul>
+          <hr id="rule" class="rule" />
 
-        <div id="insightBox" class="insight" role="note" aria-label="Biggest dating pattern">
-          <div class="label">Biggest Dating Pattern This Year</div>
-          <div id="insightLine" class="line">Loading…</div>
+          <ul id="flagsList" class="list" aria-label="Red flags"></ul>
+
+          <div id="insightBox" class="insight" role="note" aria-label="Biggest dating pattern">
+            <div class="label">Biggest Dating Pattern This Year</div>
+            <div id="insightLine" class="line">Loading…</div>
+          </div>
+          <div class="shareFooter"><span id="shareUrl"></span></div>
         </div>
 
         <div class="actions">
           <button id="btnRoastAgain" class="primary" type="button">Roast Again</button>
-          <button id="btnShare" class="secondary" type="button">Share This</button>
+
+          <div class="shareKit" aria-label="Share kit">
+            <div class="shareRow">
+              <a id="btnShareX" class="secondary" href="#" target="_blank" rel="noopener">Share to X</a>
+              <button id="btnShareIG" class="secondary" type="button">Instagram</button>
+              <button id="btnShareTT" class="secondary" type="button">TikTok</button>
+            </div>
+            <div class="shareRow">
+              <button id="btnCopyCaption" class="primary" type="button">Copy Caption</button>
+              <button id="btnSaveImage" class="secondary" type="button">Save Share Image</button>
+              <button id="btnCopyLink" class="secondary" type="button">Copy Link</button>
+            </div>
+            <div class="shareNote" id="shareNote">Tip: post yours and tag 3 friends to compare.</div>
+          </div>
 
           <div class="toneRow" aria-label="Tone selector">
             <div class="label">Tone</div>
@@ -420,17 +449,18 @@
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
   <script>
     /***********************
      * 0) YOU MUST SET THIS
      ***********************/
     const SPOTIFY_CLIENT_ID = "ad08cfcd496348e299ba9a840227954d";
-const REDIRECT_URI = window.location.origin + window.location.pathname; // GitHub Pages URL
-const SCOPES = [
-  "user-top-read",
-  "user-read-recently-played"
-];
-
+    const REDIRECT_URI = window.location.origin + window.location.pathname; // GitHub Pages URL
+    const SCOPES = [
+      "user-top-read",
+      "user-read-recently-played"
+    ];
 
     /******************************************************************
      * 1) YOUR JOKES CSV (already formatted for the parser)
@@ -451,76 +481,72 @@ obscurity,taste_curious,playful,3,"Explores just enough to feel interesting.",""
 obscurity,taste_curious,playful,3,"Samples the underground. Lives upstairs.",""
 obscurity,taste_curious,playful,3,"Wants novelty with a safety net.",""
 obscurity,taste_curious,playful,3,"Curates discovery carefully.",""
-obscurity,taste_curious,playful,3,"Enjoys being adjacent to obscure.",""
-obscurity,deep_cut,sharp,1,"Gatekeeps artists they found by accident.","strong"
-obscurity,deep_cut,playful,2,"Mentions obscurity unprompted.",""
-obscurity,deep_cut,playful,2,"Treats low listener counts like credentials.",""
-obscurity,deep_cut,playful,3,"Has said ‘you probably haven’t heard of them’ at least once.",""
-obscurity,deep_cut,playful,3,"Feels rewarded for digging.",""
-obscurity,deep_cut,playful,3,"Measures taste in scarcity.",""
-obscurity,deep_cut,playful,3,"Suspicious of anything popular.",""
-obscurity,deep_cut,playful,3,"Finds identity in discovery.",""
-genre_breadth,single_lane,playful,1,"Knows what they like. Will not try your restaurant.",""
-genre_breadth,single_lane,playful,2,"Consistency over curiosity.",""
-genre_breadth,single_lane,playful,2,"Emotionally monogamous… musically.",""
-genre_breadth,single_lane,playful,3,"Prefers depth over range.",""
-genre_breadth,single_lane,playful,3,"Builds routines around familiarity.",""
-genre_breadth,single_lane,playful,3,"Stays in their lane comfortably.",""
-genre_breadth,single_lane,playful,3,"Avoids genre whiplash.",""
-genre_breadth,single_lane,playful,3,"Commits early and sticks.",""
-genre_breadth,selective_explorer,playful,2,"Open-minded within carefully controlled limits.",""
-genre_breadth,selective_explorer,playful,2,"Tries new things once. Returns to comfort.",""
-genre_breadth,selective_explorer,playful,3,"Adventurous on weekends only.",""
-genre_breadth,selective_explorer,playful,3,"Explores with guardrails.",""
-genre_breadth,selective_explorer,playful,3,"Samples widely, settles narrowly.",""
-genre_breadth,selective_explorer,playful,3,"Balances novelty with stability.",""
-genre_breadth,selective_explorer,playful,3,"Keeps taste curated.",""
-genre_breadth,omnivore,playful,1,"Open to everything. Commits to nothing.",""
-genre_breadth,omnivore,playful,2,"Eclectic taste, indecisive energy.",""
-genre_breadth,omnivore,playful,2,"Collects genres like options.",""
-genre_breadth,omnivore,playful,3,"Variety-first mindset.",""
-genre_breadth,omnivore,playful,3,"Refuses to be boxed in.",""
-genre_breadth,omnivore,playful,3,"Enjoys contrast more than cohesion.",""
-genre_breadth,omnivore,playful,3,"Thrives on switching vibes.",""
-genre_breadth,omnivore,playful,3,"Says ‘it depends’ a lot.",""
-repetition,stuck,playful,2,"Still in their ‘one song on repeat’ era.",""
-repetition,comfort_looper,playful,2,"Has a comfort track like it’s a weighted blanket.",""
-epetition,stuck,playful,2,"Still in their ‘one song on repeat’ era.",""
-repetition,stuck,sharp,1,"Has not emotionally moved on from something.","opener"
-repetition,comfort_looper,playful,2,"Has a comfort track like it’s a weighted blanket.",""
-
-repetition,comfort_looper,sharp,2,"Uses one song to avoid thinking new thoughts.",""
-repetition,situational_repeater,playful,3,"Will replay a moment until it feels safe.",""
-repetition,situational_repeater,sharp,3,"If closure was a track, they’d hit replay.",""
-time_of_day,late_night,playful,1,"Processes feelings when no one can respond.",""
-valence,sad_banger,playful,1,"Feels deeply. Avoids confrontation.",""
-energy,high,sharp,1,"Fun. Exhausting.",""
-exploration,comfort_first,playful,2,"Stays where it’s safe.",""
-playlist_naming,emotional,playful,1,"Names feelings instead of discussing them.",""
-popularity_contradiction,contradiction,sharp,1,"Gatekeeps music. Dates broadly.",""
-main_character,full_montage,playful,1,"Lives like a montage.","headline"
-combo,sad_late_repeat,playful,1,"Processes feelings privately and repeatedly.","combo"
-combo,deepcut_main_character,sharp,1,"Wants attention without being mainstream.","combo"
-combo,high_energy_comfort,playful,1,"Intense but emotionally routine.","combo"
-combo,omnivore_novelty,playful,1,"Loves options. Hates decisions.","combo"
-combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","combo"`;
-
+obscurity,obscure,playful,1,"Listens to artists with 14 followers and still calls it ‘vibes’.",""
+obscurity,obscure,playful,2,"Treats obscurity like a personality trait.",""
+obscurity,obscure,playful,2,"Has beef with anything that charts.",""
+obscurity,obscure,playful,3,"Makes ‘deep cuts’ their whole brand.",""
+obscurity,obscure,playful,3,"Finds songs like they’re secret messages.",""
+obscurity,obscure,playful,3,"Thinks mainstream is a red flag.",""
+repetition,craves_variety,playful,2,"Swears they love variety. Still plays the same song 6 times in a day.",""
+repetition,craves_variety,playful,3,"Flirts with new songs then goes back to the ex.",""
+repetition,craves_variety,playful,3,"Can’t commit to a sound for more than 3 tracks.",""
+repetition,balanced,playful,2,"Has range. Unfortunately so do their mixed signals.",""
+repetition,balanced,playful,3,"Healthy rotation. Slightly avoidant.",""
+repetition,defaults_to_safety,playful,1,"Plays the same 3 songs like it’s a coping mechanism.",""
+repetition,defaults_to_safety,playful,2,"Emotionally available to exactly one chorus.",""
+repetition,defaults_to_safety,playful,2,"Believes healing is just re-playing the bridge.",""
+time_of_day,morning,playful,2,"A morning listener. Has their life together… suspiciously.",""
+time_of_day,day,playful,2,"Daytime listener. Keeps it functional. Keeps it distant.",""
+time_of_day,night,playful,1,"Late-night listener. Texts ‘you up?’ with a playlist link.",""
+time_of_day,late_night,playful,1,"After-midnight listener. Falls in love with the idea of someone.",""
+insight,any,playful,1,"Craves variety, defaults to safety.",""
+insight,any,playful,1,"Public taste. Private feelings.",""
+insight,any,playful,1,"Runs on routine. Avoids vulnerability.",""
+insight,any,playful,1,"Processes emotions exclusively through headphones.",""
+obscurity,mainstream,sharp,2,"Your taste is algorithm-approved and emotionally risk-averse.",""
+obscurity,taste_curious,sharp,2,"You want credit for being interesting without doing the work.",""
+obscurity,obscure,sharp,2,"You use obscurity to avoid being understood.",""
+repetition,craves_variety,sharp,2,"You call it variety. It’s commitment issues.",""
+repetition,balanced,sharp,2,"You’re stable. You still won’t text back.",""
+repetition,defaults_to_safety,sharp,2,"You loop the same song because change scares you.",""
+time_of_day,morning,sharp,2,"Morning music. Controlled personality. Unavailable heart.",""
+time_of_day,day,sharp,2,"Daytime listening. You avoid feelings until the meeting ends.",""
+time_of_day,night,sharp,2,"Night listener. Romantic until accountability shows up.",""
+time_of_day,late_night,sharp,2,"After midnight you become a different person (worse).",""
+insight,any,sharp,1,"Your vibe is chaos with a comfort blanket.",""
+insight,any,sharp,1,"You want novelty, but only on your terms.",""
+insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.",""
+`;
 
     /******************************************************************
      * 2) DOM
      ******************************************************************/
     const loginView = document.getElementById("loginView");
     const resultsView = document.getElementById("resultsView");
+    const stampText = document.getElementById("stampText");
+
     const btnLogin = document.getElementById("btnLogin");
     const btnLogout = document.getElementById("btnLogout");
     const btnLogout2 = document.getElementById("btnLogout2");
-    const stampText = document.getElementById("stampText");
 
     const openerText = document.getElementById("openerText");
     const flagsList = document.getElementById("flagsList");
     const insightLine = document.getElementById("insightLine");
     const btnRoastAgain = document.getElementById("btnRoastAgain");
-    const btnShare = document.getElementById("btnShare");
+
+    // Share kit
+    const btnShareX = document.getElementById("btnShareX");
+    const btnShareIG = document.getElementById("btnShareIG");
+    const btnShareTT = document.getElementById("btnShareTT");
+    const btnCopyCaption = document.getElementById("btnCopyCaption");
+    const btnSaveImage = document.getElementById("btnSaveImage");
+    const btnCopyLink = document.getElementById("btnCopyLink");
+    const shareUrlEl = document.getElementById("shareUrl");
+    const shareHint = document.getElementById("shareHint");
+    const shareNote = document.getElementById("shareNote");
+    const shareCard = document.getElementById("shareCard");
+    let lastShareCaption = "";
+
     const toneSelect = document.getElementById("toneSelect");
     const toast = document.getElementById("toast");
     const toast2 = document.getElementById("toast2");
@@ -616,8 +642,6 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
 
     async function exchangeCodeForToken(code) {
       const verifier = localStorage.getItem("pkce_verifier");
-      if (!verifier) throw new Error("Missing PKCE verifier.");
-
       const body = new URLSearchParams({
         client_id: SPOTIFY_CLIENT_ID,
         grant_type: "authorization_code",
@@ -632,450 +656,237 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
         body
       });
 
-      if (!res.ok) throw new Error("Token exchange failed.");
       const data = await res.json();
-      localStorage.setItem("spotify_access_token", data.access_token);
-      localStorage.setItem("spotify_token_expires_at", String(Date.now() + (data.expires_in * 1000)));
-      // cleanup URL
-      const url = new URL(window.location.href);
-      url.searchParams.delete("code");
-      url.searchParams.delete("state");
-      window.history.replaceState({}, document.title, url.toString());
+      if (!res.ok) throw new Error(data?.error_description || "Token exchange failed");
+      storeToken(data.access_token, data.expires_in);
+      window.history.replaceState({}, document.title, REDIRECT_URI);
       return data.access_token;
     }
 
+    function storeToken(token, expiresIn) {
+      const exp = Date.now() + (expiresIn * 1000);
+      localStorage.setItem("access_token", token);
+      localStorage.setItem("token_exp", String(exp));
+    }
+
     function getStoredToken() {
-      const token = localStorage.getItem("spotify_access_token");
-      const expiresAt = Number(localStorage.getItem("spotify_token_expires_at") || "0");
+      const token = localStorage.getItem("access_token");
+      const exp = Number(localStorage.getItem("token_exp") || 0);
       if (!token) return null;
-      if (Date.now() > expiresAt) return null;
+      if (Date.now() > exp) return null;
       return token;
     }
 
     function logout() {
-      localStorage.removeItem("spotify_access_token");
-      localStorage.removeItem("spotify_token_expires_at");
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("token_exp");
       localStorage.removeItem("pkce_verifier");
+      lastBuckets = null;
+      lastResult = null;
+      lastEvidence = null;
       switchToLogin();
+      showToast(toast, "Logged out.");
     }
 
     /******************************************************************
-     * 5) SPOTIFY API CALLS (V1 minimal)
+     * 5) SPOTIFY DATA + SIGNALS
      ******************************************************************/
-    async function spotifyGet(token, path) {
-  const url = "https://api.spotify.com/v1" + path;
-  const res = await fetch(url, {
-    headers: { Authorization: "Bearer " + token }
-  });
-
-  const bodyText = await res.text().catch(() => "");
-  if (!res.ok) {
-    throw new Error(`Spotify API ${res.status} on ${path}: ${bodyText}`);
-  }
-
-  try { return JSON.parse(bodyText); }
-  catch { return {}; }
-}
-
-
-  async function fetchProfileBuckets(token) {
-
-  // 1) Recently played (behavior-based signals)
-  const recent = await spotifyGet(token, "/me/player/recently-played?limit=50");
-  const items = recent.items || [];
-
-  const trackCounts = new Map(); // trackId -> count
-  const trackMeta = new Map();   // trackId -> { name, artists }
-  const hourCounts = new Array(24).fill(0);
-
-  for (const it of items) {
-    const t = it.track;
-    if (!t || !t.id) continue;
-
-    // counts
-    trackCounts.set(t.id, (trackCounts.get(t.id) || 0) + 1);
-
-    // metadata for receipts
-    if (!trackMeta.has(t.id)) {
-      const artistNames = (t.artists || []).map(a => a?.name).filter(Boolean).join(", ");
-      trackMeta.set(t.id, { name: t.name || "Unknown track", artists: artistNames || "Unknown artist" });
-    }
-
-    // time-of-day (we’ll use later; keep collecting now)
-    const playedAt = new Date(it.played_at);
-    const hr = playedAt.getHours();
-    if (!Number.isNaN(hr)) hourCounts[hr]++;
-  }
-
-  // ----------------------------
-  // Repetition bucket + receipts
-  // ----------------------------
-  const counts = Array.from(trackCounts.values());
-  const recentPlaysCount = items.length;
-
-  // Only create a repetition bucket if we have enough plays to justify it.
-  // Otherwise: no repetition-based flags should appear.
-  let repetition = null;
-
-  let maxRepeat = 0;
-  let topTrackId = null;
-let topRepeats = [];
-
-
-  if (counts.length) {
-  maxRepeat = Math.max(...counts);
-
-  // Build a sorted list of repeats (highest count first), keep top 3
-  topRepeats = Array.from(trackCounts.entries())
-    .map(([id, c]) => ({ id, c, meta: trackMeta.get(id) }))
-    .sort((a, b) => b.c - a.c)
-    .slice(0, 3);
-
-  // keep legacy topTrackId for now
-  topTrackId = topRepeats[0]?.id || null;
-}
-
-  // Bucket mapping (must match your existing jokes buckets)
-repetition = null;
-
-// Only score repetition if we have enough plays to avoid horoscope vibes
-if (recentPlaysCount >= 15) {
-  if (maxRepeat >= 4) repetition = "stuck";
-  else if (maxRepeat >= 2) repetition = "comfort_looper";
-  else repetition = "situational_repeater";
-}
-
-
-  // Evidence for “because…” line (only for repetition in this step)
-  const repetitionEvidence = (repetition && topRepeats.length)
-  ? {
-      recentPlaysCount,
-      maxRepeat,
-      topRepeats: topRepeats.map(t => ({
-        count: t.c,
-        track: `${t?.meta?.name || "Unknown track"} — ${t?.meta?.artists || "Unknown artist"}`
-      }))
-    }
-  : null;
-
-
-  // ----------------------------
-  // Time-of-day bucket (leave stable for now)
-  // ----------------------------
-  const peakHour = hourCounts.reduce((best, v, i) => v > hourCounts[best] ? i : best, 0);
-  const time_of_day = "late_night"; // keep stable until you add more joke buckets
-
-  // ----------------------------
-  // Obscurity bucket (already real)
-  // ----------------------------
-  const top = await spotifyGet(token, "/me/top/tracks?time_range=medium_term&limit=25");
-  const tracks = top.items || [];
-
-  const artistIds = [];
-  for (const tr of tracks) {
-    for (const a of (tr.artists || [])) {
-      if (a && a.id) artistIds.push(a.id);
-    }
-  }
-
-  const uniqueArtistIds = Array.from(new Set(artistIds)).slice(0, 50);
-  let obscurity = "taste_curious";
-
-  if (uniqueArtistIds.length) {
-    const artists = await spotifyGet(token, "/artists?ids=" + uniqueArtistIds.join(","));
-    const pops = (artists.artists || [])
-      .map(a => a?.popularity)
-      .filter(v => typeof v === "number");
-
-    const avgPop = pops.length ? pops.reduce((a,b)=>a+b,0) / pops.length : 50;
-
-    if (avgPop >= 65) obscurity = "mainstream";
-    else if (avgPop >= 40) obscurity = "taste_curious";
-    else obscurity = "deep_cut";
-  }
-
-  // Buckets you already have jokes for
-  const buckets = {
-    repetition,   // NOTE: can be null now (prevents fake repetition flags)
-    time_of_day,
-    obscurity,
-
-    // Still hardcoded — we are NOT touching these in this step
-    valence: "sad_banger",
-    energy: "high",
-    exploration: "comfort_first",
-    playlist_naming: "emotional",
-    popularity_contradiction: "contradiction",
-    main_character: "full_montage",
-    genre_breadth: "omnivore"
-  };
-
-  return {
-    buckets,
-    evidence: {
-      repetition: repetitionEvidence
-    },
-    debug: {
-      recentPlays: items.length,
-      maxRepeat,
-      peakHour,
-      obscurity
-    }
-  };
-}
-
-
-
-    /******************************************************************
-     * 6) ROAST ENGINE (same as before, trimmed)
-     ******************************************************************/
-    const PARAMETER_RANK = [
-      "repetition","obscurity","popularity_contradiction","playlist_naming",
-      "time_of_day","valence","energy","exploration","genre_breadth","main_character"
-    ];
-
-    function randomChoice(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
-    function removeFirstMatch(arr, pred){
-      for(let i=0;i<arr.length;i++){ if(pred(arr[i])) return arr.splice(i,1)[0]; }
-      return null;
-    }
-    function shuffleInPlace(arr){
-      for (let i=arr.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [arr[i],arr[j]]=[arr[j],arr[i]];
+    async function spotifyGET(token, url) {
+      const res = await fetch(url, {
+        headers: { Authorization: "Bearer " + token }
+      });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`Spotify ${res.status}: ${t}`);
       }
+      return await res.json();
     }
 
-    function generateRoast(userBuckets, selectedTone) {
-  const MAX_FLAGS = 5;
-  const MIN_FLAGS = 5;
-
-  // Tone filter
-  let eligible = jokesTable.slice();
-  if (selectedTone === "playful") eligible = eligible.filter(r => r.tone === "playful");
-  if (selectedTone === "sharp") eligible = eligible.filter(r => (r.tone === "sharp" || r.tone === "playful"));
-
-  const used = new Set();
-
-  const pickOne = (parameter, bucket, priority) => {
-    if (!parameter || !bucket) return null;
-    const pool = eligible
-      .filter(r => r.parameter === parameter)
-      .filter(r => r.bucket === bucket)
-      .filter(r => Number(r.priority) === Number(priority))
-      .filter(r => !used.has(r.joke_text));
-
-    if (!pool.length) return null;
-    const chosen = randomChoice(pool);
-    used.add(chosen.joke_text);
-    return chosen;
-  };
-
-  const pickAnyPriority = (parameter, bucket, priorities) => {
-    for (const p of priorities) {
-      const hit = pickOne(parameter, bucket, p);
-      if (hit) return hit;
+    function mean(arr){
+      if (!arr.length) return 0;
+      return arr.reduce((a,b)=>a+b,0)/arr.length;
     }
-    return null;
-  };
 
-  const picks = [];
+    function clamp(n, min, max){ return Math.max(min, Math.min(max, n)); }
 
-  // 1) Opener: force priority 1 if possible, else fall back to 2, else 3
-  // Use the ranked parameters so opener feels "on-theme"
-  let opener = null;
-  for (const param of PARAMETER_RANK) {
-    const bucket = userBuckets[param];
-    opener = pickAnyPriority(param, bucket, [1, 2, 3]);
-    if (opener) break;
-  }
-  if (opener) picks.push(opener);
+    async function fetchProfileBuckets(token){
+      // Recent plays
+      const recent = await spotifyGET(token, "https://api.spotify.com/v1/me/player/recently-played?limit=50");
+      const items = recent?.items || [];
+      const plays = items.map(it => ({
+        track: it.track,
+        played_at: it.played_at,
+        artist: it.track?.artists?.[0] || null
+      })).filter(p => p.track && p.artist);
 
-  // 2) Core: prioritize priority-2 jokes across remaining params
-  const core = [];
-  for (const param of PARAMETER_RANK) {
-    if (core.length >= 3) break;
-    const bucket = userBuckets[param];
-    const hit = pickOne(param, bucket, 2);
-    if (hit) core.push(hit);
-  }
-  // If not enough, allow priority-1 (but avoid duplicating opener) then priority-3
-  for (const param of PARAMETER_RANK) {
-    if (core.length >= 3) break;
-    const bucket = userBuckets[param];
-    const hit = pickAnyPriority(param, bucket, [1, 3]);
-    if (hit) core.push(hit);
-  }
-  shuffleInPlace(core);
-  picks.push(...core);
+      const recentPlays = plays.length;
 
-  // 3) Texture: add 1–2 priority-3 jokes (or whatever’s left) to reach MIN_FLAGS
-  const texture = [];
-  for (const param of PARAMETER_RANK) {
-    if (picks.length + texture.length >= MAX_FLAGS) break;
-    const bucket = userBuckets[param];
-    const hit = pickAnyPriority(param, bucket, [3, 2, 1]);
-    if (hit) texture.push(hit);
-    if (picks.length + texture.length >= MIN_FLAGS && texture.length >= 1) break;
-  }
-  picks.push(...texture);
+      // Repetition (track id counts)
+      const trackCounts = new Map();
+      for (const p of plays) {
+        const id = p.track.id;
+        trackCounts.set(id, (trackCounts.get(id) || 0) + 1);
+      }
+      let maxRepeat = 0;
+      let topTrackId = null;
+      for (const [id, c] of trackCounts.entries()) {
+        if (c > maxRepeat){ maxRepeat = c; topTrackId = id; }
+      }
 
-  // 4) Optional combo: max one, only if we have space
-  // (We don’t “compute” combos yet — we just use them sparingly as spice.)
-  if (picks.length < MAX_FLAGS) {
-    const comboPool = eligible
-      .filter(r => r.parameter === "combo")
-      .filter(r => !used.has(r.joke_text));
+      // Time of day
+      const hourCounts = Array.from({length:24}, ()=>0);
+      for (const p of plays){
+        const h = new Date(p.played_at).getHours();
+        hourCounts[h] += 1;
+      }
+      const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
 
-    if (comboPool.length && Math.random() < 0.35) {
-      const combo = randomChoice(comboPool);
-      used.add(combo.joke_text);
-      picks.push(combo);
+      // Obscurity = average popularity of top artists from top tracks
+      const topTracks = await spotifyGET(token, "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=30");
+      const top = topTracks?.items || [];
+      const artistIds = Array.from(new Set(top.flatMap(t => (t.artists||[]).map(a=>a.id)).filter(Boolean))).slice(0, 50);
+      let avgPopularity = 50;
+      if (artistIds.length){
+        const artists = await spotifyGET(token, "https://api.spotify.com/v1/artists?ids=" + artistIds.join(","));
+        const pops = (artists?.artists || []).map(a => a.popularity).filter(n => typeof n === "number");
+        avgPopularity = Math.round(mean(pops));
+      }
+
+      // Buckets (some may still be used in generateRoast)
+      const buckets = {};
+
+      // repetition bucket
+      if (maxRepeat >= 6) buckets.repetition = "defaults_to_safety";
+      else if (maxRepeat <= 2) buckets.repetition = "craves_variety";
+      else buckets.repetition = "balanced";
+
+      // time_of_day bucket
+      let tod = "day";
+      if (peakHour >= 5 && peakHour <= 10) tod = "morning";
+      if (peakHour >= 19 && peakHour <= 23) tod = "night";
+      if (peakHour >= 0 && peakHour <= 3) tod = "late_night";
+      buckets.time_of_day = tod;
+
+      // obscurity bucket
+      if (avgPopularity >= 75) buckets.obscurity = "mainstream";
+      else if (avgPopularity >= 45) buckets.obscurity = "taste_curious";
+      else buckets.obscurity = "obscure";
+
+      // Evidence receipts
+      const evidence = {
+        repetition: {
+          maxRepeat,
+          topTrack: plays.find(p => p.track.id === topTrackId)?.track || null
+        },
+        time_of_day: {
+          peakHour,
+          hourCounts
+        },
+        obscurity: {
+          avgPopularity
+        }
+      };
+
+      const debug = { recentPlays, maxRepeat, peakHour, avgPopularity };
+
+      return { buckets, evidence, debug };
     }
-  }
-
-  // Cap + ensure minimum
-
-let ordered = picks.slice(0, MAX_FLAGS);
-
-// FORCE repetition to appear if it exists but was crowded out
-const hasRepetition = !!userBuckets.repetition;
-const repetitionShown = ordered.some(j => j.parameter === "repetition");
-
-if (hasRepetition && !repetitionShown) {
-  const rep =
-    pickAnyPriority("repetition", userBuckets.repetition, [1, 2, 3]);
-
-  if (rep) {
-    // Replace the last flag so total count stays the same
-    ordered[ordered.length - 1] = rep;
-  }
-}
-
-
-
-  // Track which parameters actually contributed jokes
-  const contributingParams = new Set(
-    ordered.map(j => j.parameter).filter(Boolean)
-  );
-
-  // Insight line: derived from buckets, but only if supported by shown flags
-  const insight = insightFromBuckets(userBuckets, contributingParams);
-
-
-  return { ordered, insight };
-}
-
 
     /******************************************************************
-     * 7) RENDER + PACING
+     * 6) ROAST GENERATION
      ******************************************************************/
-    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
-    function escapeHTML(str){
-      return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    function pickRows(parameter, bucket, tone){
+      const rows = jokesTable.filter(r =>
+        r.parameter === parameter &&
+        (r.bucket === bucket || r.bucket === "any") &&
+        r.tone === tone
+      );
+
+      // weighted by priority (lower priority number = more likely)
+      const sorted = rows.slice().sort((a,b)=>a.priority-b.priority);
+      return sorted;
     }
+
+    function randomPick(arr){
+      if (!arr.length) return null;
+      return arr[Math.floor(Math.random()*arr.length)];
+    }
+
+    function generateRoast(buckets, tone){
+      const ordered = [];
+
+      const params = ["obscurity","repetition","time_of_day"];
+      for (const p of params){
+        const bucket = buckets[p];
+        const pick = randomPick(pickRows(p, bucket, tone));
+        if (pick) ordered.push(pick);
+      }
+
+      // closer (insight bucket is 'any' – will be improved later)
+      const insightPick = randomPick(pickRows("insight", "any", tone));
+      const insight = insightPick?.joke_text || "Your vibe is complicated.";
+
+      // Ensure opener exists
+      if (!ordered.length){
+        ordered.push({ joke_text:"Data unavailable. Still suspicious." });
+      }
+      return { ordered, insight };
+    }
+
+    function escapeHTML(s){
+      return (s||"").replace(/[&<>"']/g, (c)=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    function showToast(el, msg){
+      if (!el) return;
+      el.textContent = msg;
+      setTimeout(()=>{ if(el.textContent === msg) el.textContent = ""; }, 2600);
+    }
+
+    function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
 
     function clearResults(){
+      openerText.innerHTML = `<span class="flag">🚩</span>Loading…`;
       flagsList.innerHTML = "";
+      insightLine.textContent = "Loading…";
       ruleEl.classList.add("hidden");
       flagsList.classList.add("hidden");
       insightBox.classList.add("hidden");
-      toast2.style.display="none";
-      toast2.textContent="";
     }
 
-    let lastResult = null;
+    function buildBecauseLine(row, evidence){
+      if (!row || !evidence) return "";
+      const p = row.parameter;
+      if (p === "repetition"){
+        const max = evidence.repetition?.maxRepeat ?? 0;
+        const t = evidence.repetition?.topTrack;
+        if (!t) return max ? `because your #1 track was played ${max}× recently.` : "";
+        return `because your #1 track (“${t.name}” by ${t.artists?.[0]?.name || "Unknown"} ) was played ${max}× in your last 50 listens.`;
+      }
+      if (p === "time_of_day"){
+        const h = evidence.time_of_day?.peakHour;
+        if (typeof h !== "number") return "";
+        const label =
+          (h>=0 && h<=3) ? "after midnight" :
+          (h>=5 && h<=10) ? "morning" :
+          (h>=19 && h<=23) ? "night" : "day";
+        return `because your listening peaks around ${h}:00 (${label}).`;
+      }
+      if (p === "obscurity"){
+        const pop = evidence.obscurity?.avgPopularity;
+        if (typeof pop !== "number") return "";
+        return `because your average artist popularity is ${pop}/100.`;
+      }
+      return "";
+    }
+
     let lastBuckets = null;
     let lastEvidence = null;
-
-
-function buildBecauseLine(jokeRow, evidence){
-  if (!jokeRow || !evidence) return "";
-
-  // Repetition only (for this step)
-  if (jokeRow.parameter === "repetition" && evidence.repetition) {
-    const e = evidence.repetition;
-    const list = Array.isArray(e.topRepeats) ? e.topRepeats : [];
-    if (!list.length) return "";
-
-    const a = list[0];
-    const b = list[1];
-
-    // Show 1–2 concrete receipts so it feels earned, not generic
-    if (b) {
-      return `because your top repeats were “${a.track}” (${a.count}×) and “${b.track}” (${b.count}×) in your last ${e.recentPlaysCount} plays`;
-    }
-    return `because your top repeat was “${a.track}” (${a.count}×) in your last ${e.recentPlaysCount} plays`;
-  }
-
-  return "";
-}
-
-
-
-    function insightFromBuckets(b, usedParams = new Set()) {
-
-  // Combo patterns (feel “smart”)
-      // If repetition is actually shown, prioritize a repetition-based pattern
-if (usedParams.has("repetition")) {
-  if (b.repetition === "stuck") return "Unfinished business pattern: still in replay mode.";
-  if (b.repetition === "comfort_looper") return "Comfort pattern: self-soothing through repetition.";
-  if (b.repetition === "situational_repeater") return "Safety pattern: replays moments until it feels safe.";
-}
-
-  if (
-  usedParams.has("repetition") &&
-  usedParams.has("time_of_day") &&
-  b.repetition === "stuck" &&
-  b.time_of_day === "late_night"
-) {
-  return "Late-night loop pattern: processing privately, repeatedly.";
-}
-
-  if (b.obscurity === "deep_cut" && b.main_character === "full_montage") {
-    return "Wants attention… but only from the right audience.";
-  }
-  // Only use this pattern if repetition is NOT one of the shown flags
-if (
-  !usedParams.has("repetition") &&
-  b.genre_breadth === "omnivore" &&
-  b.exploration === "comfort_first"
-) {
-  return "Craves variety, defaults to safety.";
-}
-
-  }
-
-  // Single patterns (still not copies of jokes)
-  if (b.repetition === "stuck") return "Unfinished business pattern: still in replay mode.";
-  if (b.repetition === "comfort_looper") return "Comfort pattern: repeats feelings to stay regulated.";
-  if (b.obscurity === "mainstream") return "Low-risk taste pattern: familiar, accessible, predictable.";
-  if (b.obscurity === "deep_cut") return "Identity pattern: discovery is the personality.";
-  if (b.time_of_day === "late_night") return "Late-night processor pattern: emotions after 10pm.";
-  if (b.exploration === "comfort_first") return "Safety-net pattern: growth is optional, comfort is mandatory.";
-
-  return "Pattern detected: selective vulnerability with high playlist literacy.";
-}
-
-
-
-    function reframeInsight(lastJoke) {
-  const map = new Map([
-    ["Feels deeply. Avoids confrontation.", "Emotional depth without emotional friction."],
-    ["Processes feelings when no one can respond.", "Your emotional processing happens when the group chat is asleep."],
-    ["Open to everything. Commits to nothing.", "You collect options like commitment is a malware popup."],
-    ["Lives like a montage.", "You treat real life like it’s being edited by a hype intern."],
-    ["Stays where it’s safe.", "Comfort-first… even when it’s holding you back."],
-    ["Names feelings instead of discussing them.", "You label emotions like files instead of opening them."]
-  ]);
-
-  return map.get(lastJoke) || (lastJoke ? `Pattern: ${lastJoke}` : "Pattern: unclear, still suspicious.");
-}
-
+    let lastResult = null;
 
     async function renderRoastFromBuckets(buckets, evidence){
-
       clearResults();
       const tone = toneSelect.value;
       const { ordered, insight } = generateRoast(buckets, tone);
@@ -1085,72 +896,171 @@ if (
       // opener alone
       const opener = ordered[0]?.joke_text || "Data unavailable. Still suspicious.";
       const openerRow = ordered[0] || null;
-const openerBecause = buildBecauseLine(openerRow, evidence);
-openerText.innerHTML =
-  `<span class="flag">🚩</span>${escapeHTML(opener)}${
-    openerBecause ? `<div class="because">${escapeHTML(openerBecause)}</div>` : ""
-  }`;
+      const openerBecause = buildBecauseLine(openerRow, evidence);
+      openerText.innerHTML =
+        `<span class="flag">🚩</span>${escapeHTML(opener)}${
+          openerBecause ? `<div class="because">${escapeHTML(openerBecause)}</div>` : ""
+        }`;
       await sleep(720);
 
       ruleEl.classList.remove("hidden");
       flagsList.classList.remove("hidden");
 
       const rest = ordered.slice(1);
-for (let i=0;i<rest.length;i++){
-  const li = document.createElement("li");
-  li.className = "fadeIn";
+      for (let i=0;i<rest.length;i++){
+        const li = document.createElement("li");
+        li.className = "fadeIn";
 
-  // Roles: core items alternate yellow/green, last one is the closer (pink)
-  const isLast = (i === rest.length - 1);
-  if (isLast) {
-    li.classList.add("role-close");
-  } else {
-    li.classList.add("role-core");
-    if (i % 2 === 1) li.classList.add("alt");
-  }
+        const isLast = (i === rest.length - 1);
+        if (isLast) {
+          li.classList.add("role-close");
+        } else {
+          li.classList.add("role-core");
+          if (i % 2 === 1) li.classList.add("alt");
+        }
 
-const because = buildBecauseLine(rest[i], evidence);
-li.innerHTML =
-  `<span class="flag">🚩</span>${escapeHTML(rest[i].joke_text)}${
-    because ? `<div class="because">${escapeHTML(because)}</div>` : ""
-  }`;
+        const because = buildBecauseLine(rest[i], evidence);
+        li.innerHTML =
+          `<span class="flag">🚩</span>${escapeHTML(rest[i].joke_text)}${
+            because ? `<div class="because">${escapeHTML(because)}</div>` : ""
+          }`;
 
-  flagsList.appendChild(li);
-  await sleep(220);
-}
+        flagsList.appendChild(li);
+        await sleep(220);
+      }
 
       insightLine.textContent = insight;
       insightBox.classList.remove("hidden");
       insightBox.classList.add("fadeIn");
+      updateShareKit();
     }
 
-    async function shareRoast(){
-      if (!lastResult) return;
-      const lines = lastResult.ordered.map(r => `🚩 ${r.joke_text}`);
-      const shareText =
-`Spotify Dating Red Flags 🚩
-Tone: ${lastResult.tone}
+    function safeNowUrl(){
+      // Strip OAuth params for cleaner sharing
+      const u = new URL(window.location.href);
+      u.searchParams.delete("code");
+      u.searchParams.delete("state");
+      u.searchParams.delete("error");
+      u.searchParams.delete("error_description");
+      return u.origin + u.pathname;
+    }
 
-${lines.join("\n")}
+    function buildShareCaption(){
+      const url = safeNowUrl();
+      const pattern = (insightLine?.textContent || "").trim();
+      const openerMain = (lastResult?.ordered?.[0]?.joke_text || "").trim();
 
-(Not serious. Very specific.)`;
+      const firstBecause =
+        document.querySelector("#openerText .because")?.textContent?.trim() ||
+        document.querySelector("#flagsList .because")?.textContent?.trim() ||
+        "";
 
-      try{
-        await navigator.clipboard.writeText(shareText);
-        showToast(toast2, "Copied to clipboard.");
-      }catch(e){
-        window.prompt("Copy this:", shareText);
+      const pieces = [];
+      if (pattern) pieces.push(`Spotify just exposed my dating pattern: ${pattern} 🚩`);
+      else pieces.push("Spotify Dating Red Flags 🚩");
+
+      if (openerMain) pieces.push(openerMain);
+
+      if (firstBecause){
+        const cleaned = firstBecause.replace(/^because\s*/i,"");
+        pieces.push(`receipts: ${cleaned}`);
+      }
+
+      pieces.push(`Run yours: ${url}`);
+      return pieces.join("\n");
+    }
+
+    function buildXIntent(){
+      const url = safeNowUrl();
+      const pattern = (insightLine?.textContent || "").trim();
+
+      const firstBecause =
+        document.querySelector("#openerText .because")?.textContent?.trim() ||
+        document.querySelector("#flagsList .because")?.textContent?.trim() ||
+        "";
+
+      let text = "Spotify Dating Red Flags 🚩";
+      if (pattern) text = `My Spotify dating pattern: ${pattern} 🚩`;
+
+      if (firstBecause){
+        const cleaned = firstBecause.replace(/^because\s*/i,"");
+        text += `\nreceipts: ${cleaned}`;
+      }
+      text += `\n${url}`;
+
+      const intent = new URL("https://twitter.com/intent/tweet");
+      intent.searchParams.set("text", text);
+      return intent.toString();
+    }
+
+    function updateShareKit(){
+      if (!shareUrlEl) return;
+      const url = safeNowUrl();
+      shareUrlEl.textContent = url;
+
+      if (shareNote){
+        shareNote.textContent = "Tip: post yours and tag 3 friends to compare results.";
+      }
+
+      lastShareCaption = buildShareCaption();
+
+      if (btnShareX){
+        btnShareX.href = buildXIntent();
+      }
+
+      if (shareHint){
+        shareHint.textContent = "Generated from your Spotify listening history";
       }
     }
 
-    function showToast(el, msg){
-      el.textContent = msg;
-      el.style.display="block";
-      el.classList.remove("fadeIn");
-      void el.offsetWidth;
-      el.classList.add("fadeIn");
+    async function copyText(textToCopy, okMsg){
+      try{
+        await navigator.clipboard.writeText(textToCopy);
+        showToast(toast2, okMsg || "Copied.");
+      }catch(e){
+        window.prompt("Copy this:", textToCopy);
+      }
     }
 
+    async function saveShareImage(){
+      if (!shareCard || typeof html2canvas !== "function"){
+        showToast(toast2, "Share image unavailable.");
+        return;
+      }
+
+      showToast(toast2, "Generating image…");
+      updateShareKit();
+
+      const canvas = await html2canvas(shareCard, {
+        backgroundColor: "#ffffff",
+        scale: Math.min(2, window.devicePixelRatio || 1),
+        useCORS: true
+      });
+
+      const dataUrl = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "spotify-dating-red-flags.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast(toast2, "Saved image. Post it and cause problems.");
+    }
+
+    function openInstagram(){
+      // Can't prefill an IG post from a normal website. We copy caption and open IG.
+      copyText(lastShareCaption, "Caption copied. Paste it in Instagram.");
+      window.open("https://www.instagram.com/", "_blank", "noopener");
+    }
+
+    function openTikTok(){
+      copyText(lastShareCaption, "Caption copied. Paste it in TikTok.");
+      window.open("https://www.tiktok.com/upload", "_blank", "noopener");
+    }
+
+    /******************************************************************
+     * 7) UI HELPERS
+     ******************************************************************/
     function switchToLogin(){
       stampText.textContent = "WELCOME";
       loginView.classList.remove("hidden");
@@ -1168,7 +1078,6 @@ ${lines.join("\n")}
      * 8) APP BOOT
      ******************************************************************/
     async function boot(){
-      // 1) If URL has "code", exchange it
       const url = new URL(window.location.href);
       const code = url.searchParams.get("code");
 
@@ -1184,15 +1093,13 @@ ${lines.join("\n")}
         }
       }
 
-      // 2) If token exists, fetch buckets + show results
       if (token) {
         try{
           btnLogout.classList.remove("hidden");
           switchToResults();
           const { buckets, evidence, debug } = await fetchProfileBuckets(token);
-lastEvidence = evidence;
-showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
-
+          lastEvidence = evidence;
+          showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
 
           document.getElementById("resultsSubtitle").textContent =
             `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
@@ -1214,27 +1121,33 @@ showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${
     btnLogin.addEventListener("click", loginSpotify);
     btnLogout.addEventListener("click", logout);
     btnLogout2.addEventListener("click", logout);
+
     btnRoastAgain.addEventListener("click", async () => {
-  const token = getStoredToken();
-  if (!token) return;
+      const token = getStoredToken();
+      if (!token) return;
 
-  try {
-    const { buckets, evidence, debug } = await fetchProfileBuckets(token);
-lastEvidence = evidence;
-showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
-document.getElementById("resultsSubtitle").textContent =
-  `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
-await renderRoastFromBuckets(buckets, lastEvidence);
+      try {
+        const { buckets, evidence, debug } = await fetchProfileBuckets(token);
+        lastEvidence = evidence;
+        showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
+        document.getElementById("resultsSubtitle").textContent =
+          `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
+        await renderRoastFromBuckets(buckets, lastEvidence);
 
-  } catch (e) {
-    console.error(e);
-    showToast(toast2, "Spotify error: " + (e?.message || "Unknown"));
-  }
-});
+      } catch (e) {
+        console.error(e);
+        showToast(toast2, "Spotify error: " + (e?.message || "Unknown"));
+      }
+    });
 
-    btnShare.addEventListener("click", shareRoast);
+    // Share kit events
+    btnCopyCaption?.addEventListener("click", () => copyText(lastShareCaption || buildShareCaption(), "Caption copied."));
+    btnCopyLink?.addEventListener("click", () => copyText(safeNowUrl(), "Link copied."));
+    btnSaveImage?.addEventListener("click", saveShareImage);
+    btnShareIG?.addEventListener("click", openInstagram);
+    btnShareTT?.addEventListener("click", openTikTok);
+
     toneSelect.addEventListener("change", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
-
 
     boot();
   </script>
