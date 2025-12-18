@@ -752,63 +752,101 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
     }
 
     function generateRoast(userBuckets, selectedTone) {
-      const MAX_FLAGS = 7;
-      const MIN_FLAGS = 5;
+  const MAX_FLAGS = 7;
+  const MIN_FLAGS = 5;
 
-      let eligible = jokesTable.filter(r => r.parameter !== "combo");
-      if (selectedTone === "playful") eligible = eligible.filter(r => r.tone === "playful");
-      if (selectedTone === "sharp") eligible = eligible.filter(r => (r.tone === "sharp" || r.tone === "playful"));
+  // Tone filter
+  let eligible = jokesTable.slice();
+  if (selectedTone === "playful") eligible = eligible.filter(r => r.tone === "playful");
+  if (selectedTone === "sharp") eligible = eligible.filter(r => (r.tone === "sharp" || r.tone === "playful"));
 
-      const used = new Set();
-      const picked = [];
+  const used = new Set();
 
-      for (const param of PARAMETER_RANK) {
-        const bucket = userBuckets[param];
-        if (!bucket) continue;
+  const pickOne = (parameter, bucket, priority) => {
+    if (!parameter || !bucket) return null;
+    const pool = eligible
+      .filter(r => r.parameter === parameter)
+      .filter(r => r.bucket === bucket)
+      .filter(r => Number(r.priority) === Number(priority))
+      .filter(r => !used.has(r.joke_text));
 
-        let candidates = eligible.filter(r => r.parameter === param && r.bucket === bucket)
-          .filter(r => !used.has(r.joke_text));
+    if (!pool.length) return null;
+    const chosen = randomChoice(pool);
+    used.add(chosen.joke_text);
+    return chosen;
+  };
 
-        if (!candidates.length) continue;
-
-        const p1 = candidates.filter(r => r.priority === 1);
-        const p2 = candidates.filter(r => r.priority === 2);
-        const p3 = candidates.filter(r => r.priority === 3);
-        let pool = p1.length ? p1 : (p2.length ? p2 : p3);
-        const chosen = randomChoice(pool);
-        picked.push(chosen);
-        used.add(chosen.joke_text);
-        if (picked.length >= MAX_FLAGS) break;
-      }
-
-      // Backfill if needed
-      if (picked.length < MIN_FLAGS) {
-        for (const param of PARAMETER_RANK) {
-          if (picked.length >= MIN_FLAGS) break;
-          const bucket = userBuckets[param];
-          const extra = eligible.find(r => r.parameter === param && r.bucket === bucket && !used.has(r.joke_text));
-          if (extra){ picked.push(extra); used.add(extra.joke_text); }
-        }
-      }
-
-      // Opener is priority 1 if possible
-      picked.sort((a,b) => a.priority - b.priority);
-      const opener = removeFirstMatch(picked, r => r.priority === 1) || picked.shift() || null;
-
-      // Shuffle middle
-      shuffleInPlace(picked);
-      const ordered = [];
-      if (opener) ordered.push(opener);
-      for (const m of picked) {
-        if (ordered.length >= MAX_FLAGS) break;
-        ordered.push(m);
-      }
-
-      // Insight line: last
-      const insight = ordered[ordered.length - 1]?.joke_text || "Unclear. Still a red flag.";
-
-      return { ordered, insight };
+  const pickAnyPriority = (parameter, bucket, priorities) => {
+    for (const p of priorities) {
+      const hit = pickOne(parameter, bucket, p);
+      if (hit) return hit;
     }
+    return null;
+  };
+
+  const picks = [];
+
+  // 1) Opener: force priority 1 if possible, else fall back to 2, else 3
+  // Use the ranked parameters so opener feels "on-theme"
+  let opener = null;
+  for (const param of PARAMETER_RANK) {
+    const bucket = userBuckets[param];
+    opener = pickAnyPriority(param, bucket, [1, 2, 3]);
+    if (opener) break;
+  }
+  if (opener) picks.push(opener);
+
+  // 2) Core: prioritize priority-2 jokes across remaining params
+  const core = [];
+  for (const param of PARAMETER_RANK) {
+    if (core.length >= 3) break;
+    const bucket = userBuckets[param];
+    const hit = pickOne(param, bucket, 2);
+    if (hit) core.push(hit);
+  }
+  // If not enough, allow priority-1 (but avoid duplicating opener) then priority-3
+  for (const param of PARAMETER_RANK) {
+    if (core.length >= 3) break;
+    const bucket = userBuckets[param];
+    const hit = pickAnyPriority(param, bucket, [1, 3]);
+    if (hit) core.push(hit);
+  }
+  shuffleInPlace(core);
+  picks.push(...core);
+
+  // 3) Texture: add 1–2 priority-3 jokes (or whatever’s left) to reach MIN_FLAGS
+  const texture = [];
+  for (const param of PARAMETER_RANK) {
+    if (picks.length + texture.length >= MAX_FLAGS) break;
+    const bucket = userBuckets[param];
+    const hit = pickAnyPriority(param, bucket, [3, 2, 1]);
+    if (hit) texture.push(hit);
+    if (picks.length + texture.length >= MIN_FLAGS && texture.length >= 1) break;
+  }
+  picks.push(...texture);
+
+  // 4) Optional combo: max one, only if we have space
+  // (We don’t “compute” combos yet — we just use them sparingly as spice.)
+  if (picks.length < MAX_FLAGS) {
+    const comboPool = eligible
+      .filter(r => r.parameter === "combo")
+      .filter(r => !used.has(r.joke_text));
+
+    if (comboPool.length && Math.random() < 0.35) {
+      const combo = randomChoice(comboPool);
+      used.add(combo.joke_text);
+      picks.push(combo);
+    }
+  }
+
+  // Cap + ensure minimum
+  const ordered = picks.slice(0, MAX_FLAGS);
+
+  // Insight line: last flag text
+  const insight = ordered[ordered.length - 1]?.joke_text || "Unclear. Still a red flag.";
+
+  return { ordered, insight };
+}
 
     /******************************************************************
      * 7) RENDER + PACING
