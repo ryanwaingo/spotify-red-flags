@@ -224,6 +224,12 @@
     .list li:nth-child(6){ background: var(--yellow); }
     .list li:nth-child(7){ background: var(--green); color: var(--ink); }
 
+    /* Role-based colors (override nth-child chaos) */
+.list li.role-core { background: var(--yellow) !important; color: var(--ink) !important; }
+.list li.role-core.alt { background: var(--green) !important; color: var(--ink) !important; }
+.list li.role-close { background: var(--pink) !important; color: var(--ink) !important; }
+
+
     .list .flag{ color: var(--red); }
     .list li:nth-child(4) .flag{ color: var(--yellow); }
 
@@ -752,7 +758,7 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
     }
 
     function generateRoast(userBuckets, selectedTone) {
-  const MAX_FLAGS = 7;
+  const MAX_FLAGS = 5;
   const MIN_FLAGS = 5;
 
   // Tone filter
@@ -843,7 +849,9 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
   const ordered = picks.slice(0, MAX_FLAGS);
 
   // Insight line: last flag text
-  const insight = ordered[ordered.length - 1]?.joke_text || "Unclear. Still a red flag.";
+  const last = ordered[ordered.length - 1]?.joke_text || "";
+  const insight = reframeInsight(last);
+
 
   return { ordered, insight };
 }
@@ -869,6 +877,20 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
     let lastResult = null;
     let lastBuckets = null;
 
+    function reframeInsight(lastJoke) {
+  const map = new Map([
+    ["Feels deeply. Avoids confrontation.", "Emotional depth without emotional friction."],
+    ["Processes feelings when no one can respond.", "Your emotional processing happens when the group chat is asleep."],
+    ["Open to everything. Commits to nothing.", "You collect options like commitment is a malware popup."],
+    ["Lives like a montage.", "You treat real life like it’s being edited by a hype intern."],
+    ["Stays where it’s safe.", "Comfort-first… even when it’s holding you back."],
+    ["Names feelings instead of discussing them.", "You label emotions like files instead of opening them."]
+  ]);
+
+  return map.get(lastJoke) || (lastJoke ? `Pattern: ${lastJoke}` : "Pattern: unclear, still suspicious.");
+}
+
+
     async function renderRoastFromBuckets(buckets){
       clearResults();
       const tone = toneSelect.value;
@@ -885,13 +907,23 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
       flagsList.classList.remove("hidden");
 
       const rest = ordered.slice(1);
-      for (let i=0;i<rest.length;i++){
-        const li=document.createElement("li");
-        li.className="fadeIn";
-        li.innerHTML = `<span class="flag">🚩</span>${escapeHTML(rest[i].joke_text)}`;
-        flagsList.appendChild(li);
-        await sleep(220);
-      }
+for (let i=0;i<rest.length;i++){
+  const li = document.createElement("li");
+  li.className = "fadeIn";
+
+  // Roles: core items alternate yellow/green, last one is the closer (pink)
+  const isLast = (i === rest.length - 1);
+  if (isLast) {
+    li.classList.add("role-close");
+  } else {
+    li.classList.add("role-core");
+    if (i % 2 === 1) li.classList.add("alt");
+  }
+
+  li.innerHTML = `<span class="flag">🚩</span>${escapeHTML(rest[i].joke_text)}`;
+  flagsList.appendChild(li);
+  await sleep(220);
+}
 
       insightLine.textContent = insight;
       insightBox.classList.remove("hidden");
