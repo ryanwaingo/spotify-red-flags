@@ -1,0 +1,896 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spotify Dating Red Flags — Results</title>
+  <style>
+    :root{
+      /* Brutalist but FUN: flat primaries, hard contrast */
+      --bg: #FFF7E6;         /* warm paper */
+      --paper: #FFFFFF;
+      --ink: #111111;
+      --muted: #4D4D4D;
+
+      --red: #E10600;
+      --blue: #0057FF;
+      --yellow: #FFE600;
+      --green: #00C853;
+      --pink: #FF3EB5;
+      --purple: #7C4DFF;
+
+      --b: 3px solid var(--ink);
+      --pad: 22px;
+
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .wrap{
+      min-height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 14px;
+    }
+
+    .frame{
+      width: min(540px, 100%);
+      border: var(--b);
+      background: var(--paper);
+      position: relative;
+      padding: var(--pad);
+      transform: translateX(-2px) translateY(1px);
+    }
+
+    .stamp{
+      position:absolute;
+      top:-16px;
+      right:14px;
+      border: var(--b);
+      background: var(--pink);
+      color: var(--ink);
+      padding: 8px 10px;
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 12px;
+      transform: rotate(2deg);
+      user-select:none;
+    }
+
+    .header{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items:start;
+      margin-bottom: 14px;
+    }
+
+    .title{
+      font-weight: 950;
+      letter-spacing: -0.03em;
+      line-height: 1.02;
+      font-size: 24px;
+      margin: 0;
+    }
+
+    .subtitle{
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+
+    .bar{
+      height: 10px;
+      border: var(--b);
+      background: var(--yellow);
+      margin: 10px 0 18px;
+      transform: translateX(1px);
+    }
+
+    .openerPanel{
+      border: var(--b);
+      background: var(--blue);
+      color: #fff;
+      padding: 16px 14px;
+      position: relative;
+      transform: translateX(-1px);
+      overflow:hidden;
+    }
+
+    .openerPanel::before{
+      content:"";
+      position:absolute;
+      left:-10px;
+      top:-10px;
+      width:18px;
+      height:18px;
+      border: var(--b);
+      background: var(--yellow);
+    }
+
+    .opener{
+      font-weight: 950;
+      letter-spacing: -0.05em;
+      line-height: 1.05;
+      font-size: 38px;
+      margin: 0;
+    }
+
+    .flag{
+      margin-right: 10px;
+      color: var(--yellow); /* pop against blue */
+    }
+
+    .rule{
+      height:0;
+      border:none;
+      border-top: var(--b);
+      margin: 16px 0;
+    }
+
+    .list{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+
+    .list li{
+      border: var(--b);
+      padding: 10px 10px;
+      font-size: 18px;
+      line-height: 1.22;
+      letter-spacing: -0.01em;
+      background: #fff;
+      transform: translateX(1px);
+    }
+    .list li:nth-child(2n){ transform: translateX(-1px); }
+
+    .list li:nth-child(1){ background: var(--yellow); }
+    .list li:nth-child(2){ background: var(--green); color: var(--ink); }
+    .list li:nth-child(3){ background: var(--paper); }
+    .list li:nth-child(4){ background: var(--purple); color: #fff; }
+    .list li:nth-child(5){ background: var(--pink); color: var(--ink); }
+    .list li:nth-child(6){ background: var(--yellow); }
+    .list li:nth-child(7){ background: var(--green); color: var(--ink); }
+
+    .list .flag{ color: var(--red); }
+    .list li:nth-child(4) .flag{ color: var(--yellow); } /* on purple */
+
+    .insight{
+      margin-top: 16px;
+      border: var(--b);
+      background: var(--yellow);
+      padding: 14px;
+      position: relative;
+      transform: translateX(1px);
+    }
+
+    .insight::after{
+      content:"";
+      position:absolute;
+      right:-10px;
+      bottom:-10px;
+      width:18px;
+      height:18px;
+      border: var(--b);
+      background: var(--red);
+    }
+
+    .insight .label{
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .insight .line{
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .actions{
+      margin-top: 16px;
+      border: var(--b);
+      background: #fff;
+      padding: 12px;
+      display:grid;
+      gap: 10px;
+      transform: translateX(-1px);
+    }
+
+    button{
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      padding: 12px 12px;
+      border: var(--b);
+      background: #fff;
+      color: var(--ink);
+      cursor:pointer;
+    }
+    button:active{ transform: translateY(1px); }
+
+    .primary{
+      background: var(--ink);
+      color: #fff;
+    }
+    .primary:hover{
+      background: var(--yellow);
+      color: var(--ink);
+    }
+
+    .secondary{
+      background: var(--paper);
+    }
+    .secondary:hover{
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .toneRow{
+      border: var(--b);
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      background: var(--green);
+    }
+
+    .toneRow .label{
+      font-family: var(--mono);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--ink);
+      white-space:nowrap;
+    }
+
+    select{
+      font-family: var(--mono);
+      font-weight: 900;
+      border: var(--b);
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 10px;
+      cursor:pointer;
+    }
+
+    .micro{
+      margin-top: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink);
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      border-top: var(--b);
+      padding-top: 12px;
+      align-items:flex-start;
+    }
+
+    .micro .right{
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 11px;
+      background: var(--pink);
+      border: var(--b);
+      padding: 6px 8px;
+      transform: rotate(-1deg);
+      user-select:none;
+    }
+
+    .toast{
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink);
+      border: var(--b);
+      padding: 8px 10px;
+      background: var(--yellow);
+      display:none;
+    }
+
+    /* Reveal pacing */
+    .hidden{ display:none !important; }
+
+    .fadeIn{
+      animation: fadeIn 180ms ease-out both;
+    }
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(6px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    @media (max-width:420px){
+      .frame{ padding:18px; }
+      .opener{ font-size: 32px; }
+      .list li{ font-size: 17px; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <section class="frame" aria-label="Results">
+      <div class="stamp">RESULTS</div>
+
+      <header class="header">
+        <div>
+          <h1 class="title">Your Spotify Dating Red Flags 🚩</h1>
+          <div class="subtitle">Based on your listening habits. Not serious. Very specific.</div>
+        </div>
+      </header>
+
+      <div class="bar" aria-hidden="true"></div>
+
+      <!-- Opener panel -->
+      <div id="openerPanel" class="openerPanel" aria-label="Opener">
+        <div id="openerText" class="opener"><span class="flag">🚩</span>Loading…</div>
+      </div>
+
+      <hr id="rule" class="rule" />
+
+      <!-- Flags -->
+      <ul id="flagsList" class="list" aria-label="Red flags"></ul>
+
+      <!-- Insight -->
+      <div id="insightBox" class="insight" role="note" aria-label="Biggest dating pattern">
+        <div class="label">Biggest Dating Pattern This Year</div>
+        <div id="insightLine" class="line">Loading…</div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions" aria-label="Actions">
+        <button id="btnRoastAgain" class="primary" type="button">Roast Again</button>
+        <button id="btnShare" class="secondary" type="button">Share This</button>
+
+        <div class="toneRow" aria-label="Tone selector">
+          <div class="label">Tone</div>
+          <select id="toneSelect">
+            <option value="playful" selected>Playful</option>
+            <option value="sharp">Sharp</option>
+          </select>
+        </div>
+
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="micro">
+        <div class="left">If you’re mad, take it up with your playlists.</div>
+        <div class="right">🚩 VERIFIED</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    /******************************************************************
+     * 1) JOKES CSV (V1)
+     * Replace this later with a fetch() to a hosted CSV if you want.
+     ******************************************************************/
+    const JOKES_CSV = `parameter,bucket,tone,priority,joke_text,notes
+obscurity,mainstream,playful,2,"Says ‘I just like good music’ and lets Spotify handle the rest.",""
+obscurity,mainstream,playful,2,"Claims they don’t follow trends. Quietly follows all of them.",""
+obscurity,mainstream,playful,3,"Comfortable taste. Low emotional risk.",""
+obscurity,mainstream,playful,3,"Prefers familiarity over surprise.",""
+obscurity,mainstream,playful,3,"Trusts charts more than instincts.",""
+obscurity,mainstream,playful,3,"Lets popularity do the filtering.",""
+obscurity,mainstream,playful,3,"Avoids musical friction.",""
+obscurity,mainstream,playful,3,"Believes good taste should be easy.",""
+obscurity,taste_curious,playful,2,"Likes popular music but wants credit for finding it early.",""
+obscurity,taste_curious,playful,2,"Balances discovery with vibes. Hates being called predictable.",""
+obscurity,taste_curious,playful,3,"Dabbles in niche. Retreats to hits.",""
+obscurity,taste_curious,playful,3,"Explores just enough to feel interesting.",""
+obscurity,taste_curious,playful,3,"Samples the underground. Lives upstairs.",""
+obscurity,taste_curious,playful,3,"Wants novelty with a safety net.",""
+obscurity,taste_curious,playful,3,"Curates discovery carefully.",""
+obscurity,taste_curious,playful,3,"Enjoys being adjacent to obscure.",""
+obscurity,deep_cut,sharp,1,"Gatekeeps artists they found by accident.","strong"
+obscurity,deep_cut,playful,2,"Mentions obscurity unprompted.",""
+obscurity,deep_cut,playful,2,"Treats low listener counts like credentials.",""
+obscurity,deep_cut,playful,3,"Has said ‘you probably haven’t heard of them’ at least once.",""
+obscurity,deep_cut,playful,3,"Feels rewarded for digging.",""
+obscurity,deep_cut,playful,3,"Measures taste in scarcity.",""
+obscurity,deep_cut,playful,3,"Suspicious of anything popular.",""
+obscurity,deep_cut,playful,3,"Finds identity in discovery.",""
+genre_breadth,single_lane,playful,1,"Knows what they like. Will not try your restaurant.",""
+genre_breadth,single_lane,playful,2,"Consistency over curiosity.",""
+genre_breadth,single_lane,playful,2,"Emotionally monogamous… musically.",""
+genre_breadth,single_lane,playful,3,"Prefers depth over range.",""
+genre_breadth,single_lane,playful,3,"Builds routines around familiarity.",""
+genre_breadth,single_lane,playful,3,"Stays in their lane comfortably.",""
+genre_breadth,single_lane,playful,3,"Avoids genre whiplash.",""
+genre_breadth,single_lane,playful,3,"Commits early and sticks.",""
+genre_breadth,selective_explorer,playful,2,"Open-minded within carefully controlled limits.",""
+genre_breadth,selective_explorer,playful,2,"Tries new things once. Returns to comfort.",""
+genre_breadth,selective_explorer,playful,3,"Adventurous on weekends only.",""
+genre_breadth,selective_explorer,playful,3,"Explores with guardrails.",""
+genre_breadth,selective_explorer,playful,3,"Samples widely, settles narrowly.",""
+genre_breadth,selective_explorer,playful,3,"Balances novelty with stability.",""
+genre_breadth,selective_explorer,playful,3,"Keeps taste curated.",""
+genre_breadth,omnivore,playful,1,"Open to everything. Commits to nothing.",""
+genre_breadth,omnivore,playful,2,"Eclectic taste, indecisive energy.",""
+genre_breadth,omnivore,playful,2,"Collects genres like options.",""
+genre_breadth,omnivore,playful,3,"Variety-first mindset.",""
+genre_breadth,omnivore,playful,3,"Refuses to be boxed in.",""
+genre_breadth,omnivore,playful,3,"Enjoys contrast more than cohesion.",""
+genre_breadth,omnivore,playful,3,"Thrives on switching vibes.",""
+genre_breadth,omnivore,playful,3,"Says ‘it depends’ a lot.",""
+repetition,comfort_looper,playful,2,"Finds one feeling and stays there.",""
+repetition,comfort_looper,playful,2,"Emotionally loyal. Possibly stuck.",""
+repetition,comfort_looper,playful,2,"Uses repetition as self-soothing.",""
+repetition,comfort_looper,playful,3,"Returns to familiar emotions.",""
+repetition,comfort_looper,playful,3,"Prefers known outcomes.",""
+repetition,comfort_looper,playful,3,"Finds safety in replay.",""
+repetition,comfort_looper,playful,3,"Settles into moods deeply.",""
+repetition,comfort_looper,playful,3,"Builds emotional routines.",""
+repetition,situational_repeater,playful,2,"Replays songs to match the moment.",""
+repetition,situational_repeater,playful,2,"Associates music with people.",""
+repetition,situational_repeater,playful,3,"Has ‘that song’ for every phase.",""
+repetition,situational_repeater,playful,3,"Uses music as memory glue.",""
+repetition,situational_repeater,playful,3,"Marks time with tracks.",""
+repetition,situational_repeater,playful,3,"Emotionally contextual.",""
+repetition,stuck,sharp,1,"Has not emotionally moved on from something.","opener"
+repetition,stuck,sharp,1,"Still processing something old.",""
+repetition,stuck,playful,2,"Calls it healing. It’s looping.",""
+repetition,stuck,playful,2,"Revisits feelings instead of resolving them.",""
+repetition,stuck,playful,3,"Emotionally paused.",""
+repetition,stuck,playful,3,"Lives in replay mode.",""
+repetition,stuck,playful,3,"Finds comfort in unfinished feelings.",""
+repetition,stuck,playful,3,"Cycles emotionally.",""
+time_of_day,late_night,playful,1,"Processes feelings when no one can respond.",""
+time_of_day,late_night,playful,2,"Emotionally awake after 10pm.",""
+time_of_day,late_night,playful,2,"Does their best thinking at night.",""
+time_of_day,late_night,playful,3,"Reflects when the world is quiet.",""
+time_of_day,late_night,playful,3,"Late-night introspection specialist.",""
+time_of_day,late_night,playful,3,"Prefers solitude with sound.",""
+time_of_day,late_night,playful,3,"Feels most honest after dark.",""
+time_of_day,late_night,playful,3,"Avoids daytime processing.",""
+valence,sad_banger,playful,1,"Feels deeply. Avoids confrontation.",""
+valence,sad_banger,playful,2,"Romanticizes feelings instead of addressing them.",""
+valence,sad_banger,playful,2,"Finds beauty in melancholy.",""
+valence,sad_banger,playful,3,"Leans into emotional weight.",""
+valence,sad_banger,playful,3,"Processes life through sad songs.",""
+valence,sad_banger,playful,3,"Prefers emotional resonance.",""
+valence,sad_banger,playful,3,"Lives comfortably in the feels.",""
+valence,sad_banger,playful,3,"Uses sadness as texture.",""
+energy,high,sharp,1,"Fun. Exhausting.",""
+energy,high,playful,2,"Arrives loud. Leaves louder.",""
+energy,high,playful,2,"Brings intensity everywhere.",""
+energy,high,playful,3,"Operates at full volume.",""
+energy,high,playful,3,"Thrives on momentum.",""
+energy,high,playful,3,"Keeps energy high.",""
+energy,high,playful,3,"Doesn’t do subtle.",""
+energy,high,playful,3,"Hard to ignore.",""
+exploration,comfort_first,playful,2,"Stays where it’s safe.",""
+exploration,comfort_first,playful,2,"Values familiarity over growth.",""
+exploration,comfort_first,playful,3,"Avoids unnecessary risk.",""
+exploration,comfort_first,playful,3,"Prefers known outcomes.",""
+exploration,comfort_first,playful,3,"Builds loyalty quickly.",""
+exploration,comfort_first,playful,3,"Chooses reliability.",""
+exploration,comfort_first,playful,3,"Sticks to proven paths.",""
+exploration,comfort_first,playful,3,"Comfort-driven decisions.",""
+playlist_naming,emotional,playful,1,"Names feelings instead of discussing them.",""
+playlist_naming,emotional,playful,2,"Processes emotions via playlists.",""
+playlist_naming,emotional,playful,2,"Uses titles as emotional shorthand.",""
+playlist_naming,emotional,playful,3,"Labels moods carefully.",""
+playlist_naming,emotional,playful,3,"Organizes feelings by vibe.",""
+playlist_naming,emotional,playful,3,"Curates emotional states.",""
+playlist_naming,emotional,playful,3,"Expresses indirectly.",""
+playlist_naming,emotional,playful,3,"Communicates through playlists.",""
+popularity_contradiction,contradiction,sharp,1,"Gatekeeps music. Dates broadly.",""
+popularity_contradiction,contradiction,playful,2,"Unique taste. Familiar patterns.",""
+popularity_contradiction,contradiction,playful,2,"Curates uniqueness carefully.",""
+popularity_contradiction,contradiction,playful,3,"Balances identity and appeal.",""
+popularity_contradiction,contradiction,playful,3,"Switches cultural modes easily.",""
+popularity_contradiction,contradiction,playful,3,"Adapts taste socially.",""
+popularity_contradiction,contradiction,playful,3,"Context-aware listening.",""
+popularity_contradiction,contradiction,playful,3,"Flexible self-presentation.",""
+main_character,full_montage,playful,1,"Lives like a montage.","headline"
+main_character,full_montage,playful,2,"Needs an audience.",""
+main_character,full_montage,playful,2,"Frames life cinematically.",""
+main_character,full_montage,playful,3,"Sees moments as scenes.",""
+main_character,full_montage,playful,3,"Leans into the spotlight.",""
+main_character,full_montage,playful,3,"Narrates internally.",""
+main_character,full_montage,playful,3,"Romanticizes experiences.",""
+main_character,full_montage,playful,3,"Treats life like a highlight reel.",""
+combo,sad_late_repeat,playful,1,"Processes feelings privately and repeatedly.","combo"
+combo,deepcut_main_character,sharp,1,"Wants attention without being mainstream.","combo"
+combo,high_energy_comfort,playful,1,"Intense but emotionally routine.","combo"
+combo,omnivore_novelty,playful,1,"Loves options. Hates decisions.","combo"
+combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","combo"
+`;
+
+    /******************************************************************
+     * 2) CSV PARSER (simple, robust enough for our data)
+     ******************************************************************/
+    function parseCSV(csvText) {
+      const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
+      const header = splitCSVLine(lines[0]).map(h => h.trim());
+      const rows = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const cols = splitCSVLine(lines[i]);
+        const obj = {};
+        header.forEach((h, idx) => obj[h] = (cols[idx] ?? "").trim());
+        // normalize
+        obj.priority = Number(obj.priority || 3);
+        rows.push(obj);
+      }
+      return rows;
+    }
+
+    // Handles commas inside quotes.
+    function splitCSVLine(line) {
+      const out = [];
+      let cur = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"' ) {
+          // double quote escape
+          if (inQuotes && line[i+1] === '"') { cur += '"'; i++; }
+          else inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          out.push(cur);
+          cur = "";
+        } else {
+          cur += ch;
+        }
+      }
+      out.push(cur);
+      return out;
+    }
+
+    /******************************************************************
+     * 3) MOCK USER BUCKETS (replace later with Spotify-derived buckets)
+     ******************************************************************/
+    function getMockUserBuckets() {
+      // Pick buckets that exist in your CSV.
+      const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+      return {
+        obscurity: pick(["mainstream", "taste_curious", "deep_cut"]),
+        genre_breadth: pick(["single_lane", "selective_explorer", "omnivore"]),
+        repetition: pick(["comfort_looper", "situational_repeater", "stuck"]),
+        time_of_day: "late_night", // you only loaded late_night in V1 (fine)
+        valence: "sad_banger",     // you only loaded sad_banger in V1 (fine)
+        energy: "high",            // you only loaded high in V1 (fine)
+        exploration: "comfort_first",
+        playlist_naming: "emotional",
+        popularity_contradiction: "contradiction",
+        main_character: "full_montage"
+      };
+    }
+
+    /******************************************************************
+     * 4) JOKE SELECTION + ORDERING (based on your pseudocode)
+     ******************************************************************/
+    const PARAMETER_RANK = [
+      "repetition",
+      "obscurity",
+      "popularity_contradiction",
+      "playlist_naming",
+      "time_of_day",
+      "valence",
+      "energy",
+      "exploration",
+      "genre_breadth",
+      "main_character"
+    ];
+
+    const COMBO_RULES = [
+      { id: "sad_late_repeat", matches: (b) => b.valence === "sad_banger" && b.time_of_day === "late_night" && b.repetition === "stuck" },
+      { id: "deepcut_main_character", matches: (b) => b.obscurity === "deep_cut" && (b.main_character === "full_montage" || b.main_character === "situational") },
+      { id: "high_energy_comfort", matches: (b) => b.energy === "high" && b.exploration === "comfort_first" },
+      { id: "omnivore_novelty", matches: (b) => b.genre_breadth === "omnivore" && b.exploration === "novelty" },
+      { id: "mainstream_emotional", matches: (b) => b.obscurity === "mainstream" && b.playlist_naming === "emotional" }
+    ];
+
+    function generateRoast(userBuckets, jokesTable, selectedTone) {
+      const MAX_FLAGS = 7;
+      const MIN_FLAGS = 5;
+      const INCLUDE_COMBO_PROB = 0.60;
+
+      // Filter non-combo by tone policy
+      let eligible = jokesTable.filter(r => r.parameter !== "combo");
+      if (selectedTone === "playful") {
+        eligible = eligible.filter(r => r.tone === "playful");
+      } else if (selectedTone === "sharp") {
+        eligible = eligible.filter(r => (r.tone === "sharp" || r.tone === "playful"));
+      }
+
+      const usedText = new Set();
+      const picked = [];
+
+      // One per parameter, best priority bucket, random within it
+      for (const param of PARAMETER_RANK) {
+        const bucket = userBuckets[param];
+        if (!bucket) continue;
+
+        let candidates = eligible.filter(r => r.parameter === param && r.bucket === bucket)
+          .filter(r => !usedText.has(r.joke_text));
+
+        if (!candidates.length) continue;
+
+        const p1 = candidates.filter(r => r.priority === 1);
+        const p2 = candidates.filter(r => r.priority === 2);
+        const p3 = candidates.filter(r => r.priority === 3);
+
+        let pool = p1.length ? p1 : (p2.length ? p2 : p3);
+        pool = pool.filter(r => !usedText.has(r.joke_text));
+        if (!pool.length) continue;
+
+        const chosen = randomChoice(pool);
+        picked.push(chosen);
+        usedText.add(chosen.joke_text);
+
+        if (picked.length >= MAX_FLAGS) break;
+      }
+
+      // Backfill if too few
+      if (picked.length < MIN_FLAGS) {
+        for (const param of PARAMETER_RANK) {
+          if (picked.length >= MIN_FLAGS) break;
+          const bucket = userBuckets[param];
+          if (!bucket) continue;
+
+          const fillCandidates = eligible
+            .filter(r => r.parameter === param && r.bucket === bucket)
+            .filter(r => !usedText.has(r.joke_text))
+            .sort((a,b) => a.priority - b.priority);
+
+          if (!fillCandidates.length) continue;
+          const fill = fillCandidates[0];
+          picked.push(fill);
+          usedText.add(fill.joke_text);
+        }
+      }
+
+      // Combo (optional)
+      let combo = null;
+      if (Math.random() < INCLUDE_COMBO_PROB) {
+        combo = pickComboJoke(userBuckets, jokesTable, usedText, selectedTone);
+      }
+
+      // Order: opener (priority 1 if possible), then middle, then closer (combo or shortest)
+      picked.sort((a,b) => a.priority - b.priority);
+
+      const opener = removeFirstMatch(picked, r => r.priority === 1) || picked.shift() || null;
+
+      let closer = null;
+      if (combo) closer = combo;
+      else closer = removeShortest(picked) || null;
+
+      let middle = stableShuffleByPriority(picked);
+
+      // Assemble: opener + middle, then closer
+      const ordered = [];
+      if (opener) ordered.push(opener);
+      for (const m of middle) {
+        if (ordered.length >= MAX_FLAGS) break;
+        ordered.push(m);
+      }
+      if (closer && !ordered.some(r => r.joke_text === closer.joke_text) && ordered.length < MAX_FLAGS) {
+        ordered.push(closer);
+      }
+
+      // Decide insight line:
+      // Prefer combo if exists; else use the last line as "pattern" (works fine for V1)
+      const insight = combo ? combo.joke_text : (ordered[ordered.length - 1]?.joke_text || "Not enough data. Still a red flag.");
+
+      return { ordered, insight };
+    }
+
+    function pickComboJoke(userBuckets, jokesTable, usedText, selectedTone) {
+      let combos = jokesTable.filter(r => r.parameter === "combo");
+
+      if (selectedTone === "playful") combos = combos.filter(r => r.tone === "playful");
+      else if (selectedTone === "sharp") combos = combos.filter(r => (r.tone === "sharp" || r.tone === "playful"));
+
+      const applicable = [];
+      for (const rule of COMBO_RULES) {
+        if (rule.matches(userBuckets)) {
+          const row = combos.find(r => r.bucket === rule.id);
+          if (row && !usedText.has(row.joke_text)) applicable.push(row);
+        }
+      }
+      if (!applicable.length) return null;
+      applicable.sort((a,b) => a.priority - b.priority);
+      return randomChoice(applicable);
+    }
+
+    function randomChoice(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function removeFirstMatch(arr, predicate) {
+      for (let i = 0; i < arr.length; i++) {
+        if (predicate(arr[i])) return arr.splice(i, 1)[0];
+      }
+      return null;
+    }
+
+    function removeShortest(arr) {
+      if (!arr.length) return null;
+      let idx = 0;
+      for (let i = 1; i < arr.length; i++) {
+        if ((arr[i].joke_text || "").length < (arr[idx].joke_text || "").length) idx = i;
+      }
+      return arr.splice(idx, 1)[0];
+    }
+
+    function stableShuffleByPriority(arr) {
+      const p1 = arr.filter(x => x.priority === 1);
+      const p2 = arr.filter(x => x.priority === 2);
+      const p3 = arr.filter(x => x.priority === 3);
+      shuffleInPlace(p1); shuffleInPlace(p2); shuffleInPlace(p3);
+      return [...p1, ...p2, ...p3];
+    }
+
+    function shuffleInPlace(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+    }
+
+    /******************************************************************
+     * 5) RENDER + PACING
+     ******************************************************************/
+    const openerPanel = document.getElementById("openerPanel");
+    const openerText = document.getElementById("openerText");
+    const flagsList = document.getElementById("flagsList");
+    const insightLine = document.getElementById("insightLine");
+    const btnRoastAgain = document.getElementById("btnRoastAgain");
+    const btnShare = document.getElementById("btnShare");
+    const toneSelect = document.getElementById("toneSelect");
+    const toast = document.getElementById("toast");
+    const ruleEl = document.getElementById("rule");
+    const insightBox = document.getElementById("insightBox");
+
+    let jokesTable = parseCSV(JOKES_CSV);
+    let lastResult = null;
+
+    function clearResults() {
+      flagsList.innerHTML = "";
+      // Hide everything except opener panel for pacing
+      ruleEl.classList.add("hidden");
+      flagsList.classList.add("hidden");
+      insightBox.classList.add("hidden");
+      toast.style.display = "none";
+      toast.textContent = "";
+    }
+
+    async function renderRoast() {
+      clearResults();
+
+      const selectedTone = toneSelect.value;
+      const userBuckets = getMockUserBuckets(); // <-- swap later with real buckets
+      const { ordered, insight } = generateRoast(userBuckets, jokesTable, selectedTone);
+
+      lastResult = { ordered, insight, tone: selectedTone };
+
+      // Opener is first item
+      const opener = ordered[0]?.joke_text || "🚩 Data unavailable. Still suspicious.";
+      openerText.innerHTML = `<span class="flag">🚩</span>${escapeHTML(opener)}`;
+      openerPanel.classList.remove("fadeIn");
+      void openerPanel.offsetWidth; // reflow to restart animation
+      openerPanel.classList.add("fadeIn");
+
+      // Hold opener alone
+      await sleep(720);
+
+      // Reveal divider + list container
+      ruleEl.classList.remove("hidden");
+      flagsList.classList.remove("hidden");
+
+      // Build remaining list items (excluding opener)
+      const rest = ordered.slice(1);
+      // Cap list display so colors don’t become chaos
+      // (opener + up to 6 more = 7 total already)
+      rest.forEach(() => {}); // no-op; just clarity
+
+      for (let i = 0; i < rest.length; i++) {
+        const li = document.createElement("li");
+        li.className = "fadeIn";
+        li.innerHTML = `<span class="flag">🚩</span>${escapeHTML(rest[i].joke_text)}`;
+        flagsList.appendChild(li);
+        await sleep(220);
+      }
+
+      // Reveal insight (closer)
+      insightLine.textContent = insight;
+      insightBox.classList.remove("hidden");
+      insightBox.classList.remove("fadeIn");
+      void insightBox.offsetWidth;
+      insightBox.classList.add("fadeIn");
+    }
+
+    function sleep(ms) {
+      return new Promise(res => setTimeout(res, ms));
+    }
+
+    function escapeHTML(str) {
+      return String(str)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    /******************************************************************
+     * 6) SHARE (clipboard)
+     ******************************************************************/
+    async function shareRoast() {
+      if (!lastResult) return;
+
+      const lines = lastResult.ordered.map(r => `🚩 ${r.joke_text}`);
+      const shareText =
+`Your Spotify Dating Red Flags 🚩
+Tone: ${lastResult.tone}
+
+${lines.join("\n")}
+
+Biggest Dating Pattern This Year:
+${lastResult.insight}
+
+(Not serious. Very specific.)`;
+
+      try {
+        await navigator.clipboard.writeText(shareText);
+        showToast("Copied to clipboard. Paste it anywhere.");
+      } catch (e) {
+        // Fallback: prompt
+        window.prompt("Copy this:", shareText);
+      }
+    }
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.style.display = "block";
+      toast.classList.remove("fadeIn");
+      void toast.offsetWidth;
+      toast.classList.add("fadeIn");
+    }
+
+    /******************************************************************
+     * 7) EVENTS
+     ******************************************************************/
+    btnRoastAgain.addEventListener("click", () => renderRoast());
+    btnShare.addEventListener("click", () => shareRoast());
+    toneSelect.addEventListener("change", () => renderRoast());
+
+    // Initial run
+    renderRoast();
+  </script>
+</body>
+</html>
