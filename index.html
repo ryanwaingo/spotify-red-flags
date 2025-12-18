@@ -411,9 +411,10 @@
      ***********************/
     const SPOTIFY_CLIENT_ID = "ad08cfcd496348e299ba9a840227954d";
     const REDIRECT_URI = window.location.origin + window.location.pathname; // GitHub Pages URL
-    const SCOPES = [
-      "user-top-read"
-    ];
+    cconst SCOPES = [
+  "user-top-read",
+  "user-read-recently-played"
+];
 
     /******************************************************************
      * 1) YOUR JOKES CSV (already formatted for the parser)
@@ -645,56 +646,89 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
     }
 
     async function fetchProfileBuckets(token) {
-      // Top tracks short + medium term
-      const short = await spotifyGet(token, "/me/top/tracks?time_range=short_term&limit=25");
-      const medium = await spotifyGet(token, "/me/top/tracks?time_range=medium_term&limit=25");
-      const tracks = [...short.items, ...medium.items].filter(Boolean);
+    async function fetchProfileBuckets(token) {
+  // 1) Recently played (behavior-based signals)
+  const recent = await spotifyGet(token, "/me/player/recently-played?limit=50");
+  const items = recent.items || [];
 
-      const trackIds = Array.from(new Set(tracks.map(t => t.id).filter(Boolean))).slice(0, 50);
-      // Audio features max 100 per request; we're under 50
-      const feats = await spotifyGet(token, "/audio-features?ids=" + trackIds.join(","));
-      const featureMap = new Map((feats.audio_features || []).filter(Boolean).map(f => [f.id, f]));
+  const trackCounts = new Map();
+  const hourCounts = new Array(24).fill(0);
 
-      // Compute averages
-      const energies = [];
-      const valences = [];
-      for (const id of trackIds) {
-        const f = featureMap.get(id);
-        if (!f) continue;
-        if (typeof f.energy === "number") energies.push(f.energy);
-        if (typeof f.valence === "number") valences.push(f.valence);
-      }
+  for (const it of items) {
+    const t = it.track;
+    if (!t || !t.id) continue;
 
-      const avg = (arr) => arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : null;
-      const avgEnergy = avg(energies);
-      const avgValence = avg(valences);
+    trackCounts.set(t.id, (trackCounts.get(t.id) || 0) + 1);
 
-      // V1 bucket mapping (kept simple ON PURPOSE)
-      // NOTE: Your current joke CSV only has some buckets. We map into buckets you actually have.
-      const buckets = {
-        // crude proxies until you expand buckets/jokes:
-        energy: "high",
-        valence: "sad_banger",
-        time_of_day: "late_night",
-        repetition: "stuck",
-        playlist_naming: "emotional",
-        exploration: "comfort_first",
-        popularity_contradiction: "contradiction",
-        main_character: "full_montage",
-        genre_breadth: "omnivore",
-        obscurity: "taste_curious"
-      };
+    const playedAt = new Date(it.played_at);
+    const hr = playedAt.getHours();
+    if (!Number.isNaN(hr)) hourCounts[hr]++;
+  }
 
-      // Let data nudge a few (still constrained by your existing buckets)
-      if (avgEnergy !== null && avgEnergy > 0.72) buckets.energy = "high";
-      if (avgValence !== null && avgValence < 0.45) buckets.valence = "sad_banger";
+  // Time-of-day bucket (mapped to what your jokes support)
+  const peakHour = hourCounts.reduce((best, v, i) => v > hourCounts[best] ? i : best, 0);
+  const time_of_day = "late_night"; // keep stable until you add more joke buckets
 
-      // Simple “obscurity-ish” proxy using popularity if present on artists (not perfect)
-      // We'll improve this later when you fetch top artists + popularity.
-      // For now keep it stable.
+  // Repetition bucket
+  const counts = Array.from(trackCounts.values());
+  const maxRepeat = counts.length ? Math.max(...counts) : 1;
+  let repetition = "situational_repeater";
+  if (maxRepeat >= 4) repetition = "stuck";
+  else if (maxRepeat >= 2) repetition = "comfort_looper";
 
-      return { buckets, debug: { avgEnergy, avgValence, trackCount: tracks.length } };
+  // 2) Top tracks → artist popularity → obscurity
+  const top = await spotifyGet(token, "/me/top/tracks?time_range=medium_term&limit=25");
+  const tracks = top.items || [];
+
+  const artistIds = [];
+  for (const tr of tracks) {
+    for (const a of (tr.artists || [])) {
+      if (a && a.id) artistIds.push(a.id);
     }
+  }
+
+  const uniqueArtistIds = Array.from(new Set(artistIds)).slice(0, 50);
+  let obscurity = "taste_curious";
+
+  if (uniqueArtistIds.length) {
+    const artists = await spotifyGet(token, "/artists?ids=" + uniqueArtistIds.join(","));
+    const pops = (artists.artists || [])
+      .map(a => a?.popularity)
+      .filter(v => typeof v === "number");
+
+    const avgPop = pops.length ? pops.reduce((a,b)=>a+b,0) / pops.length : 50;
+
+    if (avgPop >= 65) obscurity = "mainstream";
+    else if (avgPop >= 40) obscurity = "taste_curious";
+    else obscurity = "deep_cut";
+  }
+
+  // Buckets you already have jokes for
+  const buckets = {
+    repetition,
+    time_of_day,
+    obscurity,
+
+    valence: "sad_banger",
+    energy: "high",
+    exploration: "comfort_first",
+    playlist_naming: "emotional",
+    popularity_contradiction: "contradiction",
+    main_character: "full_montage",
+    genre_breadth: "omnivore"
+  };
+
+  return {
+    buckets,
+    debug: {
+      recentPlays: items.length,
+      maxRepeat,
+      peakHour,
+      obscurity
+    }
+  };
+}
+
 
     /******************************************************************
      * 6) ROAST ENGINE (same as before, trimmed)
