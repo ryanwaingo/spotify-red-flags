@@ -222,9 +222,18 @@
     .list li:nth-child(4){ background: var(--purple); color: #fff; }
     .list li:nth-child(5){ background: var(--pink); color: var(--ink); }
     .list li:nth-child(6){ background: var(--yellow); }
-    .list li:nth-child(7){ background: var(--green); color: var(--ink); }
+.list li:nth-child(7){ background: var(--green); color: var(--ink); }
 
-    /* Role-based colors (override nth-child chaos) */
+/* Evidence line */
+.because{
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.25;
+  opacity: 0.9;
+}
+
+/* Role-based colors (override nth-child chaos) */
 .list li.role-core { background: var(--yellow) !important; color: var(--ink) !important; }
 .list li.role-core.alt { background: var(--green) !important; color: var(--ink) !important; }
 .list li.role-close { background: var(--pink) !important; color: var(--ink) !important; }
@@ -661,38 +670,82 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
 }
 
 
-    async function fetchProfileBuckets(token) {
-   
+  async function fetchProfileBuckets(token) {
+
   // 1) Recently played (behavior-based signals)
   const recent = await spotifyGet(token, "/me/player/recently-played?limit=50");
   const items = recent.items || [];
 
-  const trackCounts = new Map();
+  const trackCounts = new Map(); // trackId -> count
+  const trackMeta = new Map();   // trackId -> { name, artists }
   const hourCounts = new Array(24).fill(0);
 
   for (const it of items) {
     const t = it.track;
     if (!t || !t.id) continue;
 
+    // counts
     trackCounts.set(t.id, (trackCounts.get(t.id) || 0) + 1);
 
+    // metadata for receipts
+    if (!trackMeta.has(t.id)) {
+      const artistNames = (t.artists || []).map(a => a?.name).filter(Boolean).join(", ");
+      trackMeta.set(t.id, { name: t.name || "Unknown track", artists: artistNames || "Unknown artist" });
+    }
+
+    // time-of-day (we’ll use later; keep collecting now)
     const playedAt = new Date(it.played_at);
     const hr = playedAt.getHours();
     if (!Number.isNaN(hr)) hourCounts[hr]++;
   }
 
-  // Time-of-day bucket (mapped to what your jokes support)
+  // ----------------------------
+  // Repetition bucket + receipts
+  // ----------------------------
+  const counts = Array.from(trackCounts.values());
+  const recentPlaysCount = items.length;
+
+  // Only create a repetition bucket if we have enough plays to justify it.
+  // Otherwise: no repetition-based flags should appear.
+  let repetition = null;
+
+  let maxRepeat = 0;
+  let topTrackId = null;
+
+  if (counts.length) {
+    maxRepeat = Math.max(...counts);
+    // find which track hit maxRepeat
+    for (const [id, c] of trackCounts.entries()) {
+      if (c === maxRepeat) { topTrackId = id; break; }
+    }
+  }
+
+  // Bucket mapping (must match your existing jokes buckets)
+  // jokes exist for: repetition=stuck (priority 1 sharp opener)
+  if (recentPlaysCount >= 15 && maxRepeat >= 4) repetition = "stuck";
+  // If you add jokes later for comfort_looper etc, you can enable these:
+  // else if (recentPlaysCount >= 15 && maxRepeat >= 2) repetition = "comfort_looper";
+  // else if (recentPlaysCount >= 15) repetition = "situational_repeater";
+
+  // Evidence for “because…” line (only for repetition in this step)
+  const topMeta = topTrackId ? (trackMeta.get(topTrackId) || {}) : {};
+  const repetitionEvidence = (repetition && topTrackId)
+    ? {
+        recentPlaysCount,
+        maxRepeat,
+        topTrack: `${topMeta.name || "Unknown track"} — ${topMeta.artists || "Unknown artist"}`
+      }
+    : null;
+
+  // ----------------------------
+  // Time-of-day bucket (leave stable for now)
+  // ----------------------------
   const peakHour = hourCounts.reduce((best, v, i) => v > hourCounts[best] ? i : best, 0);
   const time_of_day = "late_night"; // keep stable until you add more joke buckets
 
-  // Repetition bucket
-  const counts = Array.from(trackCounts.values());
-  const maxRepeat = counts.length ? Math.max(...counts) : 1;
-  let repetition = "situational_repeater";
-  if (maxRepeat >= 4) repetition = "stuck";
-  else if (maxRepeat >= 2) repetition = "comfort_looper";
-
-  // 2) Top tracks → artist popularity → obscurity
+  // ----------------------------
+  // Obscurity bucket (already real)
+  // ----------------------------
   const top = await spotifyGet(token, "/me/top/tracks?time_range=medium_term&limit=25");
   const tracks = top.items || [];
 
@@ -721,10 +774,11 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
 
   // Buckets you already have jokes for
   const buckets = {
-    repetition,
+    repetition,   // NOTE: can be null now (prevents fake repetition flags)
     time_of_day,
     obscurity,
 
+    // Still hardcoded — we are NOT touching these in this step
     valence: "sad_banger",
     energy: "high",
     exploration: "comfort_first",
@@ -736,6 +790,9 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
 
   return {
     buckets,
+    evidence: {
+      repetition: repetitionEvidence
+    },
     debug: {
       recentPlays: items.length,
       maxRepeat,
@@ -744,6 +801,7 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
     }
   };
 }
+
 
 
     /******************************************************************
@@ -890,6 +948,21 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
 
     let lastResult = null;
     let lastBuckets = null;
+    let lastEvidence = null;
+
+
+function buildBecauseLine(jokeRow, evidence){
+  if (!jokeRow || !evidence) return "";
+
+  // Repetition only (for this step)
+  if (jokeRow.parameter === "repetition" && evidence.repetition) {
+    const e = evidence.repetition;
+    return `because you played “${e.topTrack}” ${e.maxRepeat}× in your last ${e.recentPlaysCount} plays`;
+  }
+
+  return "";
+}
+
 
     function insightFromBuckets(b, usedParams = new Set()) {
 
@@ -937,7 +1010,8 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
 }
 
 
-    async function renderRoastFromBuckets(buckets){
+    async function renderRoastFromBuckets(buckets, evidence){
+
       clearResults();
       const tone = toneSelect.value;
       const { ordered, insight } = generateRoast(buckets, tone);
@@ -946,7 +1020,12 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
 
       // opener alone
       const opener = ordered[0]?.joke_text || "Data unavailable. Still suspicious.";
-      openerText.innerHTML = `<span class="flag">🚩</span>${escapeHTML(opener)}`;
+      const openerRow = ordered[0] || null;
+const openerBecause = buildBecauseLine(openerRow, evidence);
+openerText.innerHTML =
+  `<span class="flag">🚩</span>${escapeHTML(opener)}${
+    openerBecause ? `<div class="because">${escapeHTML(openerBecause)}</div>` : ""
+  }`;
       await sleep(720);
 
       ruleEl.classList.remove("hidden");
@@ -966,7 +1045,12 @@ for (let i=0;i<rest.length;i++){
     if (i % 2 === 1) li.classList.add("alt");
   }
 
-  li.innerHTML = `<span class="flag">🚩</span>${escapeHTML(rest[i].joke_text)}`;
+const because = buildBecauseLine(rest[i], evidence);
+li.innerHTML =
+  `<span class="flag">🚩</span>${escapeHTML(rest[i].joke_text)}${
+    because ? `<div class="because">${escapeHTML(because)}</div>` : ""
+  }`;
+
   flagsList.appendChild(li);
   await sleep(220);
 }
@@ -1041,10 +1125,13 @@ ${lines.join("\n")}
         try{
           btnLogout.classList.remove("hidden");
           switchToResults();
-          const { buckets, debug } = await fetchProfileBuckets(token);
+          const { buckets, evidence, debug } = await fetchProfileBuckets(token);
+lastEvidence = evidence;
+
           document.getElementById("resultsSubtitle").textContent =
             `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
-          await renderRoastFromBuckets(buckets);
+          await renderRoastFromBuckets(buckets, lastEvidence);
+
         }catch(e){
           console.error(e);
           showToast(toast, "Spotify error: " + (e?.message || "Unknown"));
@@ -1061,9 +1148,10 @@ ${lines.join("\n")}
     btnLogin.addEventListener("click", loginSpotify);
     btnLogout.addEventListener("click", logout);
     btnLogout2.addEventListener("click", logout);
-    btnRoastAgain.addEventListener("click", () => lastBuckets && renderRoastFromBuckets(lastBuckets));
+    btnRoastAgain.addEventListener("click", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
     btnShare.addEventListener("click", shareRoast);
-    toneSelect.addEventListener("change", () => lastBuckets && renderRoastFromBuckets(lastBuckets));
+    toneSelect.addEventListener("change", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
+
 
     boot();
   </script>
