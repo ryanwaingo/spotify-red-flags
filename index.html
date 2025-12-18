@@ -1177,6 +1177,8 @@ ${lines.join("\n")}
           switchToResults();
           const { buckets, evidence, debug } = await fetchProfileBuckets(token);
 lastEvidence = evidence;
+showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
+
 
           document.getElementById("resultsSubtitle").textContent =
             `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
@@ -1204,10 +1206,12 @@ lastEvidence = evidence;
 
   try {
     const { buckets, evidence, debug } = await fetchProfileBuckets(token);
-    lastEvidence = evidence;
-    document.getElementById("resultsSubtitle").textContent =
-      `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
-    await renderRoastFromBuckets(buckets, lastEvidence);
+lastEvidence = evidence;
+showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
+document.getElementById("resultsSubtitle").textContent =
+  `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
+await renderRoastFromBuckets(buckets, lastEvidence);
+
   } catch (e) {
     console.error(e);
     showToast(toast2, "Spotify error: " + (e?.message || "Unknown"));
