@@ -884,8 +884,7 @@ return { ordered, insight };
     let lastBuckets = null;
 
     function insightFromBuckets(b) {
-  // Pick 1 strong pattern line. This is NOT pulled from any single flag joke text.
-  // Order matters: more “diagnostic” patterns first.
+  // Combo patterns (feel “smart”)
   if (b.repetition === "stuck" && b.time_of_day === "late_night") {
     return "Late-night loop pattern: processing privately, repeatedly.";
   }
@@ -896,17 +895,17 @@ return { ordered, insight };
     return "Craves variety, defaults to safety.";
   }
 
-  // Single-bucket fallbacks
-  if (b.repetition === "stuck") return "Unfinished business energy. Still in replay mode.";
-  if (b.repetition === "comfort_looper") return "Comfort-first pattern: repeats feelings to stay regulated.";
-  if (b.obscurity === "mainstream") return "Low-risk taste pattern: accessible, familiar, predictable.";
-  if (b.obscurity === "deep_cut") return "Identity-through-discovery pattern: taste as personality.";
+  // Single patterns (still not copies of jokes)
+  if (b.repetition === "stuck") return "Unfinished business pattern: still in replay mode.";
+  if (b.repetition === "comfort_looper") return "Comfort pattern: repeats feelings to stay regulated.";
+  if (b.obscurity === "mainstream") return "Low-risk taste pattern: familiar, accessible, predictable.";
+  if (b.obscurity === "deep_cut") return "Identity pattern: discovery is the personality.";
   if (b.time_of_day === "late_night") return "Late-night processor pattern: emotions after 10pm.";
   if (b.exploration === "comfort_first") return "Safety-net pattern: growth is optional, comfort is mandatory.";
 
-  // Ultimate fallback
   return "Pattern detected: selective vulnerability with high playlist literacy.";
 }
+
 
 
     function reframeInsight(lastJoke) {
