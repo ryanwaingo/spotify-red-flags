@@ -857,12 +857,10 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
   const ordered = picks.slice(0, MAX_FLAGS);
 
   // Insight line: last flag text
-  const last = ordered[ordered.length - 1]?.joke_text || "";
-  const insight = reframeInsight(last);
+  // Insight line: derived from buckets (not a repeat of a flag)
+const insight = insightFromBuckets(userBuckets);
 
-
-  return { ordered, insight };
-}
+return { ordered, insight };
 
     /******************************************************************
      * 7) RENDER + PACING
@@ -884,6 +882,32 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
 
     let lastResult = null;
     let lastBuckets = null;
+
+    function insightFromBuckets(b) {
+  // Pick 1 strong pattern line. This is NOT pulled from any single flag joke text.
+  // Order matters: more “diagnostic” patterns first.
+  if (b.repetition === "stuck" && b.time_of_day === "late_night") {
+    return "Late-night loop pattern: processing privately, repeatedly.";
+  }
+  if (b.obscurity === "deep_cut" && b.main_character === "full_montage") {
+    return "Wants attention… but only from the right audience.";
+  }
+  if (b.genre_breadth === "omnivore" && b.exploration === "comfort_first") {
+    return "Craves variety, defaults to safety.";
+  }
+
+  // Single-bucket fallbacks
+  if (b.repetition === "stuck") return "Unfinished business energy. Still in replay mode.";
+  if (b.repetition === "comfort_looper") return "Comfort-first pattern: repeats feelings to stay regulated.";
+  if (b.obscurity === "mainstream") return "Low-risk taste pattern: accessible, familiar, predictable.";
+  if (b.obscurity === "deep_cut") return "Identity-through-discovery pattern: taste as personality.";
+  if (b.time_of_day === "late_night") return "Late-night processor pattern: emotions after 10pm.";
+  if (b.exploration === "comfort_first") return "Safety-net pattern: growth is optional, comfort is mandatory.";
+
+  // Ultimate fallback
+  return "Pattern detected: selective vulnerability with high playlist literacy.";
+}
+
 
     function reframeInsight(lastJoke) {
   const map = new Map([
