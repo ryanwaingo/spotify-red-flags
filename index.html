@@ -645,12 +645,20 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
      * 5) SPOTIFY API CALLS (V1 minimal)
      ******************************************************************/
     async function spotifyGet(token, path) {
-      const res = await fetch("https://api.spotify.com/v1" + path, {
-        headers: { Authorization: "Bearer " + token }
-      });
-      if (!res.ok) throw new Error("Spotify API error: " + path);
-      return await res.json();
-    }
+  const url = "https://api.spotify.com/v1" + path;
+  const res = await fetch(url, {
+    headers: { Authorization: "Bearer " + token }
+  });
+
+  const bodyText = await res.text().catch(() => "");
+  if (!res.ok) {
+    throw new Error(`Spotify API ${res.status} on ${path}: ${bodyText}`);
+  }
+
+  try { return JSON.parse(bodyText); }
+  catch { return {}; }
+}
+
 
     async function fetchProfileBuckets(token) {
    
@@ -1001,7 +1009,7 @@ ${lines.join("\n")}
           await renderRoastFromBuckets(buckets);
         }catch(e){
           console.error(e);
-          showToast(toast, "Couldn’t read Spotify data. Try logging out + back in.");
+          showToast(toast, "Spotify error: " + (e?.message || "Unknown"));
           switchToLogin();
         }
       } else {
