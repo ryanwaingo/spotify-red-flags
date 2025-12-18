@@ -483,7 +483,15 @@ genre_breadth,omnivore,playful,3,"Refuses to be boxed in.",""
 genre_breadth,omnivore,playful,3,"Enjoys contrast more than cohesion.",""
 genre_breadth,omnivore,playful,3,"Thrives on switching vibes.",""
 genre_breadth,omnivore,playful,3,"Says ‘it depends’ a lot.",""
+repetition,stuck,playful,2,"Still in their ‘one song on repeat’ era.",""
+repetition,comfort_looper,playful,2,"Has a comfort track like it’s a weighted blanket.",""
+epetition,stuck,playful,2,"Still in their ‘one song on repeat’ era.",""
 repetition,stuck,sharp,1,"Has not emotionally moved on from something.","opener"
+repetition,comfort_looper,playful,2,"Has a comfort track like it’s a weighted blanket.",""
+
+repetition,comfort_looper,sharp,2,"Uses one song to avoid thinking new thoughts.",""
+repetition,situational_repeater,playful,3,"Will replay a moment until it feels safe.",""
+repetition,situational_repeater,sharp,3,"If closure was a track, they’d hit replay.",""
 time_of_day,late_night,playful,1,"Processes feelings when no one can respond.",""
 valence,sad_banger,playful,1,"Feels deeply. Avoids confrontation.",""
 energy,high,sharp,1,"Fun. Exhausting.",""
@@ -721,11 +729,15 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
   }
 
   // Bucket mapping (must match your existing jokes buckets)
-  // jokes exist for: repetition=stuck (priority 1 sharp opener)
-  if (recentPlaysCount >= 10 && maxRepeat >= 2) repetition = "stuck";
-  // If you add jokes later for comfort_looper etc, you can enable these:
-  // else if (recentPlaysCount >= 15 && maxRepeat >= 2) repetition = "comfort_looper";
-  // else if (recentPlaysCount >= 15) repetition = "situational_repeater";
+repetition = null;
+
+// Only score repetition if we have enough plays to avoid horoscope vibes
+if (recentPlaysCount >= 15) {
+  if (maxRepeat >= 4) repetition = "stuck";
+  else if (maxRepeat >= 2) repetition = "comfort_looper";
+  else repetition = "situational_repeater";
+}
+
 
   // Evidence for “because…” line (only for repetition in this step)
   const topMeta = topTrackId ? (trackMeta.get(topTrackId) || {}) : {};
@@ -913,7 +925,21 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
   }
 
   // Cap + ensure minimum
-  const ordered = picks.slice(0, MAX_FLAGS);
+  // Cap + ensure minimum
+let ordered = picks.slice(0, MAX_FLAGS);
+
+// Repetition fallback: if repetition is computed but didn’t show up, force it in
+const hasRepetitionBucket = !!userBuckets.repetition;
+const usedRepetition = ordered.some(j => j.parameter === "repetition");
+
+if (hasRepetitionBucket && !usedRepetition) {
+  const rep = pickAnyPriority("repetition", userBuckets.repetition, [1, 2, 3]);
+  if (rep) {
+    // Replace the last item to keep length stable
+    ordered[ordered.length - 1] = rep;
+  }
+}
+
 
   // Track which parameters actually contributed jokes
   const contributingParams = new Set(
