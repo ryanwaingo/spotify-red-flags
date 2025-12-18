@@ -1017,6 +1017,13 @@ function buildBecauseLine(jokeRow, evidence){
     function insightFromBuckets(b, usedParams = new Set()) {
 
   // Combo patterns (feel “smart”)
+      // If repetition is actually shown, prioritize a repetition-based pattern
+if (usedParams.has("repetition")) {
+  if (b.repetition === "stuck") return "Unfinished business pattern: still in replay mode.";
+  if (b.repetition === "comfort_looper") return "Comfort pattern: self-soothing through repetition.";
+  if (b.repetition === "situational_repeater") return "Safety pattern: replays moments until it feels safe.";
+}
+
   if (
   usedParams.has("repetition") &&
   usedParams.has("time_of_day") &&
