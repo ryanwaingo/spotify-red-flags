@@ -857,10 +857,14 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
   // Cap + ensure minimum
   const ordered = picks.slice(0, MAX_FLAGS);
 
-  // Insight line: last flag text
-  // Insight line: derived from buckets (not a repeat of a flag)
-  // Insight line: derived from buckets (never repeats a flag verbatim)
-  const insight = insightFromBuckets(userBuckets);
+  // Track which parameters actually contributed jokes
+  const contributingParams = new Set(
+    ordered.map(j => j.parameter).filter(Boolean)
+  );
+
+  // Insight line: derived from buckets, but only if supported by shown flags
+  const insight = insightFromBuckets(userBuckets, contributingParams);
+
 
   return { ordered, insight };
 }
@@ -887,11 +891,18 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
     let lastResult = null;
     let lastBuckets = null;
 
-    function insightFromBuckets(b) {
+    function insightFromBuckets(b, usedParams = new Set()) {
+
   // Combo patterns (feel “smart”)
-  if (b.repetition === "stuck" && b.time_of_day === "late_night") {
-    return "Late-night loop pattern: processing privately, repeatedly.";
-  }
+  if (
+  usedParams.has("repetition") &&
+  usedParams.has("time_of_day") &&
+  b.repetition === "stuck" &&
+  b.time_of_day === "late_night"
+) {
+  return "Late-night loop pattern: processing privately, repeatedly.";
+}
+
   if (b.obscurity === "deep_cut" && b.main_character === "full_montage") {
     return "Wants attention… but only from the right audience.";
   }
