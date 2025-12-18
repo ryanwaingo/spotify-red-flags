@@ -1036,8 +1036,15 @@ if (usedParams.has("repetition")) {
   if (b.obscurity === "deep_cut" && b.main_character === "full_montage") {
     return "Wants attention… but only from the right audience.";
   }
-  if (b.genre_breadth === "omnivore" && b.exploration === "comfort_first") {
-    return "Craves variety, defaults to safety.";
+  // Only use this pattern if repetition is NOT one of the shown flags
+if (
+  !usedParams.has("repetition") &&
+  b.genre_breadth === "omnivore" &&
+  b.exploration === "comfort_first"
+) {
+  return "Craves variety, defaults to safety.";
+}
+
   }
 
   // Single patterns (still not copies of jokes)
