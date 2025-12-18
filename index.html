@@ -719,14 +719,21 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
 
   let maxRepeat = 0;
   let topTrackId = null;
+let topRepeats = [];
+
 
   if (counts.length) {
-    maxRepeat = Math.max(...counts);
-    // find which track hit maxRepeat
-    for (const [id, c] of trackCounts.entries()) {
-      if (c === maxRepeat) { topTrackId = id; break; }
-    }
-  }
+  maxRepeat = Math.max(...counts);
+
+  // Build a sorted list of repeats (highest count first), keep top 3
+  topRepeats = Array.from(trackCounts.entries())
+    .map(([id, c]) => ({ id, c, meta: trackMeta.get(id) }))
+    .sort((a, b) => b.c - a.c)
+    .slice(0, 3);
+
+  // keep legacy topTrackId for now
+  topTrackId = topRepeats[0]?.id || null;
+}
 
   // Bucket mapping (must match your existing jokes buckets)
 repetition = null;
@@ -740,14 +747,17 @@ if (recentPlaysCount >= 15) {
 
 
   // Evidence for “because…” line (only for repetition in this step)
-  const topMeta = topTrackId ? (trackMeta.get(topTrackId) || {}) : {};
-  const repetitionEvidence = (repetition && topTrackId)
-    ? {
-        recentPlaysCount,
-        maxRepeat,
-        topTrack: `${topMeta.name || "Unknown track"} — ${topMeta.artists || "Unknown artist"}`
-      }
-    : null;
+  const repetitionEvidence = (repetition && topRepeats.length)
+  ? {
+      recentPlaysCount,
+      maxRepeat,
+      topRepeats: topRepeats.map(t => ({
+        count: t.c,
+        track: `${t?.meta?.name || "Unknown track"} — ${t?.meta?.artists || "Unknown artist"}`
+      }))
+    }
+  : null;
+
 
   // ----------------------------
   // Time-of-day bucket (leave stable for now)
@@ -986,11 +996,22 @@ function buildBecauseLine(jokeRow, evidence){
   // Repetition only (for this step)
   if (jokeRow.parameter === "repetition" && evidence.repetition) {
     const e = evidence.repetition;
-    return `because you played “${e.topTrack}” ${e.maxRepeat}× in your last ${e.recentPlaysCount} plays`;
+    const list = Array.isArray(e.topRepeats) ? e.topRepeats : [];
+    if (!list.length) return "";
+
+    const a = list[0];
+    const b = list[1];
+
+    // Show 1–2 concrete receipts so it feels earned, not generic
+    if (b) {
+      return `because your top repeats were “${a.track}” (${a.count}×) and “${b.track}” (${b.count}×) in your last ${e.recentPlaysCount} plays`;
+    }
+    return `because your top repeat was “${a.track}” (${a.count}×) in your last ${e.recentPlaysCount} plays`;
   }
 
   return "";
 }
+
 
 
     function insightFromBuckets(b, usedParams = new Set()) {
@@ -1177,7 +1198,22 @@ lastEvidence = evidence;
     btnLogin.addEventListener("click", loginSpotify);
     btnLogout.addEventListener("click", logout);
     btnLogout2.addEventListener("click", logout);
-    btnRoastAgain.addEventListener("click", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
+    btnRoastAgain.addEventListener("click", async () => {
+  const token = getStoredToken();
+  if (!token) return;
+
+  try {
+    const { buckets, evidence, debug } = await fetchProfileBuckets(token);
+    lastEvidence = evidence;
+    document.getElementById("resultsSubtitle").textContent =
+      `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
+    await renderRoastFromBuckets(buckets, lastEvidence);
+  } catch (e) {
+    console.error(e);
+    showToast(toast2, "Spotify error: " + (e?.message || "Unknown"));
+  }
+});
+
     btnShare.addEventListener("click", shareRoast);
     toneSelect.addEventListener("change", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
 
