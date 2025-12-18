@@ -410,11 +410,12 @@
      * 0) YOU MUST SET THIS
      ***********************/
     const SPOTIFY_CLIENT_ID = "ad08cfcd496348e299ba9a840227954d";
-    const REDIRECT_URI = window.location.origin + window.location.pathname; // GitHub Pages URL
-    cconst SCOPES = [
+const REDIRECT_URI = window.location.origin + window.location.pathname; // GitHub Pages URL
+const SCOPES = [
   "user-top-read",
   "user-read-recently-played"
 ];
+
 
     /******************************************************************
      * 1) YOUR JOKES CSV (already formatted for the parser)
@@ -646,7 +647,7 @@ combo,mainstream_emotional,playful,1,"Feels deeply but keeps it accessible.","co
     }
 
     async function fetchProfileBuckets(token) {
-    async function fetchProfileBuckets(token) {
+   
   // 1) Recently played (behavior-based signals)
   const recent = await spotifyGet(token, "/me/player/recently-played?limit=50");
   const items = recent.items || [];
@@ -926,7 +927,7 @@ ${lines.join("\n")}
           switchToResults();
           const { buckets, debug } = await fetchProfileBuckets(token);
           document.getElementById("resultsSubtitle").textContent =
-            `Based on your listening habits. Tracks scanned: ${debug.trackCount}.`;
+            `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
           await renderRoastFromBuckets(buckets);
         }catch(e){
           console.error(e);
