@@ -718,31 +718,79 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
 
         async function loginSpotify() {
           showToast(toast, "Redirecting to Spotify…");
+
+          // --- IMPORTANT: persist the exact redirect_uri used for BOTH authorize + token exchange
+          // GitHub Pages / Safari can normalize URLs (trailing slash), which will break token exchange if we recompute.
+          const redirectUri = (function(){
+            const u = new URL(window.location.href);
+            // Strip OAuth params if any
+            u.searchParams.delete("code");
+            u.searchParams.delete("state");
+            u.searchParams.delete("error");
+            u.searchParams.delete("error_description");
+            // Keep origin+path exactly as the browser reports right now
+            return u.origin + u.pathname;
+          })();
+          localStorage.setItem("oauth_redirect_uri", redirectUri);
+
           const verifier = randomString(64);
           const challenge = base64urlencode(await sha256(verifier));
+
+          // Store verifier in BOTH storages (Safari private / ITP can be quirky)
           localStorage.setItem("pkce_verifier", verifier);
+          try { sessionStorage.setItem("pkce_verifier", verifier); } catch(_) {}
 
           const params = new URLSearchParams({
             client_id: SPOTIFY_CLIENT_ID,
             response_type: "code",
-            redirect_uri: REDIRECT_URI,
+            redirect_uri: redirectUri,
             code_challenge_method: "S256",
             code_challenge: challenge,
             scope: SCOPES.join(" ")
           });
 
           window.location.assign("https://accounts.spotify.com/authorize?" + params.toString());
+        });
+
+          window.location.assign("https://accounts.spotify.com/authorize?" + params.toString());
         }
 
         async function exchangeCodeForToken(code) {
-          const verifier = localStorage.getItem("pkce_verifier");
+          // Use the exact redirect_uri we used during authorize
+          const redirectUri = localStorage.getItem("oauth_redirect_uri") || REDIRECT_URI;
+
+          // Pull verifier from sessionStorage first (more reliable across same-tab redirects), then localStorage.
+          let verifier = null;
+          try { verifier = sessionStorage.getItem("pkce_verifier"); } catch(_) {}
+          if (!verifier) verifier = localStorage.getItem("pkce_verifier");
+
+          if (!verifier) {
+            throw new Error("Login session expired (missing PKCE verifier). Please click Continue with Spotify again.");
+          }
+
           const body = new URLSearchParams({
             client_id: SPOTIFY_CLIENT_ID,
             grant_type: "authorization_code",
             code,
-            redirect_uri: REDIRECT_URI,
+            redirect_uri: redirectUri,
             code_verifier: verifier
           });
+
+          const res = await fetch("https://accounts.spotify.com/api/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body
+          });
+
+          const data = await res.json();
+          if (!res.ok) throw new Error(data?.error_description || data?.error || "Token exchange failed");
+          storeToken(data.access_token, data.expires_in);
+
+          // Clean up oauth params + keep page stable
+          window.history.replaceState({}, document.title, redirectUri);
+
+          return data.access_token;
+        });
 
           const res = await fetch("https://accounts.spotify.com/api/token", {
             method: "POST",
@@ -1111,7 +1159,7 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
             try{
               token = await exchangeCodeForToken(code);
             }catch(e){
-              showToast(toast, "Login failed. Check redirect URI + Client ID.");
+              showToast(toast, "Login failed: " + (e?.message || "Unknown") + " — check Redirect URI matches exactly.");
               switchToLogin();
               return;
             }
