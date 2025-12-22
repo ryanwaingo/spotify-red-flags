@@ -1217,7 +1217,9 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
         toneSelect.addEventListener("change", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
 
         // Show current Redirect URI in the login toast (helps you match Spotify dashboard)
-        showToast(toast, "Ready. Redirect URI: " + REDIRECT_URI);
+showToast(toast, "✅ JS loaded. Ready. Redirect URI: " + REDIRECT_URI);
+document.querySelector(".subtitle").textContent = "✅ JS loaded — click Continue with Spotify";
+
 
         boot();
       }catch(e){
