@@ -443,16 +443,34 @@
   filter:none !important;
 }
 /* Fixed canvas sizes for different platforms */
+/* Capture frame exists but has NO layout impact by default */
 #shareCaptureFrame{
-  margin:0 auto;
+  margin:0;
+  background:transparent;
+}
+
+/* Only when actively capturing */
+#shareCaptureFrame.isCapturing{
   background:#fff;
+  margin:0 auto;
   display:flex;
   align-items:stretch;
   justify-content:center;
 }
-#shareCaptureFrame.format-ig_square{ width:1080px; height:1080px; }
-#shareCaptureFrame.format-ig_story{ width:1080px; height:1920px; }
-#shareCaptureFrame.format-x_landscape{ width:1200px; height:675px; }
+
+#shareCaptureFrame.isCapturing.format-ig_square{
+  width:1080px;
+  height:1080px;
+}
+#shareCaptureFrame.isCapturing.format-ig_story{
+  width:1080px;
+  height:1920px;
+}
+#shareCaptureFrame.isCapturing.format-x_landscape{
+  width:1200px;
+  height:675px;
+}
+
 
 /* Make the share card fill the capture frame */
 #shareCaptureFrame .shareCard{
