@@ -1,87 +1,142 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Spotify Dating Red Flags</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spotify Dating Red Flags</title>
 
-  <style>
-    /* --- unchanged styles (exactly as before) --- */
-    /* (I am intentionally not modifying layout, capture, or auth CSS) */
-  </style>
+<style>
+/* ===== unchanged global styles ===== */
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto;background:#fff7e6}
+button,select{font-family:monospace;font-weight:700;border:3px solid #111;background:#fff;padding:10px;cursor:pointer}
+button.primary{background:#111;color:#fff}
+button.primary:hover{background:#ffe600;color:#111}
+
+/* ===== SHARE SECTION FIX ===== */
+
+.shareKit{
+  border:3px solid #111;
+  padding:14px;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* first row: platform buttons */
+.shareRow.platforms{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.shareRow.platforms > *{
+  flex:1 1 30%;
+  text-align:center;
+}
+
+/* second row: caption + save */
+.shareRow.actions{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:12px;
+}
+
+/* dropdown row */
+.shareRow.format{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.shareRow.format label{
+  font-weight:800;
+}
+
+.shareNote{
+  font-size:12px;
+  opacity:.8;
+}
+
+/* prevent overlap ever */
+.shareKit button,
+.shareKit select{
+  width:100%;
+}
+
+/* ===== tone row ===== */
+.toneRow{
+  margin-top:14px;
+  border:3px solid #111;
+  padding:12px;
+  background:#60c56a;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* ===== footer ===== */
+.footer{
+  margin-top:18px;
+  font-family:monospace;
+  display:flex;
+  justify-content:space-between;
+}
+.footer .badge{
+  background:#ff3eb5;
+  border:3px solid #111;
+  padding:6px 10px;
+  font-weight:900;
+}
+</style>
 </head>
 
 <body>
-  <!-- existing HTML structure unchanged -->
 
-  <script>
-    /* ===============================
-       VIRAL SHARE COPY (UPDATED)
-       =============================== */
+<div class="shareKit">
 
-    function buildShareCaption(platform = "ig") {
-      const flags = Array.from(document.querySelectorAll("#flagsList li"))
-        .slice(0, 2)
-        .map(li => li.textContent.replace("🚩", "").trim());
+  <button class="primary">Roast Again</button>
 
-      const top = flags[0] || "has questionable taste";
-      const second = flags[1] || "";
+  <div class="shareRow platforms">
+    <a href="#" id="btnShareX">Share to X</a>
+    <button id="btnShareIG">Instagram</button>
+    <button id="btnShareTT">TikTok</button>
+  </div>
 
-      const baseUrl = "https://ryanwaingo.github.io/spotify-red-flags/";
+  <div class="shareRow actions">
+    <button id="btnCopyCaption" class="primary">Copy Caption</button>
+    <button id="btnSaveImage">Save Share Image</button>
+    <button id="btnCopyLink">Copy Link</button>
+  </div>
 
-      if (platform === "x") {
-        return (
-          `Spotify Dating Red Flags just exposed me.\n\n` +
-          `Mine says I ${top.toLowerCase()}.\n\n` +
-          `What does yours say? 👀\n` +
-          baseUrl
-        );
-      }
+  <div class="shareRow format">
+    <label for="sharePreset">Share format</label>
+    <select id="sharePreset">
+      <option>Instagram Post (Square)</option>
+      <option>Instagram Story / TikTok</option>
+      <option>X / Twitter</option>
+    </select>
+  </div>
 
-      // Instagram / TikTok default
-      return (
-        `🚩 My Spotify listening just exposed my dating red flags\n\n` +
-        `Apparently I:\n` +
-        `• ${top}\n` +
-        (second ? `• ${second}\n` : "") +
-        `\nWhat does yours say? 👀\n` +
-        baseUrl
-      );
-    }
+  <div class="shareNote">
+    ⚠️ Compare with friends. Someone will be worse than you.
+  </div>
 
-    /* ===============================
-       BUTTON HOOKS (UPDATED)
-       =============================== */
+</div>
 
-    document.getElementById("btnCopyCaption")?.addEventListener("click", () => {
-      const caption = buildShareCaption("ig");
-      navigator.clipboard.writeText(caption);
-      showToast("Caption copied — now expose your friends.");
-    });
+<div class="toneRow">
+  <div>TONE</div>
+  <select>
+    <option>Playful</option>
+    <option>Sharp</option>
+  </select>
+</div>
 
-    document.getElementById("btnShareX")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      const text = encodeURIComponent(buildShareCaption("x"));
-      window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
-    });
+<div class="footer">
+  <div>If you’re mad, take it up with your playlists.</div>
+  <div class="badge">🚩 VERIFIED</div>
+</div>
 
-    document.getElementById("btnShareIG")?.addEventListener("click", () => {
-      showToast("Save the image, then post to IG Stories.");
-    });
-
-    document.getElementById("btnShareTT")?.addEventListener("click", () => {
-      showToast("Save the image, then upload to TikTok.");
-    });
-
-    /* ===============================
-       MICRO COPY (UPDATED)
-       =============================== */
-
-    const shareNote = document.getElementById("shareNote");
-    if (shareNote) {
-      shareNote.textContent =
-        "⚠️ Compare with friends. Someone will be worse than you.";
-    }
-  </script>
 </body>
 </html>
