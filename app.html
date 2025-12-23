@@ -485,130 +485,176 @@
       }
     }
 
-    /* =========================================================
-       CAPTURE STAGE (OFFSCREEN) — 1080 x 1920 portrait
-       We render ONLY the top block into this fixed-size card.
-       This avoids transparency/compositing issues entirely.
-       ========================================================= */
-    #captureStage{
+    .shareRowFull{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    /* Mobile-first sharing: make share controls easy to reach */
+    @media (max-width:520px){
+      .actions{
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
+        background: #fff;
+        box-shadow: 0 -2px 0 var(--ink);
+      }
+    }
+
+    /* Story Mode overlay (screenshot-first) */
+    .storyMode{
       position: fixed;
-      left: -99999px;
-      top: 0;
-      width: 1080px;
-      height: 1920px;
-      background: #fff;
-      z-index: -1;
-      overflow: hidden;
-      pointer-events: none;
+      inset: 0;
+      background: var(--bg);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
     }
-    .captureCard{
-      width: 1080px;
-      height: 1920px;
-      background: #fff;
-      color: var(--ink);
-      font-family: var(--sans);
-      padding: 72px;
+    .storyShell{
+      width: min(520px, 100%);
       border: var(--b);
-      position: relative;
-      overflow: hidden;
-      transform: none !important;
-      filter: none !important;
+      background: #fff;
+      padding: 14px;
     }
-    .captureTop{
+    .storyTop{
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
-      gap: 24px;
-      padding-bottom: 28px;
+      gap: 10px;
       border-bottom: var(--b);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
     }
-    .captureBrand{
+    .storyBrand{
       font-family: var(--mono);
       font-weight: 900;
-      letter-spacing: 0.10em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
-      font-size: 34px;
-      line-height: 1.1;
+      font-size: 12px;
     }
-    .captureHint{
+    .storyClose{
+      padding: 10px 10px;
+    }
+
+    .storyCard{
+      border: var(--b);
+      background: #fff;
+      padding: 14px;
+    }
+    .storyHint{
       font-family: var(--mono);
-      font-size: 28px;
+      font-size: 12px;
       opacity: 0.9;
-      text-align:right;
-      max-width: 520px;
-      line-height: 1.15;
+      line-height: 1.25;
     }
-    .captureBar{
-      height: 18px;
+    .storyBar{
+      height: 10px;
       border: var(--b);
       background: var(--yellow);
-      margin: 34px 0 44px;
+      margin: 10px 0 14px;
+      transform: translateX(1px);
     }
-    .capturePanel{
+    .storyPanel{
       border: var(--b);
       background: var(--blue);
-      color:#fff;
-      padding: 54px 48px;
+      color: #fff;
+      padding: 16px 14px;
       position: relative;
       overflow:hidden;
+      transform: translateX(-1px);
     }
-    .capturePanel::before{
+    .storyPanel::before{
       content:"";
       position:absolute;
-      left:-18px;
-      top:-18px;
-      width:44px;
-      height:44px;
+      left:-10px;
+      top:-10px;
+      width:18px;
+      height:18px;
       border: var(--b);
       background: var(--yellow);
     }
-    .captureOpener{
+    .storyOpener{
       font-weight: 950;
       letter-spacing: -0.05em;
-      line-height: 1.02;
-      font-size: 110px;
+      line-height: 1.05;
+      font-size: 34px;
       margin: 0;
     }
-    .captureOpener .flag{
-      margin-right: 18px;
-      color: var(--yellow);
-    }
-    .captureBecause{
-      margin-top: 22px;
+    .storyBecause{
+      margin-top: 10px;
       font-family: var(--mono);
-      font-size: 34px;
+      font-size: 12px;
       line-height: 1.25;
       opacity: 1;
       color: #fff;
     }
-    .captureFooter{
+    .storyPattern{
+      margin-top: 14px;
+      border: var(--b);
+      background: var(--yellow);
+      padding: 12px;
+      position: relative;
+      transform: translateX(1px);
+    }
+    .storyPattern::after{
+      content:"";
       position:absolute;
-      left: 72px;
-      right: 72px;
-      bottom: 60px;
-      border-top: var(--b);
-      padding-top: 28px;
+      right:-10px;
+      bottom:-10px;
+      width:18px;
+      height:18px;
+      border: var(--b);
+      background: var(--red);
+    }
+    .storyPattern .label{
       font-family: var(--mono);
-      font-size: 30px;
-      opacity: 0.95;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .storyPattern .line{
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+    .storyFooter{
+      margin-top: 12px;
+      border-top: var(--b);
+      padding-top: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.9;
       overflow-wrap:anywhere;
       word-break: break-word;
     }
-    .captureStamp{
-      position:absolute;
-      top: 38px;
-      right: 72px;
-      border: var(--b);
-      background: var(--pink);
-      color: var(--ink);
-      padding: 16px 18px;
+    .storyActions{
+      margin-top: 12px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .storyHow{
+      margin-top: 12px;
+      border-top: var(--b);
+      padding-top: 10px;
       font-family: var(--mono);
-      font-weight: 900;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      font-size: 24px;
-      transform: rotate(2deg);
-      user-select:none;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+    .storyHowSmall{
+      opacity: 0.85;
+      margin-top: 6px;
+    }
+    @media (max-width:420px){
+      .storyShell{ padding: 12px; }
+      .storyOpener{ font-size: 30px; }
+      .storyActions{ grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -651,7 +697,6 @@
 
         <div class="bar" aria-hidden="true"></div>
 
-        <!-- Keep the full share card for on-page display (unchanged) -->
         <div id="shareCard" class="shareCard" aria-label="Share card">
           <div class="shareMeta">
             <div class="shareBrand">Spotify Dating Red Flags 🚩</div>
@@ -677,17 +722,24 @@
           <button id="btnRoastAgain" class="primary" type="button">Roast Again</button>
 
           <div class="shareKit" aria-label="Share kit">
+            <div class="shareRowFull">
+              <button id="btnNativeShare" class="primary" type="button">Share (works best on phone)</button>
+              <button id="btnStoryMode" class="secondary" type="button">Story Mode (screenshot)</button>
+            </div>
+
             <div class="shareRow">
               <a id="btnShareX" class="secondary" href="#" target="_blank" rel="noopener">Share to X</a>
-              <button id="btnShareIG" class="secondary" type="button">Instagram</button>
-              <button id="btnShareTT" class="secondary" type="button">TikTok</button>
+              <button id="btnShareIG" class="secondary" type="button">Share to Instagram</button>
+              <button id="btnShareTT" class="secondary" type="button">Share to TikTok</button>
             </div>
+
             <div class="shareRow">
               <button id="btnCopyCaption" class="primary" type="button">Copy Caption</button>
-              <button id="btnSaveImage" class="secondary" type="button">Save Share Image</button>
               <button id="btnCopyLink" class="secondary" type="button">Copy Link</button>
+              <button id="btnSaveImage" class="secondary" type="button">Save Image (beta)</button>
             </div>
-            <div class="shareNote" id="shareNote">Tip: post yours and tag 3 friends to compare.</div>
+
+            <div class="shareNote" id="shareNote">Post yours, tag 2 friends, and vote who’s the bigger 🚩.</div>
           </div>
 
           <div class="toneRow" aria-label="Tone selector">
@@ -709,8 +761,42 @@
     </section>
   </main>
 
-  <!-- Offscreen 1080x1920 capture surface -->
-  <div id="captureStage" aria-hidden="true"></div>
+  <!-- Story Mode (mobile screenshot view) -->
+  <div id="storyMode" class="storyMode hidden" aria-label="Story mode">
+    <div class="storyShell">
+      <div class="storyTop">
+        <div class="storyBrand">Spotify Dating Red Flags 🚩</div>
+        <button id="btnExitStory" class="secondary storyClose" type="button">Back</button>
+      </div>
+
+      <div class="storyCard" id="storyCard">
+        <div class="storyHint" id="storyHint">Screenshot-ready. Made from your recent listening.</div>
+        <div class="storyBar" aria-hidden="true"></div>
+
+        <div class="storyPanel" id="storyPanel">
+          <div class="storyOpener" id="storyOpener"><span class="flag">🚩</span>Loading…</div>
+          <div class="storyBecause" id="storyBecause"></div>
+        </div>
+
+        <div class="storyPattern">
+          <div class="label">Biggest Dating Pattern</div>
+          <div class="line" id="storyPatternLine">Loading…</div>
+        </div>
+
+        <div class="storyFooter" id="storyFooter"></div>
+      </div>
+
+      <div class="storyActions">
+        <button id="btnStoryShare" class="primary" type="button">Share</button>
+        <button id="btnStoryCopy" class="secondary" type="button">Copy Caption + Link</button>
+      </div>
+
+      <div class="storyHow">
+        <div><b>How to post:</b> take a screenshot, then paste into IG Stories / TikTok.</div>
+        <div class="storyHowSmall">Bonus: tag 2 friends to compare 🚩</div>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
@@ -815,6 +901,19 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     const btnRoastAgain = document.getElementById("btnRoastAgain");
 
     const btnShareX = document.getElementById("btnShareX");
+    const btnNativeShare = document.getElementById("btnNativeShare");
+    const btnStoryMode = document.getElementById("btnStoryMode");
+
+    const storyMode = document.getElementById("storyMode");
+    const btnExitStory = document.getElementById("btnExitStory");
+    const btnStoryShare = document.getElementById("btnStoryShare");
+    const btnStoryCopy = document.getElementById("btnStoryCopy");
+    const storyOpenerEl = document.getElementById("storyOpener");
+    const storyBecauseEl = document.getElementById("storyBecause");
+    const storyPatternLineEl = document.getElementById("storyPatternLine");
+    const storyFooterEl = document.getElementById("storyFooter");
+    const storyHintEl = document.getElementById("storyHint");
+
     const btnShareIG = document.getElementById("btnShareIG");
     const btnShareTT = document.getElementById("btnShareTT");
     const btnCopyCaption = document.getElementById("btnCopyCaption");
@@ -824,7 +923,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     const shareHint = document.getElementById("shareHint");
     const shareNote = document.getElementById("shareNote");
     const shareCard = document.getElementById("shareCard");
-    const captureStage = document.getElementById("captureStage");
     let lastShareCaption = "";
 
     const toneSelect = document.getElementById("toneSelect");
@@ -1193,6 +1291,7 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       insightBox.classList.remove("hidden");
       insightBox.classList.add("fadeIn");
       updateShareKit();
+      if (storyMode && !storyMode.classList.contains("hidden")) refreshStoryMode();
     }
 
     function safeNowUrl(){
@@ -1255,10 +1354,10 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       if (shareUrlEl) shareUrlEl.textContent = url;
 
       if (shareNote) {
-        shareNote.textContent = "Compare with friends: post yours, tag 2 friends, and vote who’s the bigger 🚩.";
+        shareNote.textContent = "Post yours, tag 2 friends, and vote who’s the bigger 🚩.";
       }
       if (shareHint) {
-        shareHint.textContent = "Screenshot-ready. Made from your recent listening.";
+        shareHint.textContent = "Made from your recent listening. Tap Share (best on phone).";
       }
 
       lastShareCaption = buildShareCaption();
@@ -1274,7 +1373,57 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       }
     }
 
-    function buildCaptureCardHTML(){
+    async function saveShareImage(){
+      // Keep existing behavior (beta). If this has been flaky, Story Mode is the default share path now.
+      if (!shareCard || typeof html2canvas !== "function"){
+        showToast(toast2, "Save Image unavailable.");
+        return;
+      }
+      showToast(toast2, "Generating image…");
+      updateShareKit();
+
+      const canvas = await html2canvas(shareCard, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true,
+        foreignObjectRendering: false
+      });
+
+      const dataUrl = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "spotify-dating-red-flags.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+
+      showToast(toast2, "Saved.");
+    }
+
+    async function shareNative(prefer){
+      const url = safeNowUrl();
+      const text = (lastShareCaption || buildShareCaption()).trim();
+      if (navigator.share) {
+        try{
+          await navigator.share({ text, url });
+          showToast(toast2, "Shared.");
+          return true;
+        }catch(e){
+          return false;
+        }
+      }
+      await copyText(text + "\n\n" + url, "Copied. Paste into your post.");
+      return false;
+    }
+
+    function setStoryModeVisible(isOn){
+      if (!storyMode) return;
+      storyMode.classList.toggle("hidden", !isOn);
+      document.body.style.overflow = isOn ? "hidden" : "";
+    }
+
+    function refreshStoryMode(){
+      if (!storyMode) return;
       const url = safeNowUrl();
 
       const openerMain = (lastResult?.ordered?.[0]?.joke_text || "").trim();
@@ -1282,80 +1431,30 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
         document.querySelector("#openerText .because")?.textContent?.trim() ||
         "";
 
-      const openerSafe = escapeHTML(openerMain || "Loading…");
-      const becauseSafe = escapeHTML(because || "");
-
-      return `
-        <div class="captureCard">
-          <div class="captureStamp">🚩 VERIFIED</div>
-          <div class="captureTop">
-            <div class="captureBrand">Spotify Dating Red Flags</div>
-            <div class="captureHint">Made from your recent listening.<br/>Tag 2 friends. Compare.</div>
-          </div>
-          <div class="captureBar" aria-hidden="true"></div>
-
-          <div class="capturePanel">
-            <div class="captureOpener"><span class="flag">🚩</span>${openerSafe}</div>
-            ${becauseSafe ? `<div class="captureBecause">${becauseSafe}</div>` : ``}
-          </div>
-
-          <div class="captureFooter">${escapeHTML(url)}</div>
-        </div>
-      `.trim();
+      if (storyHintEl) storyHintEl.textContent = "Screenshot-ready. Made from your recent listening.";
+      if (storyOpenerEl) storyOpenerEl.innerHTML = `<span class="flag">🚩</span>${escapeHTML(openerMain || "Loading…")}`;
+      if (storyBecauseEl) storyBecauseEl.textContent = because || "";
+      if (storyPatternLineEl) storyPatternLineEl.textContent = (insightLine?.textContent || "").trim() || "Loading…";
+      if (storyFooterEl) storyFooterEl.textContent = url;
     }
 
-    function clearCaptureStage(){
-      if (!captureStage) return;
-      captureStage.innerHTML = "";
+    function openStoryMode(){
+      refreshStoryMode();
+      setStoryModeVisible(true);
     }
 
-    async function saveShareImage(){
-      if (!captureStage || typeof html2canvas !== "function"){
-        showToast(toast2, "Share image unavailable.");
-        return;
-      }
-      showToast(toast2, "Generating 1080×1920 image…");
-      updateShareKit();
-
-      clearCaptureStage();
-      captureStage.innerHTML = buildCaptureCardHTML();
-
-      const target = captureStage.firstElementChild;
-      if (!target){
-        showToast(toast2, "Capture failed (no target).");
-        return;
-      }
-
-      // Render exactly 1080x1920 (no scaling games, no transforms).
-      const canvas = await html2canvas(target, {
-        backgroundColor: "#ffffff",
-        scale: 1,
-        useCORS: true,
-        foreignObjectRendering: false,
-        width: 1080,
-        height: 1920,
-        windowWidth: 1080,
-        windowHeight: 1920
-      });
-
-      const dataUrl = canvas.toDataURL("image/png");
-      const a = document.createElement("a");
-      a.href = dataUrl;
-      a.download = "spotify-dating-red-flags-1080x1920.png";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      clearCaptureStage();
-      showToast(toast2, "Saved 1080×1920 image.");
+    function closeStoryMode(){
+      setStoryModeVisible(false);
     }
 
     function openInstagram(){
+      if (navigator.share) { shareNative("instagram"); return; }
       copyText(lastShareCaption, "Caption copied. Paste it in Instagram.");
       window.open("https://www.instagram.com/", "_blank", "noopener");
     }
 
     function openTikTok(){
+      if (navigator.share) { shareNative("tiktok"); return; }
       copyText(lastShareCaption, "Caption copied. Paste it in TikTok.");
       window.open("https://www.tiktok.com/upload", "_blank", "noopener");
     }
@@ -1405,6 +1504,8 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       } else {
         switchToLogin();
       }
+
+      showToast(toast, "✅ Ready. Tip: on mobile, tap Share or Story Mode.");
     }
 
     btnLogin.addEventListener("click", loginSpotify);
@@ -1414,6 +1515,7 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     btnRoastAgain.addEventListener("click", async () => {
       const token = getStoredToken();
       if (!token) return;
+
       try {
         const { buckets, evidence, debug } = await fetchProfileBuckets(token);
         lastEvidence = evidence;
@@ -1431,6 +1533,11 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     btnSaveImage?.addEventListener("click", saveShareImage);
     btnShareIG?.addEventListener("click", openInstagram);
     btnShareTT?.addEventListener("click", openTikTok);
+    btnNativeShare?.addEventListener("click", () => shareNative("native"));
+    btnStoryMode?.addEventListener("click", openStoryMode);
+    btnExitStory?.addEventListener("click", closeStoryMode);
+    btnStoryShare?.addEventListener("click", () => shareNative("native"));
+    btnStoryCopy?.addEventListener("click", () => copyText((lastShareCaption || buildShareCaption()) + "\n\n" + safeNowUrl(), "Copied. Paste into your post."));
 
     toneSelect.addEventListener("change", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
 
