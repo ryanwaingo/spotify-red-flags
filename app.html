@@ -525,50 +525,39 @@
     body.isStory .wrap{
       align-items: flex-start;
     }
-    #storyView #shareCard{
-      margin-top: 0;
-    }
-    #storyCardSlot{
-      display:block;
-    }
 
-    /* =========================================================
-       CAPTURE MODE (only in html2canvas clone via onclone)
-       Goal: prevent washed-out blocks WITHOUT causing blank captures.
-       Key change vs last attempt: NO blanket opacity override.
-       ========================================================= */
-    .captureMode #shareCard,
-    .captureMode #shareCard *{
-      transform: none !important;
-      filter: none !important;
-      mix-blend-mode: normal !important;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
+    .storyPoster{
+      border: var(--b);
+      background: #fff;
+      padding: 14px;
+      margin: 0 auto;
+      width: min(420px, 100%);
+      aspect-ratio: 9 / 16;
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: hidden;
     }
 
-    /* Force solid fills on key blocks */
-    .captureMode #shareCard .openerPanel{ background: var(--blue) !important; color:#fff !important; }
-    .captureMode #shareCard .openerPanel::before{ background: var(--yellow) !important; }
-    .captureMode #shareCard .list li.role-core{ background: var(--yellow) !important; color: var(--ink) !important; }
-    .captureMode #shareCard .list li.role-core.alt{ background: var(--green) !important; color: var(--ink) !important; }
-    .captureMode #shareCard .list li.role-close{ background: var(--pink) !important; color: var(--ink) !important; }
-    .captureMode #shareCard .insight{ background: var(--yellow) !important; color: var(--ink) !important; }
-    .captureMode #shareCard .insight::after{ background: var(--red) !important; }
-    .captureMode #shareCard .shareCard{ background: #fff !important; }
-
-    /* Make “subtle text” fully readable in capture (but not everything) */
-    .captureMode #shareCard .shareHint,
-    .captureMode #shareCard .shareFooter,
-    .captureMode #shareCard .because{
-      opacity: 1 !important;
+    /* Make it feel like one phone screen */
+    @media (max-width:520px){
+      .storyPoster{
+        width: 100%;
+        aspect-ratio: 9 / 16;
+      }
     }
 
-    /* Keep borders crisp */
-    .captureMode #shareCard,
-    .captureMode #shareCard .openerPanel,
-    .captureMode #shareCard .list li,
-    .captureMode #shareCard .insight{
-      border-color: var(--ink) !important;
+    .storyPoster .opener{
+      font-size: 34px;
+    }
+    .storyPoster .list li{
+      font-size: 16px;
+    }
+    .storyPoster .insight .line{
+      font-size: 18px;
+    }
+    .storyPoster .shareFooter{
+      margin-top: auto;
     }
   </style>
 </head>
@@ -660,9 +649,9 @@
                 <button id="btnShareTT" class="secondary" type="button">TikTok</button>
               </div>
               <div class="shareRow">
-                <button id="btnSaveImage" class="secondary" type="button">Save Share Image (beta)</button>
                 <button class="secondary" type="button" disabled aria-disabled="true" title="(Coming soon)">Share to iMessage</button>
                 <button class="secondary" type="button" disabled aria-disabled="true" title="(Coming soon)">Share to WhatsApp</button>
+                <button class="secondary" type="button" disabled aria-disabled="true" title="(Coming soon)">More soon</button>
               </div>
             </div>
 
@@ -699,14 +688,34 @@
 
         <div class="bar" aria-hidden="true"></div>
 
-        <div id="storyCardSlot"></div>
+        <div id="storyPoster" class="storyPoster" aria-label="Story poster">
+          <div class="shareMeta">
+            <div class="shareBrand">Spotify Dating Red Flags 🚩</div>
+            <div class="shareHint">Screenshot this screen (no downloads).</div>
+          </div>
+
+          <div class="openerPanel">
+            <div id="storyOpenerText" class="opener"><span class="flag">🚩</span>Loading…</div>
+          </div>
+
+          <hr class="rule" />
+
+          <ul id="storyFlagsList" class="list" aria-label="Story flags"></ul>
+
+          <div class="insight" role="note" aria-label="Biggest dating pattern">
+            <div class="label">Biggest Dating Pattern This Year</div>
+            <div id="storyInsightLine" class="line">Loading…</div>
+          </div>
+
+          <div class="shareFooter"><span id="storyUrl"></span></div>
+        </div>
 
         <div class="actions">
           <div class="shareKit" aria-label="Story actions">
             <div class="shareRow">
               <button id="btnStoryCopyCaption" class="primary" type="button">Copy Caption</button>
               <button id="btnStoryCopyLink" class="secondary" type="button">Copy Link</button>
-              <button id="btnStorySaveImage" class="secondary" type="button">Save Image (beta)</button>
+              <button class="secondary" type="button" disabled aria-disabled="true" title="Use a screenshot instead">No Image Export</button>
             </div>
             <div class="shareNote">Tip: Open this on your phone → screenshot → share to IG Stories / TikTok / X.</div>
           </div>
@@ -719,8 +728,6 @@
       </div>
     </section>
   </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <script>
 /* =========================================================
@@ -826,7 +833,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     const btnShareIG = document.getElementById("btnShareIG");
     const btnShareTT = document.getElementById("btnShareTT");
     const btnCopyCaption = document.getElementById("btnCopyCaption");
-    const btnSaveImage = document.getElementById("btnSaveImage");
     const btnCopyLink = document.getElementById("btnCopyLink");
     const btnStoryMode = document.getElementById("btnStoryMode");
     const btnShareMore = document.getElementById("btnShareMore");
@@ -834,11 +840,12 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
 
     const storyView = document.getElementById("storyView");
     const btnBackFromStory = document.getElementById("btnBackFromStory");
-    const storyCardSlot = document.getElementById("storyCardSlot");
-    const shareCardHome = document.getElementById("shareCardHome");
+    const storyOpenerText = document.getElementById("storyOpenerText");
+    const storyFlagsList = document.getElementById("storyFlagsList");
+    const storyInsightLine = document.getElementById("storyInsightLine");
+    const storyUrlEl = document.getElementById("storyUrl");
     const btnStoryCopyCaption = document.getElementById("btnStoryCopyCaption");
     const btnStoryCopyLink = document.getElementById("btnStoryCopyLink");
-    const btnStorySaveImage = document.getElementById("btnStorySaveImage");
 
     const shareUrlEl = document.getElementById("shareUrl");
     const shareHint = document.getElementById("shareHint");
@@ -1296,83 +1303,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       }
     }
 
-    function isCanvasProbablyBlank(canvas){
-      try{
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        if (!ctx) return true;
-        const w = canvas.width, h = canvas.height;
-        if (!w || !h) return true;
-
-        const samples = [
-          [Math.floor(w*0.1), Math.floor(h*0.1)],
-          [Math.floor(w*0.5), Math.floor(h*0.1)],
-          [Math.floor(w*0.9), Math.floor(h*0.1)],
-          [Math.floor(w*0.1), Math.floor(h*0.5)],
-          [Math.floor(w*0.5), Math.floor(h*0.5)],
-          [Math.floor(w*0.9), Math.floor(h*0.5)],
-          [Math.floor(w*0.1), Math.floor(h*0.9)],
-          [Math.floor(w*0.5), Math.floor(h*0.9)],
-          [Math.floor(w*0.9), Math.floor(h*0.9)]
-        ];
-
-        let nonBlank = 0;
-        for (const [x,y] of samples){
-          const d = ctx.getImageData(x,y,1,1).data;
-          const r = d[0], g = d[1], b = d[2], a = d[3];
-
-          const isTransparent = a < 10;
-          const isWhiteish = r > 245 && g > 245 && b > 245;
-          if (!isTransparent && !isWhiteish) nonBlank++;
-        }
-        return nonBlank === 0;
-      }catch(_){
-        return false;
-      }
-    }
-
-    async function renderWithMode(foreignObjectRendering){
-      const scale = Math.min(2, window.devicePixelRatio || 1);
-      return await html2canvas(shareCard, {
-        backgroundColor: "#ffffff",
-        scale,
-        useCORS: true,
-        foreignObjectRendering,
-        onclone: (doc) => {
-          doc.body.classList.add("captureMode");
-        }
-      });
-    }
-
-    async function saveShareImage(){
-      if (!shareCard || typeof html2canvas !== "function"){
-        showToast(toast2, "Share image unavailable.");
-        return;
-      }
-      showToast(toast2, "Generating image…");
-      updateShareKit();
-
-      let canvas = await renderWithMode(false);
-
-      if (isCanvasProbablyBlank(canvas)){
-        console.warn("Blank capture detected. Retrying with foreignObjectRendering...");
-        canvas = await renderWithMode(true);
-      }
-
-      if (isCanvasProbablyBlank(canvas)){
-        showToast(toast2, "Image capture failed (blank). Try Chrome, then try again.");
-        return;
-      }
-
-      const dataUrl = canvas.toDataURL("image/png");
-      const a = document.createElement("a");
-      a.href = dataUrl;
-      a.download = "spotify-dating-red-flags.png";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      showToast(toast2, "Saved image. Post it and cause problems.");
-    }
-
     function openInstagram(){
       copyText(lastShareCaption, "Caption copied. Paste it in Instagram.");
       window.open("https://www.instagram.com/", "_blank", "noopener");
@@ -1412,29 +1342,58 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       }
     }
 
-    function enterStoryMode(){
-      if (!storyView || !storyCardSlot || !shareCard || !shareCardHome) return;
-      updateShareKit();
+    function buildStoryMode(){
+      if (!storyOpenerText || !storyFlagsList || !storyInsightLine) return;
 
-      // Move the existing share card into the Story view (no duplicate IDs)
-      storyCardSlot.appendChild(shareCard);
+      if (!lastResult || !lastResult.ordered){
+        storyOpenerText.innerHTML = `<span class="flag">🚩</span>Run the roast first.`;
+        storyFlagsList.innerHTML = "";
+        storyInsightLine.textContent = "Then come back here.";
+        if (storyUrlEl) storyUrlEl.textContent = safeNowUrl();
+        return;
+      }
+
+      const opener = lastResult.ordered[0]?.joke_text || "Data unavailable. Still suspicious.";
+      const openerRow = lastResult.ordered[0] || null;
+      const openerBecause = buildBecauseLine(openerRow, lastEvidence);
+
+      storyOpenerText.innerHTML =
+        `<span class="flag">🚩</span>${escapeHTML(opener)}${
+          openerBecause ? `<div class="because">${escapeHTML(openerBecause)}</div>` : ""
+        }`;
+
+      storyFlagsList.innerHTML = "";
+      const flags = (lastResult.ordered || []).slice(1, 3);
+      for (let i=0;i<flags.length;i++){
+        const li = document.createElement("li");
+        li.className = "fadeIn role-core" + (i % 2 === 1 ? " alt" : "");
+        const because = buildBecauseLine(flags[i], lastEvidence);
+        li.innerHTML =
+          `<span class="flag">🚩</span>${escapeHTML(flags[i].joke_text)}${
+            because ? `<div class="because">${escapeHTML(because)}</div>` : ""
+          }`;
+        storyFlagsList.appendChild(li);
+      }
+
+      storyInsightLine.textContent = lastResult.insight || "Your vibe is complicated.";
+      if (storyUrlEl) storyUrlEl.textContent = safeNowUrl();
+    }
+
+    function enterStoryMode(){
+      if (!storyView) return;
+      updateShareKit();
+      buildStoryMode();
 
       document.body.classList.add("isStory");
       resultsView.classList.add("hidden");
       storyView.classList.remove("hidden");
 
-      // Keep share UI compact on mobile
       setShareExpanded(false);
-
-      // Jump to top so the card is immediately visible
       window.scrollTo({ top: 0, behavior: "auto" });
     }
 
     function exitStoryMode(){
-      if (!storyView || !storyCardSlot || !shareCard || !shareCardHome) return;
-
-      // Move the share card back to its home in Results view
-      shareCardHome.appendChild(shareCard);
+      if (!storyView) return;
 
       document.body.classList.remove("isStory");
       storyView.classList.add("hidden");
@@ -1470,7 +1429,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
             `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
           await renderRoastFromBuckets(buckets, lastEvidence);
 
-          // Mobile-first default: keep share options collapsed
           setShareExpanded(false);
         }catch(e){
           console.error(e);
@@ -1497,7 +1455,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
           `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
         await renderRoastFromBuckets(buckets, lastEvidence);
 
-        // Keep share compact on mobile after re-roast
         setShareExpanded(false);
       } catch (e) {
         console.error(e);
@@ -1507,17 +1464,13 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
 
     btnCopyCaption?.addEventListener("click", () => copyText(lastShareCaption || buildShareCaption(), "Caption copied."));
     btnCopyLink?.addEventListener("click", () => copyText(safeNowUrl(), "Link copied."));
-    btnSaveImage?.addEventListener("click", saveShareImage);
 
-    // Story Mode: switch to screenshot-friendly view (no automatic download)
     btnStoryMode?.addEventListener("click", enterStoryMode);
     btnBackFromStory?.addEventListener("click", exitStoryMode);
 
     btnStoryCopyCaption?.addEventListener("click", () => copyText(lastShareCaption || buildShareCaption(), "Caption copied."));
     btnStoryCopyLink?.addEventListener("click", () => copyText(safeNowUrl(), "Link copied."));
-    btnStorySaveImage?.addEventListener("click", saveShareImage);
 
-    // Advanced share
     btnShareIG?.addEventListener("click", openInstagram);
     btnShareTT?.addEventListener("click", openTikTok);
 
