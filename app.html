@@ -486,6 +486,53 @@
     }
 
     /* =========================================================
+       MOBILE-FIRST SHARE: keep it compact by default on phones.
+       - Always show: Story Mode + Copy Caption + Copy Link
+       - Hide "advanced" share controls unless expanded
+       ========================================================= */
+    .shareCompactLabel{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.85;
+      padding: 8px 10px;
+      border: var(--b);
+      background: var(--yellow);
+    }
+    .shareDivider{
+      height: 0;
+      border: none;
+      border-top: var(--b);
+      margin: 2px 0;
+    }
+    .shareAdvanced{
+      display: grid;
+      gap: 10px;
+    }
+    .shareToggleRow{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    #btnShareMore{
+      width: 100%;
+    }
+    #btnStoryMode{
+      width: 100%;
+    }
+
+    /* On small screens: advanced options are collapsed by default */
+    @media (max-width:520px){
+      .actions .shareKit:not(.isExpanded) .shareAdvanced{ display:none; }
+      .actions .shareKit.isExpanded .shareAdvanced{ display:grid; }
+    }
+
+    /* On larger screens: always show advanced (no need to toggle) */
+    @media (min-width:521px){
+      .actions .shareKit .shareAdvanced{ display:grid; }
+      .actions .shareKit .shareToggleRow{ display:none; }
+    }
+
+    /* =========================================================
        CAPTURE MODE (only in html2canvas clone via onclone)
        Goal: prevent washed-out blocks WITHOUT causing blank captures.
        Key change vs last attempt: NO blanket opacity override.
@@ -588,18 +635,36 @@
         <div class="actions">
           <button id="btnRoastAgain" class="primary" type="button">Roast Again</button>
 
-          <div class="shareKit" aria-label="Share kit">
+          <div class="shareKit" id="shareKit" aria-label="Share kit">
+            <div class="shareCompactLabel" id="shareCompactLabel">Share (best on phone): Story Mode + copy caption + paste anywhere.</div>
+
+            <!-- Always-visible compact actions -->
             <div class="shareRow">
-              <a id="btnShareX" class="secondary" href="#" target="_blank" rel="noopener">Share to X</a>
-              <button id="btnShareIG" class="secondary" type="button">Instagram</button>
-              <button id="btnShareTT" class="secondary" type="button">TikTok</button>
-            </div>
-            <div class="shareRow">
-              <button id="btnCopyCaption" class="primary" type="button">Copy Caption</button>
-              <button id="btnSaveImage" class="secondary" type="button">Save Share Image</button>
+              <button id="btnStoryMode" class="primary" type="button">Story Mode (Save Image)</button>
+              <button id="btnCopyCaption" class="secondary" type="button">Copy Caption</button>
               <button id="btnCopyLink" class="secondary" type="button">Copy Link</button>
             </div>
-            <div class="shareNote" id="shareNote">Tip: post yours and tag 3 friends to compare.</div>
+
+            <!-- Mobile-only toggle -->
+            <div class="shareToggleRow">
+              <button id="btnShareMore" class="secondary" type="button" aria-expanded="false">More Share Options</button>
+            </div>
+
+            <!-- Advanced actions (collapsed by default on mobile) -->
+            <div class="shareAdvanced" id="shareAdvanced">
+              <div class="shareRow">
+                <a id="btnShareX" class="secondary" href="#" target="_blank" rel="noopener">Share to X</a>
+                <button id="btnShareIG" class="secondary" type="button">Instagram</button>
+                <button id="btnShareTT" class="secondary" type="button">TikTok</button>
+              </div>
+              <div class="shareRow">
+                <button id="btnSaveImage" class="secondary" type="button">Save Share Image (beta)</button>
+                <button class="secondary" type="button" disabled aria-disabled="true" title="(Coming soon)">Share to iMessage</button>
+                <button class="secondary" type="button" disabled aria-disabled="true" title="(Coming soon)">Share to WhatsApp</button>
+              </div>
+            </div>
+
+            <div class="shareNote" id="shareNote">Compare with friends: post yours, then tag 2 friends and vote who’s the bigger 🚩.</div>
           </div>
 
           <div class="toneRow" aria-label="Tone selector">
@@ -729,6 +794,9 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     const btnCopyCaption = document.getElementById("btnCopyCaption");
     const btnSaveImage = document.getElementById("btnSaveImage");
     const btnCopyLink = document.getElementById("btnCopyLink");
+    const btnStoryMode = document.getElementById("btnStoryMode");
+    const btnShareMore = document.getElementById("btnShareMore");
+    const shareKit = document.getElementById("shareKit");
     const shareUrlEl = document.getElementById("shareUrl");
     const shareHint = document.getElementById("shareHint");
     const shareNote = document.getElementById("shareNote");
@@ -1131,6 +1199,7 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
         pieces.push(`receipts: ${cleaned}`);
       }
       pieces.push(`Run yours: ${url}`);
+      pieces.push(`Tag 2 friends and vote who’s the bigger 🚩.`);
       return pieces.join("\n");
     }
 
@@ -1162,7 +1231,7 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       if (shareUrlEl) shareUrlEl.textContent = url;
 
       if (shareNote) {
-        shareNote.textContent = "Compare with friends: post yours, then tag 2 friends and decide who’s the bigger 🚩.";
+        shareNote.textContent = "Compare with friends: post yours, then tag 2 friends and vote who’s the bigger 🚩.";
       }
       if (shareHint) {
         shareHint.textContent = "Screenshot-ready. Made from your recent listening.";
@@ -1188,7 +1257,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
         const w = canvas.width, h = canvas.height;
         if (!w || !h) return true;
 
-        // Sample a small grid of pixels (fast) to detect “all white/transparent”
         const samples = [
           [Math.floor(w*0.1), Math.floor(h*0.1)],
           [Math.floor(w*0.5), Math.floor(h*0.1)],
@@ -1203,17 +1271,15 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
 
         let nonBlank = 0;
         for (const [x,y] of samples){
-          const d = ctx.getImageData(x,y,1,1).data; // [r,g,b,a]
+          const d = ctx.getImageData(x,y,1,1).data;
           const r = d[0], g = d[1], b = d[2], a = d[3];
 
-          // Count pixels that are not basically white and not transparent
           const isTransparent = a < 10;
           const isWhiteish = r > 245 && g > 245 && b > 245;
           if (!isTransparent && !isWhiteish) nonBlank++;
         }
         return nonBlank === 0;
       }catch(_){
-        // If we can’t read pixels (tainted), don’t assume blank.
         return false;
       }
     }
@@ -1239,16 +1305,13 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       showToast(toast2, "Generating image…");
       updateShareKit();
 
-      // IMPORTANT: default renderer first (most reliable).
       let canvas = await renderWithMode(false);
 
-      // If we got a “blank” canvas, retry with foreignObjectRendering.
       if (isCanvasProbablyBlank(canvas)){
         console.warn("Blank capture detected. Retrying with foreignObjectRendering...");
         canvas = await renderWithMode(true);
       }
 
-      // If still blank, show a helpful message instead of silently saving junk.
       if (isCanvasProbablyBlank(canvas)){
         showToast(toast2, "Image capture failed (blank). Try Chrome, then try again.");
         return;
@@ -1287,6 +1350,22 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       resultsView.classList.remove("hidden");
     }
 
+    function setShareExpanded(expanded){
+      if (!shareKit) return;
+      const isSmall = window.matchMedia && window.matchMedia("(max-width:520px)").matches;
+      if (!isSmall) {
+        shareKit.classList.remove("isExpanded");
+        if (btnShareMore) { btnShareMore.setAttribute("aria-expanded", "false"); btnShareMore.textContent = "More Share Options"; }
+        return;
+      }
+
+      shareKit.classList.toggle("isExpanded", !!expanded);
+      if (btnShareMore){
+        btnShareMore.setAttribute("aria-expanded", expanded ? "true" : "false");
+        btnShareMore.textContent = expanded ? "Hide Share Options" : "More Share Options";
+      }
+    }
+
     async function boot(){
       const url = new URL(window.location.href);
       const code = url.searchParams.get("code");
@@ -1312,6 +1391,9 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
           document.getElementById("resultsSubtitle").textContent =
             `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
           await renderRoastFromBuckets(buckets, lastEvidence);
+
+          // Mobile-first default: keep share options collapsed
+          setShareExpanded(false);
         }catch(e){
           console.error(e);
           showToast(toast, "Spotify error: " + (e?.message || "Unknown"));
@@ -1336,6 +1418,9 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
         document.getElementById("resultsSubtitle").textContent =
           `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
         await renderRoastFromBuckets(buckets, lastEvidence);
+
+        // Keep share compact on mobile after re-roast
+        setShareExpanded(false);
       } catch (e) {
         console.error(e);
         showToast(toast2, "Spotify error: " + (e?.message || "Unknown"));
@@ -1345,8 +1430,17 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     btnCopyCaption?.addEventListener("click", () => copyText(lastShareCaption || buildShareCaption(), "Caption copied."));
     btnCopyLink?.addEventListener("click", () => copyText(safeNowUrl(), "Link copied."));
     btnSaveImage?.addEventListener("click", saveShareImage);
+    btnStoryMode?.addEventListener("click", saveShareImage);
+
     btnShareIG?.addEventListener("click", openInstagram);
     btnShareTT?.addEventListener("click", openTikTok);
+
+    btnShareMore?.addEventListener("click", () => {
+      const expanded = !!shareKit?.classList?.contains("isExpanded");
+      setShareExpanded(!expanded);
+    });
+
+    window.addEventListener("resize", () => setShareExpanded(false));
 
     toneSelect.addEventListener("change", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
 
