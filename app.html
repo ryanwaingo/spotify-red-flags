@@ -27,6 +27,7 @@
 
     *{ box-sizing:border-box; }
     html, body{ height:100%; }
+
     body{
       margin:0;
       background: var(--bg);
@@ -34,6 +35,10 @@
       font-family: var(--sans);
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+
+      /* iOS safe-area so bottom buttons aren’t hidden under Safari chrome */
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     .wrap{
@@ -41,7 +46,9 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 28px 14px;
+
+      /* account for iOS safe areas */
+      padding: calc(28px + env(safe-area-inset-top, 0px)) 14px calc(28px + env(safe-area-inset-bottom, 0px));
     }
 
     .frame{
@@ -49,7 +56,11 @@
       border: var(--b);
       background: var(--paper);
       position: relative;
+
+      /* add a little extra bottom space for iOS Safari */
       padding: var(--pad);
+      padding-bottom: calc(var(--pad) + env(safe-area-inset-bottom, 0px));
+
       transform: translateX(-2px) translateY(1px);
     }
 
@@ -336,7 +347,7 @@
     }
 
     @media (max-width:420px){
-      .frame{ padding:18px; }
+      .frame{ padding:18px; padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
       .opener{ font-size: 32px; }
       .list li{ font-size: 17px; }
     }
@@ -414,82 +425,7 @@
       .shareFooter{ justify-content:flex-start; }
     }
 
-    /* =========================================================
-       SHARE UI LAYOUT FIX (scoped)
-       ========================================================= */
-    .actions .shareKit{
-      position: relative;
-      overflow: visible;
-      min-width: 0;
-    }
-    .actions .shareKit .shareRow{
-      align-items: stretch;
-    }
-    .actions .shareKit .shareRow > *{
-      width: 100%;
-      min-width: 0;
-      max-width: 100%;
-    }
-    .actions .shareKit a,
-    .actions .shareKit button{
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-      white-space: nowrap;
-      min-height: 48px;
-      line-height: 1;
-    }
-    .actions .shareKit a{
-      font-family: var(--mono);
-      font-weight: 900;
-      letter-spacing: 0.02em;
-      padding: 12px 12px;
-      border: var(--b);
-      background: #fff;
-      color: var(--ink);
-      cursor: pointer;
-    }
-    #btnSaveImage{
-      position: static !important;
-      inset: auto !important;
-      transform: none !important;
-      margin: 0 !important;
-    }
-    .actions .shareKit .primary{
-      background: var(--ink);
-      color: #fff;
-    }
-    .actions .shareKit .primary:hover{
-      background: var(--yellow);
-      color: var(--ink);
-    }
-    .actions .shareKit .secondary:hover{
-      background: var(--blue);
-      color: #fff;
-    }
-    .toneRow select{
-      width: min(240px, 100%);
-    }
-    @media (max-width:520px){
-      .toneRow{
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .toneRow .label{
-        width: 100%;
-      }
-      .toneRow select{
-        width: 100%;
-      }
-    }
-
-    /* =========================================================
-       MOBILE-FIRST SHARE: keep it compact by default on phones.
-       - Always show: Story Mode + Copy Caption + Copy Link
-       - Hide "advanced" share controls unless expanded
-       ========================================================= */
+    /* SHARE: compact on mobile */
     .shareCompactLabel{
       font-family: var(--mono);
       font-size: 12px;
@@ -520,35 +456,52 @@
     }
 
     /* =========================================================
-       STORY MODE VIEW (screenshot-friendly)
+       STORY MODE VIEW (iOS-safe + screenshot-friendly)
        ========================================================= */
     body.isStory .wrap{
       align-items: flex-start;
     }
 
+    /* Use real mobile viewport units. Prefer svh (stable), fallback dvh. */
     .storyPoster{
       border: var(--b);
       background: #fff;
       padding: 14px;
       margin: 0 auto;
       width: min(420px, 100%);
+
+      /* Fit within the visible phone screen (fixes iOS Safari cut-offs) */
+      height: min(calc(100svh - 260px), 760px);
+      height: min(calc(100dvh - 260px), 760px);
+
       aspect-ratio: 9 / 16;
       display:flex;
       flex-direction: column;
       gap: 12px;
-      overflow: hidden;
+
+      /* IMPORTANT: don’t clip children on iOS (fixes cut-off blue panel) */
+      overflow: visible;
     }
 
-    /* Make it feel like one phone screen */
     @media (max-width:520px){
       .storyPoster{
         width: 100%;
-        aspect-ratio: 9 / 16;
       }
+    }
+
+    /* iOS Safari sometimes clips transformed children inside “poster” containers.
+       Remove transforms & overflow hiding inside Story Mode only. */
+    .storyPoster .openerPanel{
+      transform: none !important;
+      overflow: visible !important;
+    }
+    .storyPoster .list li{
+      transform: none !important;
     }
 
     .storyPoster .opener{
       font-size: 34px;
+      line-height: 1.08; /* slightly taller so text never clips */
     }
     .storyPoster .list li{
       font-size: 16px;
@@ -558,6 +511,11 @@
     }
     .storyPoster .shareFooter{
       margin-top: auto;
+    }
+
+    /* Extra bottom space in Story Mode so action buttons aren’t under Safari bar */
+    body.isStory .frame{
+      padding-bottom: calc(var(--pad) + 16px + env(safe-area-inset-bottom, 0px));
     }
   </style>
 </head>
@@ -601,26 +559,26 @@
         <div class="bar" aria-hidden="true"></div>
 
         <div id="shareCardHome">
-        <div id="shareCard" class="shareCard" aria-label="Share card">
-          <div class="shareMeta">
-            <div class="shareBrand">Spotify Dating Red Flags 🚩</div>
-            <div class="shareHint" id="shareHint">Generated from your listening history</div>
+          <div id="shareCard" class="shareCard" aria-label="Share card">
+            <div class="shareMeta">
+              <div class="shareBrand">Spotify Dating Red Flags 🚩</div>
+              <div class="shareHint" id="shareHint">Generated from your listening history</div>
+            </div>
+
+            <div id="openerPanel" class="openerPanel">
+              <div id="openerText" class="opener"><span class="flag">🚩</span>Loading…</div>
+            </div>
+
+            <hr id="rule" class="rule" />
+
+            <ul id="flagsList" class="list" aria-label="Red flags"></ul>
+
+            <div id="insightBox" class="insight" role="note" aria-label="Biggest dating pattern">
+              <div class="label">Biggest Dating Pattern This Year</div>
+              <div id="insightLine" class="line">Loading…</div>
+            </div>
+            <div class="shareFooter"><span id="shareUrl"></span></div>
           </div>
-
-          <div id="openerPanel" class="openerPanel">
-            <div id="openerText" class="opener"><span class="flag">🚩</span>Loading…</div>
-          </div>
-
-          <hr id="rule" class="rule" />
-
-          <ul id="flagsList" class="list" aria-label="Red flags"></ul>
-
-          <div id="insightBox" class="insight" role="note" aria-label="Biggest dating pattern">
-            <div class="label">Biggest Dating Pattern This Year</div>
-            <div id="insightLine" class="line">Loading…</div>
-          </div>
-          <div class="shareFooter"><span id="shareUrl"></span></div>
-        </div>
         </div>
 
         <div class="actions">
@@ -629,19 +587,16 @@
           <div class="shareKit" id="shareKit" aria-label="Share kit">
             <div class="shareCompactLabel" id="shareCompactLabel">Share (best on phone): use Story Mode → screenshot → post → tag friends.</div>
 
-            <!-- Always-visible compact actions -->
             <div class="shareRow">
               <button id="btnStoryMode" class="primary" type="button">Story Mode (screenshot)</button>
               <button id="btnCopyCaption" class="secondary" type="button">Copy Caption</button>
               <button id="btnCopyLink" class="secondary" type="button">Copy Link</button>
             </div>
 
-            <!-- Mobile-only toggle -->
             <div class="shareToggleRow">
               <button id="btnShareMore" class="secondary" type="button" aria-expanded="false">More Share Options</button>
             </div>
 
-            <!-- Advanced actions (collapsed by default on mobile) -->
             <div class="shareAdvanced" id="shareAdvanced">
               <div class="shareRow">
                 <a id="btnShareX" class="secondary" href="#" target="_blank" rel="noopener">Share to X</a>
@@ -675,8 +630,7 @@
         </div>
       </div>
 
-
-      <!-- STORY MODE VIEW (screenshot-friendly) -->
+      <!-- STORY MODE VIEW -->
       <div id="storyView" class="hidden" aria-label="Story mode">
         <header class="header">
           <div>
@@ -730,10 +684,6 @@
   </main>
 
   <script>
-/* =========================================================
-   Spotify Dating Red Flags — Frontend-only (GitHub Pages)
-   ========================================================= */
-
 (function(){
   function flash(msg){
     try{
@@ -850,7 +800,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     const shareUrlEl = document.getElementById("shareUrl");
     const shareHint = document.getElementById("shareHint");
     const shareNote = document.getElementById("shareNote");
-    const shareCard = document.getElementById("shareCard");
     let lastShareCaption = "";
 
     const toneSelect = document.getElementById("toneSelect");
@@ -869,11 +818,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
           el.style.display = "none";
         }
       }, 3500);
-    }
-
-    if (!btnLogin){
-      showToast(toast, "JS loaded, but #btnLogin not found. Check your HTML.");
-      return;
     }
 
     function splitCSVLine(line) {
@@ -1098,10 +1042,7 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       else buckets.obscurity = "obscure";
 
       const evidence = {
-        repetition: {
-          maxRepeat,
-          topTrack: plays.find(p => p.track.id === topTrackId)?.track || null
-        },
+        repetition: { maxRepeat, topTrack: plays.find(p => p.track.id === topTrackId)?.track || null },
         time_of_day: { peakHour, hourCounts },
         obscurity: { avgPopularity }
       };
@@ -1283,13 +1224,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       const url = safeNowUrl();
       if (shareUrlEl) shareUrlEl.textContent = url;
 
-      if (shareNote) {
-        shareNote.textContent = "Compare with friends: post yours, tag 2 friends, and vote who’s the bigger 🚩.";
-      }
-      if (shareHint) {
-        shareHint.textContent = "Screenshot-ready. Made from your recent listening.";
-      }
-
       lastShareCaption = buildShareCaption();
       if (btnShareX) btnShareX.href = buildXIntent();
     }
@@ -1380,7 +1314,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     }
 
     function enterStoryMode(){
-      if (!storyView) return;
       updateShareKit();
       buildStoryMode();
 
@@ -1393,8 +1326,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     }
 
     function exitStoryMode(){
-      if (!storyView) return;
-
       document.body.classList.remove("isStory");
       storyView.classList.add("hidden");
       resultsView.classList.remove("hidden");
@@ -1424,7 +1355,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
           switchToResults();
           const { buckets, evidence, debug } = await fetchProfileBuckets(token);
           lastEvidence = evidence;
-          showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
           document.getElementById("resultsSubtitle").textContent =
             `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
           await renderRoastFromBuckets(buckets, lastEvidence);
@@ -1450,7 +1380,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       try {
         const { buckets, evidence, debug } = await fetchProfileBuckets(token);
         lastEvidence = evidence;
-        showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
         document.getElementById("resultsSubtitle").textContent =
           `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
         await renderRoastFromBuckets(buckets, lastEvidence);
@@ -1480,10 +1409,8 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     });
 
     window.addEventListener("resize", () => setShareExpanded(false));
-
     toneSelect.addEventListener("change", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
 
-    showToast(toast, "✅ JS loaded. Redirect URI: " + getRedirectUriForOAuth());
     boot();
   } catch (e) {
     const t = document.getElementById("toast") || document.getElementById("toast2");
@@ -1491,6 +1418,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     console.error(e);
   }
 });
-</script>
+  </script>
 </body>
 </html>
