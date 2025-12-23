@@ -498,12 +498,6 @@
       border: var(--b);
       background: var(--yellow);
     }
-    .shareDivider{
-      height: 0;
-      border: none;
-      border-top: var(--b);
-      margin: 2px 0;
-    }
     .shareAdvanced{
       display: grid;
       gap: 10px;
@@ -513,23 +507,29 @@
       grid-template-columns: 1fr;
       gap: 10px;
     }
-    #btnShareMore{
-      width: 100%;
-    }
-    #btnStoryMode{
-      width: 100%;
-    }
+    #btnShareMore{ width: 100%; }
+    #btnStoryMode{ width: 100%; }
 
-    /* On small screens: advanced options are collapsed by default */
     @media (max-width:520px){
       .actions .shareKit:not(.isExpanded) .shareAdvanced{ display:none; }
       .actions .shareKit.isExpanded .shareAdvanced{ display:grid; }
     }
-
-    /* On larger screens: always show advanced (no need to toggle) */
     @media (min-width:521px){
       .actions .shareKit .shareAdvanced{ display:grid; }
       .actions .shareKit .shareToggleRow{ display:none; }
+    }
+
+    /* =========================================================
+       STORY MODE VIEW (screenshot-friendly)
+       ========================================================= */
+    body.isStory .wrap{
+      align-items: flex-start;
+    }
+    #storyView #shareCard{
+      margin-top: 0;
+    }
+    #storyCardSlot{
+      display:block;
     }
 
     /* =========================================================
@@ -611,6 +611,7 @@
 
         <div class="bar" aria-hidden="true"></div>
 
+        <div id="shareCardHome">
         <div id="shareCard" class="shareCard" aria-label="Share card">
           <div class="shareMeta">
             <div class="shareBrand">Spotify Dating Red Flags 🚩</div>
@@ -631,16 +632,17 @@
           </div>
           <div class="shareFooter"><span id="shareUrl"></span></div>
         </div>
+        </div>
 
         <div class="actions">
           <button id="btnRoastAgain" class="primary" type="button">Roast Again</button>
 
           <div class="shareKit" id="shareKit" aria-label="Share kit">
-            <div class="shareCompactLabel" id="shareCompactLabel">Share (best on phone): Story Mode + copy caption + paste anywhere.</div>
+            <div class="shareCompactLabel" id="shareCompactLabel">Share (best on phone): use Story Mode → screenshot → post → tag friends.</div>
 
             <!-- Always-visible compact actions -->
             <div class="shareRow">
-              <button id="btnStoryMode" class="primary" type="button">Story Mode (Save Image)</button>
+              <button id="btnStoryMode" class="primary" type="button">Story Mode (screenshot)</button>
               <button id="btnCopyCaption" class="secondary" type="button">Copy Caption</button>
               <button id="btnCopyLink" class="secondary" type="button">Copy Link</button>
             </div>
@@ -664,7 +666,7 @@
               </div>
             </div>
 
-            <div class="shareNote" id="shareNote">Compare with friends: post yours, then tag 2 friends and vote who’s the bigger 🚩.</div>
+            <div class="shareNote" id="shareNote">Compare with friends: post yours, tag 2 friends, and vote who’s the bigger 🚩.</div>
           </div>
 
           <div class="toneRow" aria-label="Tone selector">
@@ -676,6 +678,38 @@
           </div>
 
           <div id="toast2" class="toast" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="micro">
+          <div class="left">If you’re mad, take it up with your playlists.</div>
+          <div class="right">🚩 VERIFIED</div>
+        </div>
+      </div>
+
+
+      <!-- STORY MODE VIEW (screenshot-friendly) -->
+      <div id="storyView" class="hidden" aria-label="Story mode">
+        <header class="header">
+          <div>
+            <h1 class="title">Story Mode</h1>
+            <div class="subtitle">Take a screenshot (or screen record). Post it, then tag 2 friends and vote who’s the bigger 🚩.</div>
+          </div>
+          <button id="btnBackFromStory" class="secondary" type="button">Back</button>
+        </header>
+
+        <div class="bar" aria-hidden="true"></div>
+
+        <div id="storyCardSlot"></div>
+
+        <div class="actions">
+          <div class="shareKit" aria-label="Story actions">
+            <div class="shareRow">
+              <button id="btnStoryCopyCaption" class="primary" type="button">Copy Caption</button>
+              <button id="btnStoryCopyLink" class="secondary" type="button">Copy Link</button>
+              <button id="btnStorySaveImage" class="secondary" type="button">Save Image (beta)</button>
+            </div>
+            <div class="shareNote">Tip: Open this on your phone → screenshot → share to IG Stories / TikTok / X.</div>
+          </div>
         </div>
 
         <div class="micro">
@@ -797,6 +831,15 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     const btnStoryMode = document.getElementById("btnStoryMode");
     const btnShareMore = document.getElementById("btnShareMore");
     const shareKit = document.getElementById("shareKit");
+
+    const storyView = document.getElementById("storyView");
+    const btnBackFromStory = document.getElementById("btnBackFromStory");
+    const storyCardSlot = document.getElementById("storyCardSlot");
+    const shareCardHome = document.getElementById("shareCardHome");
+    const btnStoryCopyCaption = document.getElementById("btnStoryCopyCaption");
+    const btnStoryCopyLink = document.getElementById("btnStoryCopyLink");
+    const btnStorySaveImage = document.getElementById("btnStorySaveImage");
+
     const shareUrlEl = document.getElementById("shareUrl");
     const shareHint = document.getElementById("shareHint");
     const shareNote = document.getElementById("shareNote");
@@ -974,6 +1017,9 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       lastBuckets = null;
       lastResult = null;
       lastEvidence = null;
+      document.body.classList.remove("isStory");
+      if (storyView) storyView.classList.add("hidden");
+      if (resultsView) resultsView.classList.add("hidden");
       switchToLogin();
       showToast(toast, "Logged out.");
     }
@@ -1231,7 +1277,7 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       if (shareUrlEl) shareUrlEl.textContent = url;
 
       if (shareNote) {
-        shareNote.textContent = "Compare with friends: post yours, then tag 2 friends and vote who’s the bigger 🚩.";
+        shareNote.textContent = "Compare with friends: post yours, tag 2 friends, and vote who’s the bigger 🚩.";
       }
       if (shareHint) {
         shareHint.textContent = "Screenshot-ready. Made from your recent listening.";
@@ -1366,6 +1412,38 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       }
     }
 
+    function enterStoryMode(){
+      if (!storyView || !storyCardSlot || !shareCard || !shareCardHome) return;
+      updateShareKit();
+
+      // Move the existing share card into the Story view (no duplicate IDs)
+      storyCardSlot.appendChild(shareCard);
+
+      document.body.classList.add("isStory");
+      resultsView.classList.add("hidden");
+      storyView.classList.remove("hidden");
+
+      // Keep share UI compact on mobile
+      setShareExpanded(false);
+
+      // Jump to top so the card is immediately visible
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+
+    function exitStoryMode(){
+      if (!storyView || !storyCardSlot || !shareCard || !shareCardHome) return;
+
+      // Move the share card back to its home in Results view
+      shareCardHome.appendChild(shareCard);
+
+      document.body.classList.remove("isStory");
+      storyView.classList.add("hidden");
+      resultsView.classList.remove("hidden");
+
+      setShareExpanded(false);
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+
     async function boot(){
       const url = new URL(window.location.href);
       const code = url.searchParams.get("code");
@@ -1430,8 +1508,16 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     btnCopyCaption?.addEventListener("click", () => copyText(lastShareCaption || buildShareCaption(), "Caption copied."));
     btnCopyLink?.addEventListener("click", () => copyText(safeNowUrl(), "Link copied."));
     btnSaveImage?.addEventListener("click", saveShareImage);
-    btnStoryMode?.addEventListener("click", saveShareImage);
 
+    // Story Mode: switch to screenshot-friendly view (no automatic download)
+    btnStoryMode?.addEventListener("click", enterStoryMode);
+    btnBackFromStory?.addEventListener("click", exitStoryMode);
+
+    btnStoryCopyCaption?.addEventListener("click", () => copyText(lastShareCaption || buildShareCaption(), "Caption copied."));
+    btnStoryCopyLink?.addEventListener("click", () => copyText(safeNowUrl(), "Link copied."));
+    btnStorySaveImage?.addEventListener("click", saveShareImage);
+
+    // Advanced share
     btnShareIG?.addEventListener("click", openInstagram);
     btnShareTT?.addEventListener("click", openTikTok);
 
