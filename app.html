@@ -35,7 +35,7 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
 
-      /* iOS safe-area so bottom content isn’t under browser UI */
+      /* iOS safe-area */
       padding-top: env(safe-area-inset-top, 0px);
       padding-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -420,7 +420,9 @@
       .shareFooter{ justify-content:flex-start; }
     }
 
-    /* MOBILE-FIRST SHARE: compact by default */
+    /* =========================================================
+       MOBILE-FIRST SHARE: compact by default
+       ========================================================= */
     .shareCompactLabel{
       font-family: var(--mono);
       font-size: 12px;
@@ -438,9 +440,6 @@
       grid-template-columns: 1fr;
       gap: 10px;
     }
-    #btnShareMore{ width: 100%; }
-    #btnOpenStoryTab{ width: 100%; }
-
     @media (max-width:520px){
       .actions .shareKit:not(.isExpanded) .shareAdvanced{ display:none; }
       .actions .shareKit.isExpanded .shareAdvanced{ display:grid; }
@@ -451,45 +450,45 @@
     }
 
     /* =========================================================
-       STORY TAB (opens in a NEW tab at #story)
-       Goal: ONE fixed 1080x1920 poster, scaled to fit screen.
-       No buttons. No back UI. Nothing to clip on iPhone.
+       STORY MODE VIEW (legacy; still present but not the primary path)
        ========================================================= */
-    body.storyOnly .wrap{
-      padding: 0 !important;
-      align-items: stretch !important;
-      justify-content: stretch !important;
+    body.isStory .wrap{
+      align-items: flex-start;
     }
-    body.storyOnly .frame{
-      width: 100% !important;
-      border: none !important;
-      background: var(--bg) !important;
-      padding: 0 !important;
-      transform: none !important;
+    #storyView #shareCard{
+      margin-top: 0;
     }
-    body.storyOnly .stamp{ display:none !important; }
+    #storyCardSlot{
+      display:block;
+    }
 
-    /* Fullscreen stage */
+    /* =========================================================
+       STORY TAB (opens in a NEW tab at #story)
+       Poster-only 1080x1920, scaled to fit. No buttons, no share UI.
+       ========================================================= */
+    body.storyTabOnly{
+      margin:0;
+      padding:0;
+    }
+    body.storyTabOnly .wrap{ padding:0 !important; align-items:stretch !important; justify-content:stretch !important; }
+    body.storyTabOnly .frame{ width:100% !important; border:none !important; background: var(--bg) !important; padding:0 !important; transform:none !important; }
+    body.storyTabOnly .stamp{ display:none !important; }
+
     .storyOnlyStage{
       position: fixed;
       inset: 0;
       background: var(--bg);
-      display: block;
       overflow: hidden;
     }
-
-    /* Center the canvas; JS sets --storyScale */
     .storyCanvasWrap{
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(-50%, -50%) scale(var(--storyScale, 0.5));
-      transform-origin: 0 0;
       width: 1080px;
       height: 1920px;
+      transform: translate(-50%, -50%) scale(var(--storyScale, 0.35));
+      transform-origin: 50% 50%;
     }
-
-    /* The actual “poster” */
     .storyCanvas{
       width: 1080px;
       height: 1920px;
@@ -500,18 +499,14 @@
       flex-direction: column;
       gap: 22px;
     }
-
-    /* Story typography tweaks so everything stays on one poster */
     .storyCanvas .opener{
       font-size: 86px;
       line-height: 1.05;
     }
-    .storyCanvas .list{
-      gap: 18px;
-    }
+    .storyCanvas .list{ gap: 18px; }
     .storyCanvas .list li{
       font-size: 44px;
-      padding: 26px 26px;
+      padding: 26px;
       line-height: 1.18;
     }
     .storyCanvas .because{
@@ -519,30 +514,12 @@
       line-height: 1.22;
       margin-top: 14px;
     }
-    .storyCanvas .insight .label{
-      font-size: 26px;
-    }
-    .storyCanvas .insight .line{
-      font-size: 54px;
-    }
-    .storyCanvas .shareBrand{
-      font-size: 26px;
-    }
-    .storyCanvas .shareHint{
-      font-size: 26px;
-      max-width: none;
-    }
-    .storyCanvas .bar{
-      height: 16px;
-      margin: 0;
-    }
-    .storyCanvas .shareFooter{
-      margin-top: auto;
-      font-size: 24px;
-      opacity: 0.85;
-    }
-
-    /* Remove small corner that can cause iOS clip artifacts */
+    .storyCanvas .insight .label{ font-size: 26px; }
+    .storyCanvas .insight .line{ font-size: 54px; }
+    .storyCanvas .shareBrand{ font-size: 26px; }
+    .storyCanvas .shareHint{ font-size: 26px; max-width:none; }
+    .storyCanvas .bar{ height: 16px; margin: 0; }
+    .storyCanvas .shareFooter{ margin-top:auto; font-size: 24px; opacity: 0.85; }
     .storyCanvas .insight::after{ display:none; }
   </style>
 </head>
@@ -604,6 +581,7 @@
               <div class="label">Biggest dating pattern this year</div>
               <div id="insightLine" class="line">Loading…</div>
             </div>
+
             <div class="shareFooter"><span id="shareUrl"></span></div>
           </div>
         </div>
@@ -612,10 +590,11 @@
           <button id="btnRoastAgain" class="primary" type="button">Roast Again</button>
 
           <div class="shareKit" id="shareKit" aria-label="Share kit">
-            <div class="shareCompactLabel" id="shareCompactLabel">Share (best on phone): open Story Tab → screenshot → post → tag friends.</div>
+            <div class="shareCompactLabel">Share (best on phone): open Story Tab → screenshot → post → tag friends.</div>
 
+            <!-- Always-visible compact actions -->
             <div class="shareRow">
-              <button id="btnOpenStoryTab" class="primary" type="button">Open Story Tab (screenshot)</button>
+              <button id="btnStoryMode" class="primary" type="button">Open Story Tab (screenshot)</button>
               <button id="btnCopyCaption" class="secondary" type="button">Copy Caption</button>
               <button id="btnCopyLink" class="secondary" type="button">Copy Link</button>
             </div>
@@ -657,11 +636,35 @@
         </div>
       </div>
 
-      <!-- STORY TAB VIEW (poster only) -->
-      <div id="storyOnlyView" class="hidden" aria-label="Story poster only">
+      <!-- STORY MODE VIEW (old in-tab mode; not primary anymore) -->
+      <div id="storyView" class="hidden" aria-label="Story mode">
+        <header class="header">
+          <div>
+            <h1 class="title">Story Mode</h1>
+            <div class="subtitle">Take a screenshot (or screen record). Post it, then tag 2 friends and vote who’s the bigger 🚩.</div>
+          </div>
+          <button id="btnBackFromStory" class="secondary" type="button">Back</button>
+        </header>
+
+        <div id="storyCardSlot"></div>
+
+        <div class="actions">
+          <div class="shareKit" aria-label="Story share kit">
+            <div class="shareRow">
+              <button id="btnStoryCopyCaption" class="secondary" type="button">Copy Caption</button>
+              <button id="btnStoryCopyLink" class="secondary" type="button">Copy Link</button>
+              <button id="btnStorySaveImage" class="secondary hidden" type="button">Save Image</button>
+            </div>
+            <div class="shareNote">Tip: screenshot is best. (We are not auto-downloading.)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STORY TAB ONLY VIEW (opens in new tab at #story) -->
+      <div id="storyTabOnlyView" class="hidden" aria-label="Story tab poster only">
         <div class="storyOnlyStage">
           <div id="storyCanvasWrap" class="storyCanvasWrap">
-            <div id="storyCanvas" class="storyCanvas" aria-label="Story canvas">
+            <div id="storyCanvas" class="storyCanvas" aria-label="Story poster">
               <div class="shareMeta">
                 <div class="shareBrand">SPOTIFY DATING RED FLAGS 🚩</div>
                 <div class="shareHint">Screenshot this screen (no downloads).</div>
@@ -677,7 +680,7 @@
 
               <ul id="storyFlagsList" class="list" aria-label="Story flags"></ul>
 
-              <div id="storyInsightBox" class="insight" role="note" aria-label="Biggest dating pattern">
+              <div class="insight" role="note" aria-label="Biggest dating pattern">
                 <div class="label">Biggest Dating Pattern This Year</div>
                 <div id="storyInsightLine" class="line">—</div>
               </div>
@@ -688,34 +691,13 @@
         </div>
       </div>
 
-</section>
+    </section>
   </main>
 
   <script>
-(function(){
-  function flash(msg){
-    try{
-      const t = document.getElementById("toast") || document.getElementById("toast2");
-      if (t){
-        t.style.display = "block";
-        t.textContent = msg;
-      }
-    }catch(_){}
-  }
-  window.addEventListener("error", (e)=> {
-    flash("JS error: " + (e?.message || "Unknown error") + " (open DevTools Console)");
-  });
-  window.addEventListener("unhandledrejection", (e)=> {
-    const msg = (e?.reason && (e.reason.message || String(e.reason))) || "Unhandled promise rejection";
-    flash("JS error: " + msg + " (open DevTools Console)");
-  });
-})();
-
 document.addEventListener("DOMContentLoaded", () => {
   try {
     const SPOTIFY_CLIENT_ID = "ad08cfcd496348e299ba9a840227954d";
-    const REDIRECT_URI = window.location.origin + window.location.pathname;
-
     const SCOPES = ["user-top-read","user-read-recently-played"];
 
     const JOKES_CSV = `parameter,bucket,tone,priority,joke_text,notes
@@ -773,8 +755,7 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
 
     const loginView = document.getElementById("loginView");
     const resultsView = document.getElementById("resultsView");
-    const storyOnlyView = document.getElementById("storyOnlyView");
-    const stampText = document.getElementById("stampText");
+    const storyView = document.getElementById("storyView");
 
     const btnLogin = document.getElementById("btnLogin");
     const btnLogout = document.getElementById("btnLogout");
@@ -790,18 +771,30 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     const btnShareTT = document.getElementById("btnShareTT");
     const btnCopyCaption = document.getElementById("btnCopyCaption");
     const btnCopyLink = document.getElementById("btnCopyLink");
-    const btnOpenStoryTab = document.getElementById("btnOpenStoryTab");
+    const btnStoryMode = document.getElementById("btnStoryMode");
     const btnShareMore = document.getElementById("btnShareMore");
     const shareKit = document.getElementById("shareKit");
 
-    const storyCanvasWrap = document.getElementById("storyCanvasWrap");
+    const btnBackFromStory = document.getElementById("btnBackFromStory");
+    const storyCardSlot = document.getElementById("storyCardSlot");
+    const shareCardHome = document.getElementById("shareCardHome");
+    const btnStoryCopyCaption = document.getElementById("btnStoryCopyCaption");
+    const btnStoryCopyLink = document.getElementById("btnStoryCopyLink");
+    const btnStorySaveImage = document.getElementById("btnStorySaveImage");
+
+    const storyTabOnlyView = document.getElementById("storyTabOnlyView");
     const storyOpenerText = document.getElementById("storyOpenerText");
     const storyFlagsList = document.getElementById("storyFlagsList");
     const storyInsightLine = document.getElementById("storyInsightLine");
     const storyUrlEl = document.getElementById("storyUrl");
+    const storyCanvasWrap = document.getElementById("storyCanvasWrap");
 
     const shareUrlEl = document.getElementById("shareUrl");
+    const shareHint = document.getElementById("shareHint");
+    const shareNote = document.getElementById("shareNote");
+    const shareCard = document.getElementById("shareCard");
 
+    const stampText = document.getElementById("stampText");
     const toneSelect = document.getElementById("toneSelect");
     const toast = document.getElementById("toast");
     const toast2 = document.getElementById("toast2");
@@ -882,6 +875,7 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     function getRedirectUriForOAuth(){
       const u = new URL(window.location.href);
       ["code","state","error","error_description"].forEach(k=>u.searchParams.delete(k));
+      u.hash = "";
       return u.origin + u.pathname;
     }
 
@@ -909,7 +903,7 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     }
 
     async function exchangeCodeForToken(code) {
-      const redirectUri = localStorage.getItem("oauth_redirect_uri") || REDIRECT_URI;
+      const redirectUri = localStorage.getItem("oauth_redirect_uri") || getRedirectUriForOAuth();
 
       let verifier = null;
       try { verifier = sessionStorage.getItem("pkce_verifier"); } catch(_) {}
@@ -955,11 +949,12 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     function logout() {
       ["access_token","token_exp","pkce_verifier","oauth_redirect_uri"].forEach(k=>localStorage.removeItem(k));
       try { sessionStorage.removeItem("pkce_verifier"); } catch(_) {}
-
       lastBuckets = null; lastResult = null; lastEvidence = null;
-      document.body.classList.remove("storyOnly");
-      storyOnlyView.classList.add("hidden");
+
+      document.body.classList.remove("storyTabOnly");
+      storyTabOnlyView.classList.add("hidden");
       resultsView.classList.add("hidden");
+      storyView.classList.add("hidden");
       switchToLogin();
       showToast(toast, "Logged out.");
     }
@@ -1045,7 +1040,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       );
       return rows.slice().sort((a,b)=>a.priority-b.priority);
     }
-
     function randomPick(arr){ return arr.length ? arr[Math.floor(Math.random()*arr.length)] : null; }
 
     function generateRoast(buckets, tone){
@@ -1065,8 +1059,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
         "&":"&amp;","<":"&lt;",">":"&gt;", "\"":"&quot;","'":"&#39;"
       }[c]));
     }
-
-    function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
 
     function clearResults(){
       openerText.innerHTML = `<span class="flag">🚩</span>Loading…`;
@@ -1101,49 +1093,6 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
         return `because your average artist popularity is ${pop}/100.`;
       }
       return "";
-    }
-
-    async function renderRoastFromBuckets(buckets, evidence){
-      clearResults();
-      const tone = toneSelect.value;
-      const { ordered, insight } = generateRoast(buckets, tone);
-      lastResult = { ordered, insight, tone };
-      lastBuckets = buckets;
-      lastEvidence = evidence;
-
-      const opener = ordered[0]?.joke_text || "Data unavailable. Still suspicious.";
-      const openerBecause = buildBecauseLine(ordered[0] || null, evidence);
-
-      openerText.innerHTML =
-        `<span class="flag">🚩</span>${escapeHTML(opener)}${
-          openerBecause ? `<div class="because">${escapeHTML(openerBecause)}</div>` : ""
-        }`;
-
-      await sleep(400);
-
-      ruleEl.classList.remove("hidden");
-      flagsList.classList.remove("hidden");
-
-      const rest = ordered.slice(1);
-      for (let i=0;i<rest.length;i++){
-        const li = document.createElement("li");
-        li.className = "fadeIn";
-        const isLast = (i === rest.length - 1);
-        if (isLast) li.classList.add("role-close");
-        else { li.classList.add("role-core"); if (i % 2 === 1) li.classList.add("alt"); }
-
-        const because = buildBecauseLine(rest[i], evidence);
-        li.innerHTML =
-          `<span class="flag">🚩</span>${escapeHTML(rest[i].joke_text)}${
-            because ? `<div class="because">${escapeHTML(because)}</div>` : ""
-          }`;
-        flagsList.appendChild(li);
-        await sleep(120);
-      }
-
-      insightLine.textContent = insight;
-      insightBox.classList.remove("hidden");
-      updateShareKit();
     }
 
     function safeNowUrl(){
@@ -1185,80 +1134,83 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       return intent.toString();
     }
 
-    function updateShareKit(){
-      const url = safeNowUrl();
-      if (shareUrlEl) shareUrlEl.textContent = url;
-      lastShareCaption = buildShareCaption();
-      saveStoryPayload();
-      if (btnShareX) btnShareX.href = buildXIntent();
+    // ===== Story Tab (new tab at #story) =====
+    function safeStoryUrl(){
+      return safeNowUrl() + "#story";
     }
 
     function saveStoryPayload(){
       try{
         if (!lastResult || !lastEvidence) return;
-        const openerRow = lastResult.ordered?.[0] || null;
-        const openerBecause = buildBecauseLine(openerRow, lastEvidence);
 
-        const flagsRows = (lastResult.ordered || []).slice(1, 3); // 2 max
-        const flags = flagsRows.map(r => ({
-          text: r.joke_text || "",
+        const openerRow = lastResult.ordered?.[0] || null;
+        const openerBecause = buildBecauseLine(openerRow, lastEvidence) || "";
+
+        const rows = (lastResult.ordered || []).slice(1, 3);
+        const flags = rows.map(r => ({
+          text: r?.joke_text || "",
           because: buildBecauseLine(r, lastEvidence) || ""
         }));
 
         const payload = {
           v: 1,
           createdAt: Date.now(),
-          tone: lastResult.tone || "playful",
           url: safeNowUrl(),
-          opener: { text: openerRow?.joke_text || "", because: openerBecause || "" },
+          opener: { text: openerRow?.joke_text || "", because: openerBecause },
           flags,
-          insight: lastResult.insight || ""
+          insight: (lastResult.insight || "")
         };
+
         localStorage.setItem("sdrf_story_payload", JSON.stringify(payload));
-      }catch(e){
-        // ignore storage failures
-      }
+      }catch(_){}
     }
 
-    function renderStoryOnlyFromStorage(){
+    function renderStoryFromStorage(){
       try{
         const raw = localStorage.getItem("sdrf_story_payload");
+        const url = safeNowUrl();
+
         if (!raw){
-          storyOpenerText.innerHTML = `<span class="flag">🚩</span>Run the roast first.`;
-          storyFlagsList.innerHTML = "";
-          storyInsightLine.textContent = "Then open Story Tab again.";
-          if (storyUrlEl) storyUrlEl.textContent = safeNowUrl();
+          if (storyOpenerText) storyOpenerText.innerHTML = `<span class="flag">🚩</span>Run the roast first.`;
+          if (storyFlagsList) storyFlagsList.innerHTML = "";
+          if (storyInsightLine) storyInsightLine.textContent = "Then open Story Tab again.";
+          if (storyUrlEl) storyUrlEl.textContent = url;
           return;
         }
-        const payload = JSON.parse(raw);
 
-        storyOpenerText.innerHTML =
-          `<span class="flag">🚩</span>${escapeHTML(payload.opener?.text || "")}${
-            payload.opener?.because ? `<div class="because">${escapeHTML(payload.opener.because)}</div>` : ""
-          }`;
+        const p = JSON.parse(raw);
 
-        storyFlagsList.innerHTML = "";
-        (payload.flags || []).slice(0,2).forEach((f, i)=>{
-          const li = document.createElement("li");
-          li.className = "role-core" + (i % 2 === 1 ? " alt" : "");
-          li.innerHTML =
-            `<span class="flag">🚩</span>${escapeHTML(f.text || "")}${
-              f.because ? `<div class="because">${escapeHTML(f.because)}</div>` : ""
+        if (storyOpenerText){
+          storyOpenerText.innerHTML =
+            `<span class="flag">🚩</span>${escapeHTML(p.opener?.text || "")}${
+              p.opener?.because ? `<div class="because">${escapeHTML(p.opener.because)}</div>` : ""
             }`;
-          storyFlagsList.appendChild(li);
-        });
+        }
 
-        storyInsightLine.textContent = payload.insight || "—";
-        if (storyUrlEl) storyUrlEl.textContent = payload.url || safeNowUrl();
+        if (storyFlagsList){
+          storyFlagsList.innerHTML = "";
+          (p.flags || []).slice(0,2).forEach((f, i)=>{
+            const li = document.createElement("li");
+            li.className = "role-core" + (i % 2 === 1 ? " alt" : "");
+            li.innerHTML =
+              `<span class="flag">🚩</span>${escapeHTML(f.text || "")}${
+                f.because ? `<div class="because">${escapeHTML(f.because)}</div>` : ""
+              }`;
+            storyFlagsList.appendChild(li);
+          });
+        }
+
+        if (storyInsightLine) storyInsightLine.textContent = p.insight || "—";
+        if (storyUrlEl) storyUrlEl.textContent = p.url || url;
       }catch(e){
-        storyOpenerText.innerHTML = `<span class="flag">🚩</span>Could not load story data.`;
-        storyFlagsList.innerHTML = "";
-        storyInsightLine.textContent = "Go back and run the roast again.";
+        if (storyOpenerText) storyOpenerText.innerHTML = `<span class="flag">🚩</span>Could not load story data.`;
+        if (storyFlagsList) storyFlagsList.innerHTML = "";
+        if (storyInsightLine) storyInsightLine.textContent = "Go back and run the roast again.";
         if (storyUrlEl) storyUrlEl.textContent = safeNowUrl();
       }
     }
 
-    function fitStoryCanvasToScreen(){
+    function fitStoryToScreen(){
       try{
         const vw = Math.max(320, window.innerWidth);
         const vh = Math.max(480, window.innerHeight);
@@ -1274,13 +1226,65 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
       }catch(_){}
     }
 
-    async function copyText(textToCopy, okMsg){
-      try{
-        await navigator.clipboard.writeText(textToCopy);
-        showToast(toast2, okMsg || "Copied.");
-      }catch(e){
-        window.prompt("Copy this:", textToCopy);
+    function openStoryTab(){
+      saveStoryPayload();
+      window.open(safeStoryUrl(), "_blank", "noopener");
+    }
+
+    async function renderRoastFromBuckets(buckets, evidence){
+      clearResults();
+      const tone = toneSelect.value;
+      const { ordered, insight } = generateRoast(buckets, tone);
+      lastResult = { ordered, insight, tone };
+      lastBuckets = buckets;
+      lastEvidence = evidence;
+
+      const opener = ordered[0]?.joke_text || "Data unavailable. Still suspicious.";
+      const openerBecause = buildBecauseLine(ordered[0] || null, evidence);
+
+      openerText.innerHTML =
+        `<span class="flag">🚩</span>${escapeHTML(opener)}${
+          openerBecause ? `<div class="because">${escapeHTML(openerBecause)}</div>` : ""
+        }`;
+
+      ruleEl.classList.remove("hidden");
+      flagsList.classList.remove("hidden");
+
+      const rest = ordered.slice(1);
+      for (let i=0;i<rest.length;i++){
+        const li = document.createElement("li");
+        li.className = "fadeIn";
+        const isLast = (i === rest.length - 1);
+        if (isLast) li.classList.add("role-close");
+        else { li.classList.add("role-core"); if (i % 2 === 1) li.classList.add("alt"); }
+
+        const because = buildBecauseLine(rest[i], evidence);
+        li.innerHTML =
+          `<span class="flag">🚩</span>${escapeHTML(rest[i].joke_text)}${
+            because ? `<div class="because">${escapeHTML(because)}</div>` : ""
+          }`;
+        flagsList.appendChild(li);
       }
+
+      insightLine.textContent = insight;
+      insightBox.classList.remove("hidden");
+      updateShareKit();
+    }
+
+    function updateShareKit(){
+      const url = safeNowUrl();
+      if (shareUrlEl) shareUrlEl.textContent = url;
+      lastShareCaption = buildShareCaption();
+      saveStoryPayload();
+      if (btnShareX) btnShareX.href = buildXIntent();
+    }
+
+    function copyText(textToCopy, okMsg){
+      return navigator.clipboard.writeText(textToCopy).then(()=>{
+        showToast(toast2, okMsg || "Copied.");
+      }).catch(()=>{
+        window.prompt("Copy this:", textToCopy);
+      });
     }
 
     function openInstagram(){
@@ -1316,6 +1320,23 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
         btnShareMore.setAttribute("aria-expanded", expanded ? "true" : "false");
         btnShareMore.textContent = expanded ? "Hide Share Options" : "More Share Options";
       }
+    }
+
+    // ===== Route: Story Tab Only (open in new tab with #story) =====
+    const isStoryTab = (window.location.hash || "").toLowerCase() === "#story";
+    if (isStoryTab){
+      document.body.classList.add("storyTabOnly");
+      loginView.classList.add("hidden");
+      resultsView.classList.add("hidden");
+      storyView.classList.add("hidden");
+      storyTabOnlyView?.classList.remove("hidden");
+
+      renderStoryFromStorage();
+      fitStoryToScreen();
+      window.addEventListener("resize", fitStoryToScreen);
+
+      // Do NOT run Spotify OAuth here.
+      return;
     }
 
     async function boot(){
@@ -1354,11 +1375,7 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     btnCopyCaption?.addEventListener("click", () => copyText(lastShareCaption || buildShareCaption(), "Caption copied."));
     btnCopyLink?.addEventListener("click", () => copyText(safeNowUrl(), "Link copied."));
 
-    btnOpenStoryTab?.addEventListener("click", () => {
-      saveStoryPayload();
-      const url = safeNowUrl() + "#story";
-      window.open(url, "_blank", "noopener");
-    });
+    btnStoryMode?.addEventListener("click", openStoryTab);
 
     btnShareIG?.addEventListener("click", openInstagram);
     btnShareTT?.addEventListener("click", openTikTok);
@@ -1371,26 +1388,12 @@ insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.","
     window.addEventListener("resize", () => setShareExpanded(false));
     toneSelect?.addEventListener("change", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
 
-    // STORY TAB ROUTE: if the URL ends with #story, render ONLY the 1080x1920 poster.
-    const isStoryTab = (window.location.hash || "").toLowerCase() === "#story";
-    if (isStoryTab){
-      document.body.classList.add("storyOnly");
-      loginView.classList.add("hidden");
-      resultsView.classList.add("hidden");
-      storyOnlyView.classList.remove("hidden");
-
-      renderStoryOnlyFromStorage();
-      fitStoryCanvasToScreen();
-      window.addEventListener("resize", fitStoryCanvasToScreen);
-      // Do not run Spotify boot/login flows in Story Tab.
-      return;
-    }
-
     boot().catch(e=>{
       console.error(e);
       showToast(toast, "Error: " + (e?.message || "Unknown"));
       switchToLogin();
     });
+
   } catch (e) {
     console.error(e);
     const t = document.getElementById("toast") || document.getElementById("toast2");
