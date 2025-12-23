@@ -1,142 +1,666 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Spotify Dating Red Flags</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spotify Dating Red Flags</title>
+  <style>
+    :root{
+      --bg: #FFF7E6;
+      --paper: #FFFFFF;
+      --ink: #111111;
+      --muted: #4D4D4D;
 
-<style>
-/* ===== unchanged global styles ===== */
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto;background:#fff7e6}
-button,select{font-family:monospace;font-weight:700;border:3px solid #111;background:#fff;padding:10px;cursor:pointer}
-button.primary{background:#111;color:#fff}
-button.primary:hover{background:#ffe600;color:#111}
+      --red: #E10600;
+      --blue: #0057FF;
+      --yellow: #FFE600;
+      --green: #00C853;
+      --pink: #FF3EB5;
+      --purple: #7C4DFF;
 
-/* ===== SHARE SECTION FIX ===== */
+      --b: 3px solid var(--ink);
+      --pad: 22px;
 
-.shareKit{
-  border:3px solid #111;
-  padding:14px;
-  background:#fff;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
 
-/* first row: platform buttons */
-.shareRow.platforms{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-}
-.shareRow.platforms > *{
-  flex:1 1 30%;
-  text-align:center;
-}
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
 
-/* second row: caption + save */
-.shareRow.actions{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:12px;
-}
+    .wrap{
+      min-height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 14px;
+    }
 
-/* dropdown row */
-.shareRow.format{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap;
-}
+    .frame{
+      width: min(560px, 100%);
+      border: var(--b);
+      background: var(--paper);
+      position: relative;
+      padding: var(--pad);
+      transform: translateX(-2px) translateY(1px);
+    }
 
-.shareRow.format label{
-  font-weight:800;
-}
+    .stamp{
+      position:absolute;
+      top:-16px;
+      right:14px;
+      border: var(--b);
+      background: var(--pink);
+      color: var(--ink);
+      padding: 8px 10px;
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 12px;
+      transform: rotate(2deg);
+      user-select:none;
+    }
 
-.shareNote{
-  font-size:12px;
-  opacity:.8;
-}
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 14px;
+    }
 
-/* prevent overlap ever */
-.shareKit button,
-.shareKit select{
-  width:100%;
-}
+    .title{
+      font-weight: 950;
+      letter-spacing: -0.03em;
+      line-height: 1.02;
+      font-size: 24px;
+      margin: 0;
+    }
 
-/* ===== tone row ===== */
-.toneRow{
-  margin-top:14px;
-  border:3px solid #111;
-  padding:12px;
-  background:#60c56a;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
+    .subtitle{
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
 
-/* ===== footer ===== */
-.footer{
-  margin-top:18px;
-  font-family:monospace;
-  display:flex;
-  justify-content:space-between;
-}
-.footer .badge{
-  background:#ff3eb5;
-  border:3px solid #111;
-  padding:6px 10px;
-  font-weight:900;
-}
-</style>
+    .bar{
+      height: 10px;
+      border: var(--b);
+      background: var(--yellow);
+      margin: 10px 0 18px;
+      transform: translateX(1px);
+    }
+
+    button{
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      padding: 12px 12px;
+      border: var(--b);
+      background: #fff;
+      color: var(--ink);
+      cursor:pointer;
+    }
+    button:active{ transform: translateY(1px); }
+
+    .primary{
+      background: var(--ink);
+      color: #fff;
+    }
+    .primary:hover{
+      background: var(--yellow);
+      color: var(--ink);
+    }
+
+    .secondary:hover{
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .note{
+      border: var(--b);
+      background: var(--yellow);
+      padding: 10px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      margin-top: 12px;
+    }
+
+    .toast{
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink);
+      border: var(--b);
+      padding: 8px 10px;
+      background: var(--yellow);
+      display:none;
+    }
+
+    .hidden{ display:none !important; }
+
+    .fadeIn{
+      animation: fadeIn 180ms ease-out both;
+    }
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(6px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    /* RESULTS UI */
+    .openerPanel{
+      border: var(--b);
+      background: var(--blue);
+      color: #fff;
+      padding: 16px 14px;
+      position: relative;
+      transform: translateX(-1px);
+      overflow:hidden;
+    }
+    .openerPanel::before{
+      content:"";
+      position:absolute;
+      left:-10px;
+      top:-10px;
+      width:18px;
+      height:18px;
+      border: var(--b);
+      background: var(--yellow);
+    }
+    .opener{
+      font-weight: 950;
+      letter-spacing: -0.05em;
+      line-height: 1.05;
+      font-size: 38px;
+      margin: 0;
+    }
+    .flag{
+      margin-right: 10px;
+      color: var(--yellow);
+    }
+
+    .rule{
+      height:0;
+      border:none;
+      border-top: var(--b);
+      margin: 16px 0;
+    }
+
+    .list{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .list li{
+      border: var(--b);
+      padding: 10px 10px;
+      font-size: 18px;
+      line-height: 1.22;
+      letter-spacing: -0.01em;
+      background: #fff;
+      transform: translateX(1px);
+    }
+    .list li:nth-child(2n){ transform: translateX(-1px); }
+
+    .list li:nth-child(1){ background: var(--yellow); }
+    .list li:nth-child(2){ background: var(--green); color: var(--ink); }
+    .list li:nth-child(3){ background: var(--paper); }
+    .list li:nth-child(4){ background: var(--purple); color: #fff; }
+    .list li:nth-child(5){ background: var(--pink); color: var(--ink); }
+    .list li:nth-child(6){ background: var(--yellow); }
+    .list li:nth-child(7){ background: var(--green); color: var(--ink); }
+
+    /* Evidence line */
+    .because{
+      margin-top: 6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.25;
+      opacity: 0.9;
+    }
+
+    /* Role-based colors (override nth-child chaos) */
+    .list li.role-core { background: var(--yellow) !important; color: var(--ink) !important; }
+    .list li.role-core.alt { background: var(--green) !important; color: var(--ink) !important; }
+    .list li.role-close { background: var(--pink) !important; color: var(--ink) !important; }
+
+    .list .flag{ color: var(--red); }
+    .list li:nth-child(4) .flag{ color: var(--yellow); }
+
+    .insight{
+      margin-top: 16px;
+      border: var(--b);
+      background: var(--yellow);
+      padding: 14px;
+      position: relative;
+      transform: translateX(1px);
+    }
+    .insight::after{
+      content:"";
+      position:absolute;
+      right:-10px;
+      bottom:-10px;
+      width:18px;
+      height:18px;
+      border: var(--b);
+      background: var(--red);
+    }
+    .insight .label{
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .insight .line{
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .actions{
+      margin-top: 16px;
+      border: var(--b);
+      background: #fff;
+      padding: 12px;
+      display:grid;
+      gap: 10px;
+      transform: translateX(-1px);
+    }
+
+    .toneRow{
+      border: var(--b);
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      background: var(--green);
+    }
+    .toneRow .label{
+      font-family: var(--mono);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--ink);
+      white-space:nowrap;
+    }
+    select{
+      font-family: var(--mono);
+      font-weight: 900;
+      border: var(--b);
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 10px;
+      cursor:pointer;
+    }
+
+    .micro{
+      margin-top: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink);
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      border-top: var(--b);
+      padding-top: 12px;
+      align-items:flex-start;
+    }
+    .micro .right{
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 11px;
+      background: var(--pink);
+      border: var(--b);
+      padding: 6px 8px;
+      transform: rotate(-1deg);
+      user-select:none;
+    }
+
+    @media (max-width:420px){
+      .frame{ padding:18px; }
+      .opener{ font-size: 32px; }
+      .list li{ font-size: 17px; }
+    }
+
+    .shareCard{
+      border: var(--b);
+      background:#fff;
+      padding: 14px;
+      margin-top: 14px;
+    }
+    .shareMeta{
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      border-bottom: var(--b);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      align-items:flex-start;
+    }
+    .shareBrand{
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    .shareHint{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.75;
+      text-align:right;
+      max-width: 240px;
+    }
+    .shareFooter{
+      margin-top: 12px;
+      border-top: var(--b);
+      padding-top: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.85;
+      display:flex;
+      justify-content:flex-end;
+    }
+
+    .shareKit{
+      border: var(--b);
+      background:#fff;
+      padding: 12px;
+      display:grid;
+      gap: 10px;
+    }
+
+    /* ✅ FIXED SHARE GRID */
+    .shareRow{
+      display:grid;
+      /* Container-responsive: auto-wrap instead of collapsing to 1 column too early */
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      align-items: stretch;
+    }
+    /* Force each control to fill its grid cell cleanly */
+    .shareRow > button,
+    .shareRow > a{
+      width: 100%;
+    }
+    /* Share format row should always take a full row */
+    .shareRow .sharePresetRow{
+      grid-column: 1 / -1;
+      margin: 0;
+    }
+    .shareRow .sharePreset{
+      width: auto;
+      max-width: 100%;
+    }
+
+    .shareNote{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    .shareRow a.secondary{
+      text-align:center;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+    }
+
+    /* Keep the metadata layout responsive, but don’t nuke the share grid early */
+    @media (max-width:420px){
+      .shareHint{ text-align:left; max-width:none; }
+      .shareMeta{ flex-direction:column; }
+      .shareFooter{ justify-content:flex-start; }
+    }
+
+    /* ===========================
+       SHARE IMAGE POLISH
+    =========================== */
+    .sharePresetRow{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .sharePresetLabel{ font-weight:700; }
+    .sharePreset{
+      padding:8px 10px;
+      border:2px solid #111;
+      border-radius:10px;
+      background:#fff;
+      font-weight:700;
+    }
+    #shareCard.captureMode{
+      opacity:1 !important;
+      filter:none !important;
+    }
+    #shareCard.captureMode *{
+      opacity:1 !important;
+      filter:none !important;
+    }
+
+    #shareCaptureFrame{
+      margin:0;
+      background:transparent;
+    }
+
+    #shareCaptureFrame.isCapturing{
+      background:#fff;
+      margin:0 auto;
+      display:flex;
+      align-items:stretch;
+      justify-content:center;
+    }
+
+    #shareCaptureFrame.isCapturing.format-ig_square{
+      width:1080px;
+      height:1080px;
+    }
+    #shareCaptureFrame.isCapturing.format-ig_story{
+      width:1080px;
+      height:1920px;
+    }
+    #shareCaptureFrame.isCapturing.format-x_landscape{
+      width:1200px;
+      height:675px;
+    }
+
+    #shareCaptureFrame .shareCard{
+      width:100%;
+      height:100%;
+      box-sizing:border-box;
+      display:flex;
+      flex-direction:column;
+      justify-content:flex-start;
+      padding:40px;
+    }
+    #shareCaptureFrame .footerUrl{
+      margin-top:auto;
+      padding-top:18px;
+      font-weight:800;
+    }
+  </style>
 </head>
 
 <body>
+  <main class="wrap">
+    <section class="frame">
+      <div class="stamp" id="stampText">WELCOME</div>
 
-<div class="shareKit">
+      <!-- LOGIN VIEW -->
+      <div id="loginView">
+        <header class="header">
+          <div>
+            <h1 class="title">Spotify Dating Red Flags 🚩</h1>
+            <div class="subtitle">Log in, get roasted, screenshot, repeat.</div>
+          </div>
+          <button id="btnLogout" class="secondary hidden" type="button">Log out</button>
+        </header>
 
-  <button class="primary">Roast Again</button>
+        <div class="bar" aria-hidden="true"></div>
 
-  <div class="shareRow platforms">
-    <a href="#" id="btnShareX">Share to X</a>
-    <button id="btnShareIG">Instagram</button>
-    <button id="btnShareTT">TikTok</button>
-  </div>
+        <button id="btnLogin" class="primary" type="button">Continue with Spotify</button>
 
-  <div class="shareRow actions">
-    <button id="btnCopyCaption" class="primary">Copy Caption</button>
-    <button id="btnSaveImage">Save Share Image</button>
-    <button id="btnCopyLink">Copy Link</button>
-  </div>
+        <div class="note">
+          We only read your listening data. We don’t post. We don’t save your password.
+        </div>
 
-  <div class="shareRow format">
-    <label for="sharePreset">Share format</label>
-    <select id="sharePreset">
-      <option>Instagram Post (Square)</option>
-      <option>Instagram Story / TikTok</option>
-      <option>X / Twitter</option>
-    </select>
-  </div>
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      </div>
 
-  <div class="shareNote">
-    ⚠️ Compare with friends. Someone will be worse than you.
-  </div>
+      <!-- RESULTS VIEW -->
+      <div id="resultsView" class="hidden" aria-label="Results">
+        <header class="header">
+          <div>
+            <h1 class="title">Your Spotify Dating Red Flags 🚩</h1>
+            <div class="subtitle" id="resultsSubtitle">Based on your listening habits. Not serious. Very specific.</div>
+          </div>
+          <button id="btnLogout2" class="secondary" type="button">Log out</button>
+        </header>
 
-</div>
+        <div class="bar" aria-hidden="true"></div>
 
-<div class="toneRow">
-  <div>TONE</div>
-  <select>
-    <option>Playful</option>
-    <option>Sharp</option>
-  </select>
-</div>
+        <div id="shareCaptureFrame" class="format-ig_square">
+          <div id="shareCard" class="shareCard" aria-label="Share card">
+            <div class="shareMeta">
+              <div class="shareBrand">Spotify Dating Red Flags 🚩</div>
+              <div class="shareHint" id="shareHint">Generated from your listening history</div>
+            </div>
 
-<div class="footer">
-  <div>If you’re mad, take it up with your playlists.</div>
-  <div class="badge">🚩 VERIFIED</div>
-</div>
+            <div id="openerPanel" class="openerPanel">
+              <div id="openerText" class="opener"><span class="flag">🚩</span>Loading…</div>
+            </div>
 
+            <hr id="rule" class="rule" />
+
+            <ul id="flagsList" class="list" aria-label="Red flags"></ul>
+
+            <div id="insightBox" class="insight" role="note" aria-label="Biggest dating pattern">
+              <div class="label">Biggest Dating Pattern This Year</div>
+              <div id="insightLine" class="line">Loading…</div>
+            </div>
+
+            <div class="shareFooter"><span id="shareUrl"></span></div>
+          </div>
+        </div><!-- /#shareCaptureFrame -->
+
+        <div class="actions">
+          <button id="btnRoastAgain" class="primary" type="button">Roast Again</button>
+
+          <div class="shareKit" aria-label="Share kit">
+            <div class="shareRow">
+              <a id="btnShareX" class="secondary" href="#" target="_blank" rel="noopener">Share to X</a>
+              <button id="btnShareIG" class="secondary" type="button">Instagram</button>
+              <button id="btnShareTT" class="secondary" type="button">TikTok</button>
+            </div>
+
+            <div class="shareRow">
+              <button id="btnCopyCaption" class="primary" type="button">Copy Caption</button>
+
+              <div class="sharePresetRow">
+                <label for="sharePreset" class="sharePresetLabel">Share format</label>
+                <select id="sharePreset" class="sharePreset">
+                  <option value="ig_square">Instagram Post (Square)</option>
+                  <option value="ig_story">Instagram Story / TikTok (Vertical)</option>
+                  <option value="x_landscape">X / Twitter (Landscape)</option>
+                </select>
+              </div>
+
+              <button id="btnSaveImage" class="secondary" type="button">Save Share Image</button>
+              <button id="btnCopyLink" class="secondary" type="button">Copy Link</button>
+            </div>
+
+            <div class="shareNote" id="shareNote">Tip: post yours and tag 3 friends to compare.</div>
+          </div>
+
+          <div class="toneRow" aria-label="Tone selector">
+            <div class="label">Tone</div>
+            <select id="toneSelect">
+              <option value="playful" selected>Playful</option>
+              <option value="sharp">Sharp</option>
+            </select>
+          </div>
+
+          <div id="toast2" class="toast" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="micro">
+          <div class="left">If you’re mad, take it up with your playlists.</div>
+          <div class="right">🚩 VERIFIED</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <!-- Your existing JS continues here (unchanged) -->
+  <script>
+/* =========================================================
+   Spotify Dating Red Flags — Frontend-only (GitHub Pages)
+   ========================================================= */
+
+(function(){
+  function flash(msg){
+    try{
+      const t = document.getElementById("toast") || document.getElementById("toast2");
+      if (t){
+        t.style.display = "block";
+        t.textContent = msg;
+      }
+    }catch(_){}
+  }
+  window.addEventListener("error", (e)=> {
+    flash("JS error: " + (e?.message || "Unknown error") + " (open DevTools Console)");
+  });
+  window.addEventListener("unhandledrejection", (e)=> {
+    const msg = (e?.reason && (e.reason.message || String(e.reason))) || "Unhandled promise rejection";
+    flash("JS error: " + msg + " (open DevTools Console)");
+  });
+})();
+
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    const SPOTIFY_CLIENT_ID = "ad08cfcd496348e299ba9a840227954d";
+    const REDIRECT_URI = window.location.origin + window.location.pathname;
+    const SCOPES = [
+      "user-top-read",
+      "user-read-recently-played"
+    ];
+
+    /* ... KEEP YOUR EXISTING JS BELOW THIS POINT ... */
+    /* (I’m not touching your logic here; this update is purely layout.) */
+
+  } catch (e) {
+    const t = document.getElementById("toast");
+    if (t){
+      t.style.display = "block";
+      t.textContent = "JS error: " + (e?.message || e);
+    }
+    console.error(e);
+  }
+});
+  </script>
 </body>
 </html>
