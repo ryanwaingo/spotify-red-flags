@@ -5,6 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Spotify Dating Red Flags</title>
 
+/* =========================================================
+   SHARE UI LAYOUT PATCH (prevents overlap + weird stacking)
+   Paste this near the END of your <style> block.
+   ========================================================= */
+
+/* Make the share panel behave predictably */
+.shareKit{
+  position: relative !important;
+}
+
+/* Ensure the “Save Share Image” button is NOT floating/absolute */
+#btnSaveImage,
+#btnSaveShareImage,
+.saveShareImage,
+button[data-action="save-share-image"]{
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+/* Fix rows so buttons never overlap each other */
+.shareRow{
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+  gap: 12px !important;
+  align-items: stretch !important;
+}
+
+/* Force buttons/links to fill their grid cell */
+.shareRow > button,
+.shareRow > a{
+  width: 100% !important;
+  max-width: 100% !important;
+  justify-self: stretch !important;
+}
+
+/* “Share format” row should always be on its own full line */
+.sharePresetRow{
+  grid-column: 1 / -1 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  flex-wrap: wrap !important;
+  margin: 0 !important;
+}
+
+/* Make dropdown not collide with anything */
+#sharePreset,
+.sharePreset{
+  max-width: 100% !important;
+}
+
+/* On narrow screens, stack to 1 column cleanly */
+@media (max-width: 520px){
+  .shareRow{
+    grid-template-columns: 1fr !important;
+  }
+}
+
+  
   <style>
     /* --- unchanged styles (exactly as before) --- */
     /* (I am intentionally not modifying layout, capture, or auth CSS) */
