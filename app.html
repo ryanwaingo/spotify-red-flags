@@ -4,279 +4,1575 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Spotify Dating Red Flags</title>
-
-/* =========================================================
-   SHARE UI LAYOUT PATCH (prevents overlap + weird stacking)
-   Paste this near the END of your <style> block.
-   ========================================================= */
-
-/* Make the share panel behave predictably */
-.shareKit{
-  position: relative !important;
-}
-
-/* Ensure the “Save Share Image” button is NOT floating/absolute */
-#btnSaveImage,
-#btnSaveShareImage,
-.saveShareImage,
-button[data-action="save-share-image"]{
-  position: static !important;
-  inset: auto !important;
-  transform: none !important;
-  margin: 0 !important;
-}
-
-/* Fix rows so buttons never overlap each other */
-.shareRow{
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
-  gap: 12px !important;
-  align-items: stretch !important;
-}
-
-/* Force buttons/links to fill their grid cell */
-.shareRow > button,
-.shareRow > a{
-  width: 100% !important;
-  max-width: 100% !important;
-  justify-self: stretch !important;
-}
-
-/* “Share format” row should always be on its own full line */
-.sharePresetRow{
-  grid-column: 1 / -1 !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 10px !important;
-  flex-wrap: wrap !important;
-  margin: 0 !important;
-}
-
-/* Make dropdown not collide with anything */
-#sharePreset,
-.sharePreset{
-  max-width: 100% !important;
-}
-
-/* On narrow screens, stack to 1 column cleanly */
-@media (max-width: 520px){
-  .shareRow{
-    grid-template-columns: 1fr !important;
-  }
-}
-
-  
   <style>
-    /* --- unchanged styles (exactly as before) --- */
-    /* (I am intentionally not modifying layout, capture, or auth CSS) */
+    :root{
+      --bg: #FFF7E6;
+      --paper: #FFFFFF;
+      --ink: #111111;
+      --muted: #4D4D4D;
+
+      --red: #E10600;
+      --blue: #0057FF;
+      --yellow: #FFE600;
+      --green: #00C853;
+      --pink: #FF3EB5;
+      --purple: #7C4DFF;
+
+      --b: 3px solid var(--ink);
+      --pad: 22px;
+
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+    a{ color:inherit; }
+
+    .wrap{
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 28px 18px 40px;
+    }
+
+    .shell{
+      background: var(--paper);
+      border: var(--b);
+      box-shadow: 0 10px 0 rgba(0,0,0,0.06);
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 14px;
+      padding: 18px var(--pad) 0;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border: var(--b);
+      background: var(--pink);
+      padding: 6px 10px;
+      font-family: var(--mono);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+      margin-left: 10px;
+      position: relative;
+      top: -8px;
+    }
+
+    .subtitle{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: .85;
+      margin-top: 6px;
+      line-height: 1.2;
+    }
+
+    .metaRight{
+      display:flex;
+      align-items:flex-start;
+      gap: 10px;
+    }
+
+    .btn{
+      font-family: var(--mono);
+      font-weight: 900;
+      font-size: 14px;
+      padding: 12px 14px;
+      border: var(--b);
+      background: #fff;
+      cursor: pointer;
+      user-select:none;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .btn.primary{
+      background: #111;
+      color: #fff;
+    }
+    .btn.primary:hover{ background: var(--yellow); color: #111; }
+    .btn.secondary:hover{ background: var(--yellow); }
+
+    .divider{
+      margin: 14px var(--pad) 16px;
+      height: 7px;
+      background: var(--yellow);
+      border: var(--b);
+    }
+
+    .panel{
+      padding: 0 var(--pad) var(--pad);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 18px;
+      align-items: start;
+    }
+    @media (max-width: 860px){
+      .hero{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      border: var(--b);
+      background: #fff;
+      padding: 16px;
+    }
+
+    .loginCard{
+      display:flex;
+      flex-direction:column;
+      gap: 14px;
+    }
+    .loginTitle{
+      font-family: var(--mono);
+      font-weight: 900;
+      font-size: 42px;
+      line-height: 1;
+      margin: 0;
+    }
+    .loginSub{
+      font-family: var(--mono);
+      font-size: 16px;
+      opacity: .85;
+      margin: 0;
+      line-height: 1.25;
+    }
+
+    .notice{
+      border: var(--b);
+      background: var(--yellow);
+      padding: 14px;
+      font-family: var(--mono);
+      font-weight: 800;
+      line-height: 1.25;
+    }
+    .notice small{
+      display:block;
+      margin-top: 6px;
+      font-weight: 700;
+      opacity: .9;
+    }
+
+    .errorBox{
+      border: var(--b);
+      background: #fff;
+      padding: 12px 14px;
+      font-family: var(--mono);
+      font-size: 13px;
+      display:none;
+      white-space: pre-wrap;
+    }
+
+    .resultsHeader{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .resultsTitle{
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin: 0;
+      font-size: 14px;
+    }
+    .resultsSubtitle{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: .85;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .shareCard{
+      background: #fff;
+      border: var(--b);
+      padding: 16px;
+    }
+
+    /* the screenshot area */
+    #captureArea{
+      width: 100%;
+      background: #fff;
+      border: var(--b);
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+      opacity: 1 !important;
+    }
+
+    .captureTop{
+      display:flex;
+      justify-content:space-between;
+      gap: 12px;
+      align-items:flex-start;
+      margin-bottom: 10px;
+    }
+    .captureBrand{
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: 12px;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+    }
+    .shareHint{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: .75;
+      text-align:right;
+      max-width: 240px;
+    }
+    .shareScore{
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .bar{
+      height: 6px;
+      background: var(--ink);
+      border: 0;
+      margin: 10px 0 12px;
+    }
+
+    .flagBlock{
+      border: var(--b);
+      padding: 16px;
+      margin: 10px 0;
+      position: relative;
+      opacity: 1 !important;
+      background: #fff !important;
+    }
+    .flagBlock .flag{
+      position:absolute;
+      left: 12px;
+      top: 12px;
+      font-size: 18px;
+    }
+    .flagBlock h2{
+      margin: 0;
+      padding-left: 30px;
+      font-family: var(--sans);
+      font-weight: 900;
+      font-size: 40px;
+      line-height: 1.05;
+    }
+    .flagBlock .because{
+      font-family: var(--mono);
+      font-size: 12px;
+      margin-top: 10px;
+      padding-left: 30px;
+      opacity: .85;
+    }
+
+    .flag-yellow{ background: rgba(255,230,0,0.55); }
+    .flag-pink{ background: rgba(255,62,181,0.55); }
+    .flag-blue{ background: rgba(0,87,255,0.85); color:#fff; }
+    .flag-blue .because{ color:#fff; opacity:.9; }
+
+    .bigPattern{
+      border: var(--b);
+      background: rgba(255,230,0,0.65);
+      padding: 16px;
+      margin-top: 12px;
+      opacity: 1 !important;
+    }
+    .bigPattern .label{
+      font-family: var(--mono);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: 12px;
+      opacity: .8;
+      margin-bottom: 6px;
+    }
+    .bigPattern .text{
+      font-family: var(--sans);
+      font-weight: 900;
+      font-size: 26px;
+      line-height: 1.1;
+    }
+    .bigPattern .because{
+      font-family: var(--mono);
+      font-size: 12px;
+      margin-top: 10px;
+      opacity: .85;
+    }
+
+    .urlFooter{
+      margin-top: 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: .75;
+      text-align: right;
+    }
+
+    .controlsCard{
+      border: var(--b);
+      background: #fff;
+      padding: 0;
+    }
+    .controlsTop{
+      background: #111;
+      color:#fff;
+      padding: 14px 16px;
+      font-family: var(--mono);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      text-align:center;
+      font-size: 18px;
+    }
+    .controlsInner{
+      padding: 14px;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+
+    /* share kit layout (fixed) */
+    .shareKit{
+      border: var(--b);
+      padding: 14px;
+      background: #fff;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .shareRow{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+    @media (max-width: 720px){
+      .shareRow{ grid-template-columns: 1fr; }
+    }
+    .shareRow a,
+    .shareRow button{
+      width: 100%;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      border: var(--b);
+      padding: 12px 10px;
+      font-family: var(--mono);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      background:#fff;
+      cursor:pointer;
+      line-height:1;
+    }
+    .shareRow a.secondary,
+    .shareRow button.secondary{
+      background:#fff;
+      color:#111;
+    }
+    .shareRow a.primary,
+    .shareRow button.primary{
+      background:#111;
+      color:#fff;
+    }
+    .shareRow a:hover,
+    .shareRow button:hover{
+      background: var(--yellow);
+      color:#111;
+    }
+
+    .sharePresetRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+    .sharePresetLabel{
+      font-family: var(--mono);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 12px;
+    }
+    .sharePreset{
+      flex: 1 1 280px;
+      max-width: 100%;
+      font-family: var(--mono);
+      font-weight: 900;
+      border: 2px solid #111;
+      padding: 12px 10px;
+      background:#fff;
+      cursor:pointer;
+    }
+
+    .shareNote{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: .8;
+    }
+
+    .toneRow{
+      border: var(--b);
+      background: rgba(0,200,83,0.65);
+      padding: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+    }
+    .toneLabel{
+      font-family: var(--mono);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    #toneSelect{
+      font-family: var(--mono);
+      font-weight: 900;
+      border: var(--b);
+      padding: 10px 12px;
+      background:#fff;
+      cursor:pointer;
+      min-width: 160px;
+    }
+
+    .bottomLine{
+      margin-top: 10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+      font-family: var(--mono);
+      padding: 10px 14px;
+    }
+    .verifiedBadge{
+      border: var(--b);
+      background: var(--pink);
+      padding: 8px 12px;
+      font-family: var(--mono);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      background:#111;
+      color:#fff;
+      border: var(--b);
+      padding: 10px 12px;
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-size: 12px;
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity .18s ease;
+      z-index: 9999;
+    }
+    .toast.show{ opacity: 1; }
   </style>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Spotify Dating Red Flags</title>
-
-<style>
-/* ===== unchanged global styles ===== */
-*{box-sizing:border-box}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto;background:#fff7e6}
-button,select{font-family:monospace;font-weight:700;border:3px solid #111;background:#fff;padding:10px;cursor:pointer}
-button.primary{background:#111;color:#fff}
-button.primary:hover{background:#ffe600;color:#111}
-
-/* ===== SHARE SECTION FIX ===== */
-
-.shareKit{
-  border:3px solid #111;
-  padding:14px;
-  background:#fff;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-/* first row: platform buttons */
-.shareRow.platforms{
-  display:flex;
-  gap:12px;
-  flex-wrap:wrap;
-}
-.shareRow.platforms > *{
-  flex:1 1 30%;
-  text-align:center;
-}
-
-/* second row: caption + save */
-.shareRow.actions{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:12px;
-}
-
-/* dropdown row */
-.shareRow.format{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  flex-wrap:wrap;
-}
-
-.shareRow.format label{
-  font-weight:800;
-}
-
-.shareNote{
-  font-size:12px;
-  opacity:.8;
-}
-
-/* prevent overlap ever */
-.shareKit button,
-.shareKit select{
-  width:100%;
-}
-
-/* ===== tone row ===== */
-.toneRow{
-  margin-top:14px;
-  border:3px solid #111;
-  padding:12px;
-  background:#60c56a;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-/* ===== footer ===== */
-.footer{
-  margin-top:18px;
-  font-family:monospace;
-  display:flex;
-  justify-content:space-between;
-}
-.footer .badge{
-  background:#ff3eb5;
-  border:3px solid #111;
-  padding:6px 10px;
-  font-weight:900;
-}
-</style>
-</head>
-
-<body>
-  <!-- existing HTML structure unchanged -->
 
   <script>
-    /* ===============================
-       VIRAL SHARE COPY (UPDATED)
-       =============================== */
+    // Prevent Safari BFCache weirdness with stale hash/callback state
+    window.addEventListener("pageshow", (e)=> {
+      if (e.persisted) {
+        // On BFCache restore, ensure the app re-renders properly.
+        setTimeout(()=> {
+          try { window.dispatchEvent(new Event("load")); } catch {}
+        }, 0);
+      }
+    });
+  </script>
 
-    function buildShareCaption(platform = "ig") {
-      const flags = Array.from(document.querySelectorAll("#flagsList li"))
-        .slice(0, 2)
-        .map(li => li.textContent.replace("🚩", "").trim());
+</head>
+<body>
+  <div class="wrap">
+    <div class="shell">
 
-      const top = flags[0] || "has questionable taste";
-      const second = flags[1] || "";
+      <div class="topbar">
+        <div>
+          <div class="brand">
+            Spotify Dating Red Flags <span aria-hidden="true">🚩</span>
+            <span class="tag">WELCOME</span>
+          </div>
+          <div class="subtitle">Log in, get roasted, screenshot, repeat.</div>
+        </div>
+      </div>
 
-      const baseUrl = "https://ryanwaingo.github.io/spotify-red-flags/";
+      <div class="divider"></div>
 
-      if (platform === "x") {
-        return (
-          `Spotify Dating Red Flags just exposed me.\n\n` +
-          `Mine says I ${top.toLowerCase()}.\n\n` +
-          `What does yours say? 👀\n` +
-          baseUrl
+      <div class="panel">
+        <div class="hero">
+
+          <!-- LEFT: LOGIN / EXPLAINER -->
+          <div class="card loginCard" id="loginCard">
+            <h1 class="loginTitle">Spotify Dating Red Flags</h1>
+            <p class="loginSub">We read your listening history and generate your most questionable dating patterns… with receipts.</p>
+
+            <button class="btn primary" id="btnLogin">Continue with Spotify</button>
+
+            <div class="notice">
+              We only read your listening data. We don’t post. We don’t save your password.
+              <small>We store a short-lived access token in your browser storage so you can see results.</small>
+            </div>
+
+            <div class="errorBox" id="errorBox"></div>
+          </div>
+
+          <!-- RIGHT: RESULTS -->
+          <div class="card" id="resultsCard" style="display:none;">
+            <div class="resultsHeader">
+              <div>
+                <h2 class="resultsTitle">Your Spotify Dating Red Flags 🚩</h2>
+                <p class="resultsSubtitle" id="resultsSubtitle">Based on your listening habits.</p>
+              </div>
+              <div class="metaRight">
+                <button class="btn secondary" id="btnLogout">Log out</button>
+              </div>
+            </div>
+
+            <div class="shareCard">
+              <div id="captureArea">
+                <div class="captureTop">
+                  <div class="captureBrand">SPOTIFY DATING RED FLAGS <span aria-hidden="true">🚩</span></div>
+                  <div class="shareHint">
+              <div id="shareHint">Generated from your listening history</div>
+              <div id="shareScore" class="shareScore"></div>
+            </div>
+                </div>
+                <div class="bar"></div>
+
+                <!-- Opener / headline -->
+                <div class="flagBlock flag-blue" id="openerBlock">
+                  <div class="flag" aria-hidden="true">🚩</div>
+                  <h2 id="openerText">Loading your flags…</h2>
+                  <div class="because" id="openerBecause"></div>
+                </div>
+
+                <!-- 2 extra flags -->
+                <ul id="flagsList" style="list-style:none; padding:0; margin:0;">
+                  <!-- inserted by JS -->
+                </ul>
+
+                <!-- Biggest Dating Pattern -->
+                <div class="bigPattern" id="bigPatternBlock">
+                  <div class="label">BIGGEST DATING PATTERN THIS YEAR</div>
+                  <div class="text" id="insightLine">Calculating…</div>
+                  <div class="because" id="insightBecause"></div>
+                </div>
+
+                <div class="urlFooter" id="shareUrl">—</div>
+              </div>
+
+              <!-- controls -->
+              <div class="controlsCard" style="margin-top:16px;">
+                <div class="controlsTop">Roast Again</div>
+                <div class="controlsInner">
+
+                  <div class="shareKit" aria-label="Share kit">
+            <div class="shareRow">
+              <a id="btnShareX" class="secondary" href="#" target="_blank" rel="noopener">Share to X</a>
+              <button id="btnShareIG" class="secondary" type="button">Instagram</button>
+              <button id="btnShareTT" class="secondary" type="button">TikTok</button>
+            </div>
+
+            <div class="shareRow">
+              <button id="btnCopyCaption" class="primary" type="button">Copy Caption</button>
+              <button id="btnSaveImage" class="secondary" type="button">Save Share Image</button>
+              <button id="btnCopyLink" class="secondary" type="button">Copy Link</button>
+            </div>
+
+            <div class="sharePresetRow">
+              <label for="sharePreset" class="sharePresetLabel">Share format</label>
+              <select id="sharePreset" class="sharePreset">
+                <option value="ig_square">Instagram Post (Square)</option>
+                <option value="ig_story">Instagram Story / TikTok (Vertical)</option>
+                <option value="x_landscape">X / Twitter (Landscape)</option>
+              </select>
+            </div>
+
+            <div class="shareNote" id="shareNote">Challenge: post your score + biggest pattern and tag 3 friends.</div>
+</div>
+
+
+                  <div class="toneRow">
+                    <div class="toneLabel">TONE</div>
+                    <select id="toneSelect">
+                      <option value="playful">Playful</option>
+                      <option value="sharp">Sharp</option>
+                    </select>
+                  </div>
+
+                  <div class="bottomLine">
+                    <div>If you’re mad, take it up with your playlists.</div>
+                    <div class="verifiedBadge"><span aria-hidden="true">🚩</span> VERIFIED</div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Copied</div>
+
+  <script>
+    /******************************************************************
+     * 1) CONFIG — set your Spotify app details
+     ******************************************************************/
+    const SPOTIFY_CLIENT_ID = "YOUR_SPOTIFY_CLIENT_ID_HERE"; // <-- replace this
+    const SPOTIFY_SCOPES = [
+      "user-read-recently-played",
+      "user-top-read"
+    ];
+
+    /******************************************************************
+     * 2) DOM
+     ******************************************************************/
+    const btnLogin = document.getElementById("btnLogin");
+    const btnLogout = document.getElementById("btnLogout");
+    const errorBox = document.getElementById("errorBox");
+    const loginCard = document.getElementById("loginCard");
+    const resultsCard = document.getElementById("resultsCard");
+    const resultsSubtitle = document.getElementById("resultsSubtitle");
+
+    const captureArea = document.getElementById("captureArea");
+    const openerText = document.getElementById("openerText");
+    const openerBecause = document.getElementById("openerBecause");
+    const flagsList = document.getElementById("flagsList");
+    const insightLine = document.getElementById("insightLine");
+    const insightBecause = document.getElementById("insightBecause");
+
+    const shareUrlEl = document.getElementById("shareUrl");
+    const shareHint = document.getElementById("shareHint");
+    const shareNote = document.getElementById("shareNote");
+
+    const btnCopyCaption = document.getElementById("btnCopyCaption");
+    const btnCopyLink = document.getElementById("btnCopyLink");
+    const btnSaveImage = document.getElementById("btnSaveImage");
+    const btnShareX = document.getElementById("btnShareX");
+    const btnShareIG = document.getElementById("btnShareIG");
+    const btnShareTT = document.getElementById("btnShareTT");
+    const sharePreset = document.getElementById("sharePreset");
+
+    const toneSelect = document.getElementById("toneSelect");
+    const toast = document.getElementById("toast");
+
+    /******************************************************************
+     * 3) UI HELPERS
+     ******************************************************************/
+    function showError(msg){
+      errorBox.style.display = "block";
+      errorBox.textContent = msg;
+    }
+    function clearError(){
+      errorBox.style.display = "none";
+      errorBox.textContent = "";
+    }
+    function showToast(msg){
+      toast.textContent = msg;
+      toast.classList.add("show");
+      setTimeout(()=>toast.classList.remove("show"), 1700);
+    }
+    async function copyText(text, successMsg="Copied"){
+      try{
+        await navigator.clipboard.writeText(text);
+        showToast(successMsg);
+      }catch(e){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        showToast(successMsg);
+      }
+    }
+
+    function safeNowUrl(){
+      const u = new URL(window.location.href);
+      u.hash = "";
+      return u.toString();
+    }
+
+    /******************************************************************
+     * 4) OAUTH — PKCE (no backend)
+     ******************************************************************/
+    function base64urlencode(a){
+      return btoa(String.fromCharCode.apply(null, new Uint8Array(a)))
+        .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    }
+
+    async function sha256(plain){
+      const enc = new TextEncoder().encode(plain);
+      return await crypto.subtle.digest('SHA-256', enc);
+    }
+
+    function randomString(len=64){
+      const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      let text = "";
+      const vals = crypto.getRandomValues(new Uint8Array(len));
+      for (let i=0; i<len; i++) text += possible[vals[i] % possible.length];
+      return text;
+    }
+
+    function getRedirectUri(){
+      // must exactly match Spotify dashboard redirect URI
+      const u = new URL(window.location.href);
+      u.search = "";
+      u.hash = "";
+      return u.toString();
+    }
+
+    function saveToken(token, expiresIn){
+      const exp = Date.now() + (expiresIn * 1000) - 5000;
+      localStorage.setItem("spotify_access_token", token);
+      localStorage.setItem("spotify_token_exp", String(exp));
+    }
+    function getStoredToken(){
+      const t = localStorage.getItem("spotify_access_token");
+      const exp = Number(localStorage.getItem("spotify_token_exp") || 0);
+      if (!t || !exp) return null;
+      if (Date.now() > exp) return null;
+      return t;
+    }
+    function clearToken(){
+      localStorage.removeItem("spotify_access_token");
+      localStorage.removeItem("spotify_token_exp");
+      localStorage.removeItem("spotify_pkce_verifier");
+      localStorage.removeItem("spotify_pkce_state");
+    }
+
+    async function startLogin(){
+      clearError();
+
+      if (!SPOTIFY_CLIENT_ID || SPOTIFY_CLIENT_ID.includes("YOUR_SPOTIFY_CLIENT_ID")){
+        showError("Missing Spotify Client ID. Replace SPOTIFY_CLIENT_ID in the code.");
+        return;
+      }
+
+      const verifier = randomString(64);
+      const challenge = base64urlencode(await sha256(verifier));
+      const state = randomString(16);
+
+      localStorage.setItem("spotify_pkce_verifier", verifier);
+      localStorage.setItem("spotify_pkce_state", state);
+
+      const auth = new URL("https://accounts.spotify.com/authorize");
+      auth.searchParams.set("client_id", SPOTIFY_CLIENT_ID);
+      auth.searchParams.set("response_type", "code");
+      auth.searchParams.set("redirect_uri", getRedirectUri());
+      auth.searchParams.set("code_challenge_method", "S256");
+      auth.searchParams.set("code_challenge", challenge);
+      auth.searchParams.set("scope", SPOTIFY_SCOPES.join(" "));
+      auth.searchParams.set("state", state);
+
+      window.location.href = auth.toString();
+    }
+
+    async function exchangeCodeForToken(code){
+      const verifier = localStorage.getItem("spotify_pkce_verifier");
+      if (!verifier) throw new Error("Missing PKCE verifier (try logging in again).");
+
+      const body = new URLSearchParams();
+      body.set("client_id", SPOTIFY_CLIENT_ID);
+      body.set("grant_type", "authorization_code");
+      body.set("code", code);
+      body.set("redirect_uri", getRedirectUri());
+      body.set("code_verifier", verifier);
+
+      const res = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: { "Content-Type":"application/x-www-form-urlencoded" },
+        body
+      });
+
+      if (!res.ok){
+        const txt = await res.text();
+        throw new Error(`Spotify token error: ${res.status} ${txt}`);
+      }
+
+      const json = await res.json();
+      saveToken(json.access_token, json.expires_in);
+      return json.access_token;
+    }
+
+    async function handleOAuthReturn(){
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("code");
+      const state = url.searchParams.get("state");
+      const err = url.searchParams.get("error");
+
+      if (err){
+        showError("Spotify auth error: " + err);
+        return null;
+      }
+
+      if (!code) return null;
+
+      const expectedState = localStorage.getItem("spotify_pkce_state");
+      if (expectedState && state && expectedState !== state){
+        showError("Spotify auth error: state mismatch. Try again.");
+        return null;
+      }
+
+      try{
+        const token = await exchangeCodeForToken(code);
+
+        // Clean URL so refresh doesn't re-trigger token exchange
+        url.searchParams.delete("code");
+        url.searchParams.delete("state");
+        window.history.replaceState({}, document.title, url.toString());
+
+        return token;
+      }catch(e){
+        showError(String(e.message || e));
+        return null;
+      }
+    }
+
+    /******************************************************************
+     * 5) SPOTIFY API HELPERS
+     ******************************************************************/
+    async function spotifyGET(token, url){
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (!res.ok){
+        const txt = await res.text();
+        throw new Error(`Spotify ${res.status}: ${txt || "Request failed"}`);
+      }
+      return await res.json();
+    }
+
+    function mean(arr){ return arr.reduce((a,b)=>a+b,0)/arr.length; }
+
+    /******************************************************************
+     * 6) SIGNALS + BUCKETS
+     ******************************************************************/
+    // Jokes table: parameter/bucket/tone -> text
+    const jokesTable = [
+      // obscurity
+      { parameter:"obscurity", bucket:"mainstream", tone:"playful", priority:1, joke_text:"Plays it safe. Chooses the crowd over the spark.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
+      { parameter:"obscurity", bucket:"taste_curious", tone:"playful", priority:1, joke_text:"Explores just enough to feel interesting.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
+      { parameter:"obscurity", bucket:"obscure", tone:"playful", priority:1, joke_text:"Treats obscurity like a personality trait.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
+
+      { parameter:"obscurity", bucket:"mainstream", tone:"sharp", priority:1, joke_text:"Main character energy. In the most predictable way.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
+      { parameter:"obscurity", bucket:"taste_curious", tone:"sharp", priority:1, joke_text:"Wants depth, but not enough to be inconvenienced.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
+      { parameter:"obscurity", bucket:"obscure", tone:"sharp", priority:1, joke_text:"Collects niche artists like emotional baggage.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
+
+      // repetition
+      { parameter:"repetition", bucket:"defaults_to_safety", tone:"playful", priority:1, joke_text:"Can’t commit to a sound for more than 3 tracks.", because:e=> {
+        const t = e.repetition.topTrack;
+        if (!t) return "because you replay the same track a lot.";
+        return `because your #1 track (“${t.name}” by ${t.artists?.[0]?.name || "??"}) was played ${e.repetition.maxRepeat}× recently.`;
+      }},
+      { parameter:"repetition", bucket:"balanced", tone:"playful", priority:1, joke_text:"Flirts with new songs then goes back to the ex.", because:e=> {
+        const t = e.repetition.topTrack;
+        if (!t) return "because you replay some tracks, but not too hard.";
+        return `because your #1 track (“${t.name}” by ${t.artists?.[0]?.name || "??"}) was played ${e.repetition.maxRepeat}× in your last 50 listens.`;
+      }},
+      { parameter:"repetition", bucket:"craves_variety", tone:"playful", priority:1, joke_text:"Avoids attachment. Even to songs.", because:e=>`because your most-replayed track was only played ${e.repetition.maxRepeat}× recently.` },
+
+      { parameter:"repetition", bucket:"defaults_to_safety", tone:"sharp", priority:1, joke_text:"Craves variety, defaults to safety.", because:e=> {
+        const t = e.repetition.topTrack;
+        if (!t) return "because you replay the same track a lot.";
+        return `because you looped “${t.name}” (${t.artists?.[0]?.name || "??"}) ${e.repetition.maxRepeat}× recently.`;
+      }},
+      { parameter:"repetition", bucket:"balanced", tone:"sharp", priority:1, joke_text:"Tests the waters, then crawls back to comfort.", because:e=>`because your top track still got replayed ${e.repetition.maxRepeat}×.` },
+      { parameter:"repetition", bucket:"craves_variety", tone:"sharp", priority:1, joke_text:"Commitment-phobic. In 4K.", because:e=>`because you rarely replay the same track (max ${e.repetition.maxRepeat}×).` },
+
+      // time of day
+      { parameter:"time_of_day", bucket:"morning", tone:"playful", priority:1, joke_text:"Morning listener. Romanticizes routines.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00 (morning).` },
+      { parameter:"time_of_day", bucket:"day", tone:"playful", priority:1, joke_text:"Daytime listener. Keeps it functional. Keeps it distant.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00 (day).` },
+      { parameter:"time_of_day", bucket:"night", tone:"playful", priority:1, joke_text:"Night listener. Makes feelings louder after dark.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00 (night).` },
+      { parameter:"time_of_day", bucket:"late_night", tone:"playful", priority:1, joke_text:"Late-night listener. Texts should be reviewed in the morning.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00 (late night).` },
+
+      { parameter:"time_of_day", bucket:"morning", tone:"sharp", priority:1, joke_text:"Wakes up and chooses emotional control.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00.` },
+      { parameter:"time_of_day", bucket:"day", tone:"sharp", priority:1, joke_text:"Keeps it together. Keeps it contained.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00.` },
+      { parameter:"time_of_day", bucket:"night", tone:"sharp", priority:1, joke_text:"After dark, your standards drop.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00.` },
+      { parameter:"time_of_day", bucket:"late_night", tone:"sharp", priority:1, joke_text:"Your worst decisions have a soundtrack.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00.` }
+    ];
+
+    async function fetchProfileBuckets(token){
+      // --- Layer 1: recent behavior (last 50)
+      const recent = await spotifyGET(token, "https://api.spotify.com/v1/me/player/recently-played?limit=50");
+      const items = recent?.items || [];
+      const plays = items.map(it => ({
+        track: it.track,
+        played_at: it.played_at,
+        artist: it.track?.artists?.[0] || null
+      })).filter(p => p.track && p.artist);
+
+      const recentPlays = plays.length;
+
+      // Track repetition (receipts)
+      const trackCounts = new Map();
+      for (const p of plays) {
+        const id = p.track.id;
+        trackCounts.set(id, (trackCounts.get(id) || 0) + 1);
+      }
+      let maxRepeat = 0;
+      let topTrackId = null;
+      for (const [id, c] of trackCounts.entries()) {
+        if (c > maxRepeat){ maxRepeat = c; topTrackId = id; }
+      }
+
+      // Time-of-day peak hour (receipts)
+      const hourCounts = Array.from({length:24}, ()=>0);
+      for (const p of plays){
+        const h = new Date(p.played_at).getHours();
+        hourCounts[h] += 1;
+      }
+      const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
+
+      // Recent artist frequency (for extended-history comparisons)
+      const recentArtistCounts = new Map();
+      for (const p of plays){
+        const name = p.artist?.name;
+        if (!name) continue;
+        recentArtistCounts.set(name, (recentArtistCounts.get(name) || 0) + 1);
+      }
+      const recentArtistRanked = Array.from(recentArtistCounts.entries())
+        .sort((a,b)=>b[1]-a[1])
+        .map(([name,count])=>({name,count}));
+      const topRecentArtist = recentArtistRanked[0] || null;
+
+      // --- Layer 2/3: medium_term (~6 months) + long_term (years)
+      async function fetchTop(timeRange){
+        const [topTracks, topArtists] = await Promise.all([
+          spotifyGET(token, `https://api.spotify.com/v1/me/top/tracks?time_range=${timeRange}&limit=25`),
+          spotifyGET(token, `https://api.spotify.com/v1/me/top/artists?time_range=${timeRange}&limit=25`)
+        ]);
+        const tracks = topTracks?.items || [];
+        const artists = topArtists?.items || [];
+        const artistNames = artists.map(a => a.name).filter(Boolean);
+        const artistIds = artists.map(a => a.id).filter(Boolean);
+        // Avg popularity across top artists in this range
+        const pops = artists.map(a => a.popularity).filter(n => typeof n === "number");
+        const avgPop = pops.length ? Math.round(mean(pops)) : 50;
+        return { tracks, artists, artistNames, artistIds, avgPop };
+      }
+
+      // Fetch medium + long in parallel (fast)
+      const [medium, long] = await Promise.all([
+        fetchTop("medium_term"),
+        fetchTop("long_term")
+      ]);
+
+      // Artist popularity / obscurity (use medium-term as "identity" baseline; fallback to long-term)
+      const avgPopularity = typeof medium.avgPop === "number" ? medium.avgPop : (typeof long.avgPop === "number" ? long.avgPop : 50);
+
+      // Overlap measures (uniqueness + biggest pattern)
+      function topN(arr, n){ return arr.slice(0, n); }
+      const recentTop5 = topN(recentArtistRanked.map(x=>x.name), 5);
+      const mediumTop15 = topN(medium.artistNames, 15);
+      const longTop15 = topN(long.artistNames, 15);
+
+      const setMedium = new Set(mediumTop15);
+      const setLong = new Set(longTop15);
+
+      const overlapRecentMedium = recentTop5.filter(a => setMedium.has(a));
+      const overlapRecentLong = recentTop5.filter(a => setLong.has(a));
+      const overlapMediumLong = mediumTop15.filter(a => setLong.has(a));
+
+      // "Same anchor artist" check (strong, very shareable)
+      const mediumTop1 = medium.artistNames[0] || null;
+      const longTop1 = long.artistNames[0] || null;
+      const recentTop1 = topRecentArtist?.name || null;
+
+      const sameAllThreeTop1 = !!(recentTop1 && mediumTop1 && longTop1 && recentTop1 === mediumTop1 && recentTop1 === longTop1);
+
+      const buckets = {};
+
+      // Repetition bucket
+      if (maxRepeat >= 6) buckets.repetition = "defaults_to_safety";
+      else if (maxRepeat <= 2) buckets.repetition = "craves_variety";
+      else buckets.repetition = "balanced";
+
+      // Time of day bucket
+      let tod = "day";
+      if (peakHour >= 5 && peakHour <= 10) tod = "morning";
+      if (peakHour >= 19 && peakHour <= 23) tod = "night";
+      if (peakHour >= 0 && peakHour <= 3) tod = "late_night";
+      buckets.time_of_day = tod;
+
+      // Obscurity bucket (based on medium-term top artists)
+      if (avgPopularity >= 75) buckets.obscurity = "mainstream";
+      else if (avgPopularity >= 45) buckets.obscurity = "taste_curious";
+      else buckets.obscurity = "obscure";
+
+      const evidence = {
+        repetition: {
+          maxRepeat,
+          topTrack: plays.find(p => p.track.id === topTrackId)?.track || null
+        },
+        time_of_day: { peakHour, hourCounts },
+        obscurity: { avgPopularity },
+        extended: {
+          recentTop5,
+          mediumTop15,
+          longTop15,
+          overlapRecentMedium,
+          overlapRecentLong,
+          overlapMediumLong,
+          recentTop1,
+          mediumTop1,
+          longTop1,
+          sameAllThreeTop1
+        }
+      };
+
+      const debug = {
+        recentPlays,
+        maxRepeat,
+        peakHour,
+        avgPopularity,
+        overlapRM: overlapRecentMedium.length,
+        overlapRL: overlapRecentLong.length,
+        overlapML: overlapMediumLong.length,
+        sameAllThreeTop1
+      };
+
+      return { buckets, evidence, debug };
+    }
+
+    /******************************************************************
+     * 7) ROAST GENERATION
+     ******************************************************************/
+    function pickRows(parameter, bucket, tone){
+      const rows = jokesTable.filter(r =>
+        r.parameter === parameter &&
+        (r.bucket === bucket || r.bucket === "any") &&
+        r.tone === tone
+      );
+      return rows.slice().sort((a,b)=>a.priority-b.priority);
+    }
+
+    function randomPick(arr){ return arr.length ? arr[Math.floor(Math.random()*arr.length)] : null; }
+
+    function computeBiggestPattern(buckets, evidence, tone){
+      // Goal: pick ONE pattern that is (1) evidence-backed, (2) meaningfully different across users.
+      const ex = evidence?.extended || {};
+      const maxRepeat = evidence?.repetition?.maxRepeat ?? 0;
+      const peakHour = evidence?.time_of_day?.peakHour;
+
+      const recentTop1 = ex.recentTop1;
+      const mediumTop1 = ex.mediumTop1;
+      const longTop1 = ex.longTop1;
+
+      const overlapRM = (ex.overlapRecentMedium || []).length;
+      const overlapRL = (ex.overlapRecentLong || []).length;
+      const overlapML = (ex.overlapMediumLong || []).length;
+
+      const sameAllThreeTop1 = !!ex.sameAllThreeTop1;
+
+      // Helper to add candidates with scores
+      const candidates = [];
+      const add = (key, score, text, because) => {
+        if (!text || !because) return;
+        candidates.push({ key, score, text, because });
+      };
+
+      // 1) THE LOYALIST (very strong + rare)
+      if (sameAllThreeTop1 && recentTop1){
+        add(
+          "loyalist",
+          95,
+          (tone === "sharp")
+            ? `Biggest dating pattern: The Loyalist (to one artist, and one vibe).`
+            : `Biggest dating pattern: The Loyalist.`,
+          `because your #1 artist is ${recentTop1} across recent listens, last 6 months, and long-term.`
         );
       }
 
-      // Instagram / TikTok default
-      return (
-        `🚩 My Spotify listening just exposed my dating red flags\n\n` +
-        `Apparently I:\n` +
-        `• ${top}\n` +
-        (second ? `• ${second}\n` : "") +
-        `\nWhat does yours say? 👀\n` +
-        baseUrl
-      );
+      // 2) THE PHASE (recent obsession that doesn't show up in 6-month identity)
+      if (recentTop1 && overlapRM <= 1){
+        add(
+          "phase",
+          80 + (overlapRM === 0 ? 10 : 0),
+          (tone === "sharp")
+            ? `Biggest dating pattern: The Phase.`
+            : `Biggest dating pattern: The Phase.`,
+          `because only ${overlapRM}/5 of your top recent artists appear in your 6-month top artists — your “right now” taste is drifting.`
+        );
+      }
+
+      // 3) THE CONSISTENT TYPE (recent aligns with medium + long)
+      if (overlapRM >= 3 && overlapRL >= 3){
+        add(
+          "consistent",
+          78 + (overlapRM + overlapRL),
+          (tone === "sharp")
+            ? `Biggest dating pattern: Predictably consistent.`
+            : `Biggest dating pattern: Consistent taste.`,
+          `because ${overlapRM}/5 of your top recent artists also show up in your 6-month top, and ${overlapRL}/5 also show up long-term.`
+        );
+      }
+
+      // 4) THE REINVENTOR (medium differs from long)
+      if (overlapML <= 6){
+        add(
+          "reinventor",
+          70 + (6 - overlapML) * 2,
+          (tone === "sharp")
+            ? `Biggest dating pattern: Reinvention (with commitment issues).`
+            : `Biggest dating pattern: Reinvention.`,
+          `because only ${overlapML}/15 of your 6-month top artists match your long-term top — your “type” changes.`
+        );
+      }
+
+      // 5) THE COMFORT BLANKET (high repetition + stable identity)
+      if (maxRepeat >= 6 && overlapRM >= 2){
+        add(
+          "comfort",
+          74 + (maxRepeat - 6) * 2,
+          (tone === "sharp")
+            ? `Biggest dating pattern: Comfort blanket behavior.`
+            : `Biggest dating pattern: Comfort blanket.`,
+          `because your #1 track was looped ${maxRepeat}× recently, and your recent artists overlap ${overlapRM}/5 with your 6-month top.`
+        );
+      }
+
+      // 6) THE NIGHT SPIRAL (peak hour very late)
+      if (typeof peakHour === "number" && peakHour >= 0 && peakHour <= 3){
+        add(
+          "night",
+          72 + (3 - peakHour),
+          (tone === "sharp")
+            ? `Biggest dating pattern: After-midnight decision making.`
+            : `Biggest dating pattern: After-midnight energy.`,
+          `because your listening peaks around ${peakHour}:00 (after midnight).`
+        );
+      }
+
+      // Fallback (should still be evidence-backed)
+      if (!candidates.length){
+        const pop = evidence?.obscurity?.avgPopularity;
+        add(
+          "fallback",
+          50,
+          (tone === "sharp")
+            ? `Biggest dating pattern: Mildly avoidant… musically.`
+            : `Biggest dating pattern: Your taste has a “default setting.”`,
+          (typeof pop === "number")
+            ? `because your average artist popularity is ${pop}/100 across your 6-month top artists.`
+            : `because we only scanned your recent listening history.`
+        );
+      }
+
+      // Pick best (highest score)
+      candidates.sort((a,b)=>b.score-a.score);
+      return candidates[0];
     }
 
-    /* ===============================
-       BUTTON HOOKS (UPDATED)
-       =============================== */
+    function generateRoast(buckets, evidence, tone){
+      const ordered = [];
+      const params = ["obscurity","repetition","time_of_day"];
+      for (const p of params){
+        const bucket = buckets[p];
+        const pick = randomPick(pickRows(p, bucket, tone));
+        if (pick) ordered.push(pick);
+      }
+      if (!ordered.length) ordered.push({ joke_text:"Data unavailable. Still suspicious.", parameter:"repetition" });
 
-    document.getElementById("btnCopyCaption")?.addEventListener("click", () => {
-      const caption = buildShareCaption("ig");
-      navigator.clipboard.writeText(caption);
-      showToast("Caption copied — now expose your friends.");
-    });
-
-    document.getElementById("btnShareX")?.addEventListener("click", (e) => {
-      e.preventDefault();
-      const text = encodeURIComponent(buildShareCaption("x"));
-      window.open(`https://twitter.com/intent/tweet?text=${text}`, "_blank");
-    });
-
-    document.getElementById("btnShareIG")?.addEventListener("click", () => {
-      showToast("Save the image, then post to IG Stories.");
-    });
-
-    document.getElementById("btnShareTT")?.addEventListener("click", () => {
-      showToast("Save the image, then upload to TikTok.");
-    });
-
-    /* ===============================
-       MICRO COPY (UPDATED)
-       =============================== */
-
-    const shareNote = document.getElementById("shareNote");
-    if (shareNote) {
-      shareNote.textContent =
-        "⚠️ Compare with friends. Someone will be worse than you.";
+      const biggest = computeBiggestPattern(buckets, evidence, tone);
+      return { ordered, biggest };
     }
+
+    function escapeHTML(s){
+      return (s||"").replace(/[&<>"']/g, (c)=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    /******************************************************************
+     * 8) RENDER
+     ******************************************************************/
+    let lastEvidence = null;
+    let lastResult = null;
+    let lastShareCaption = null;
+
+    function renderRoastFromBuckets(buckets, evidence){
+      const tone = toneSelect.value;
+      const { ordered, biggest } = generateRoast(buckets, evidence, tone);
+
+      lastEvidence = evidence;
+      lastResult = { ordered, biggest };
+
+      // opener = first joke
+      const opener = ordered[0];
+      openerText.textContent = opener.joke_text;
+      openerBecause.textContent = opener.because ? opener.because(evidence) : "";
+
+      // flags list = next 2
+      flagsList.innerHTML = "";
+      const colors = ["flag-yellow","flag-pink"];
+      ordered.slice(1,3).forEach((row, idx)=>{
+        const li = document.createElement("li");
+        li.className = `flagBlock ${colors[idx % colors.length]}`;
+        li.innerHTML = `
+          <div class="flag" aria-hidden="true">🚩</div>
+          <h2>${escapeHTML(row.joke_text)}</h2>
+          <div class="because">${escapeHTML(row.because ? row.because(evidence) : "")}</div>
+        `;
+        flagsList.appendChild(li);
+      });
+
+      // biggest pattern
+      insightLine.textContent = biggest?.text || "Biggest dating pattern: ???";
+      insightBecause.textContent = biggest?.because || "";
+
+      updateShareKit();
+    }
+
+    /******************************************************************
+     * 9) SHARE PRESETS (controls screenshot size)
+     ******************************************************************/
+    function applySharePreset(){
+      const v = sharePreset.value;
+      // default sizes
+      captureArea.style.width = "100%";
+      captureArea.style.maxWidth = "100%";
+      captureArea.style.margin = "0";
+
+      if (v === "ig_square"){
+        captureArea.style.width = "920px";
+        captureArea.style.maxWidth = "920px";
+        captureArea.style.margin = "0 auto";
+      } else if (v === "ig_story"){
+        captureArea.style.width = "720px";
+        captureArea.style.maxWidth = "720px";
+        captureArea.style.margin = "0 auto";
+      } else if (v === "x_landscape"){
+        captureArea.style.width = "1000px";
+        captureArea.style.maxWidth = "1000px";
+        captureArea.style.margin = "0 auto";
+      }
+    }
+
+    /******************************************************************
+     * 10) SHARE CAPTION + LINKS (VIRAL + COMPARE)
+     ******************************************************************/
+    function computeCompareScore(evidence, biggest){
+      const ex = evidence?.extended || {};
+      const maxRepeat = evidence?.repetition?.maxRepeat ?? 0;
+      const peakHour = evidence?.time_of_day?.peakHour;
+      const avgPopularity =
+        evidence?.obscurity?.avgPopularity ??
+        evidence?.obscurity?.avgPop ??
+        null;
+
+      const overlapRM = (ex.overlapRecentMedium || []).length;
+      const overlapML = (ex.overlapMediumLong || []).length;
+
+      // Fun but evidence-based composite score (0–100). Higher = more “chaos”.
+      let score = 25;
+
+      // Repetition: looping the same track is a classic red flag.
+      score += Math.min(30, Math.max(0, maxRepeat - 1) * 4);
+
+      // Time-of-day: late night bumps the chaos.
+      if (typeof peakHour === "number"){
+        if (peakHour >= 0 && peakHour <= 3) score += 20;
+        else if (peakHour >= 19 && peakHour <= 23) score += 10;
+        else if (peakHour >= 5 && peakHour <= 10) score += 6;
+      }
+
+      // “Phase” drift: recent taste not matching medium-term identity.
+      if (overlapRM === 0) score += 18;
+      else if (overlapRM === 1) score += 12;
+      else if (overlapRM === 2) score += 6;
+
+      // Reinvention: medium-term differs from long-term.
+      if (overlapML <= 6) score += 12;
+      else if (overlapML <= 10) score += 6;
+
+      // Extreme mainstream OR extreme obscure gets a small bump (not “bad”, just “loudly you”).
+      if (typeof avgPopularity === "number"){
+        if (avgPopularity >= 80 || avgPopularity <= 25) score += 8;
+        else if (avgPopularity >= 70 || avgPopularity <= 35) score += 4;
+      }
+
+      // Blend with the “strength” of the biggest pattern (evidence intensity).
+      if (biggest && typeof biggest.score === "number"){
+        score = Math.round(score * 0.65 + biggest.score * 0.35);
+      } else {
+        score = Math.round(score);
+      }
+
+      return Math.max(0, Math.min(100, score));
+    }
+
+    function buildShareCaption(platform){
+      const url = safeNowUrl();
+      const rawPattern = (insightLine?.textContent || "").trim();
+      const pattern = rawPattern.replace(/^Biggest dating pattern:\s*/i,"").trim();
+      const biggest = lastResult?.biggest || null;
+
+      const score = computeCompareScore(lastEvidence, biggest);
+      const scoreLine = `Red Flag Score: ${score}/100`;
+
+      const topFlags = (lastResult?.ordered || [])
+        .slice(0, 2)
+        .map(x => (x?.joke_text || "").trim())
+        .filter(Boolean);
+
+      const firstBecause =
+        document.querySelector("#openerText .because")?.textContent?.trim() ||
+        document.querySelector("#flagsList .because")?.textContent?.trim() ||
+        "";
+
+      const receiptsLine = firstBecause
+        ? ("receipts: " + firstBecause.replace(/^because\s*/i,"").trim())
+        : "";
+
+      // Platform-specific templates
+      if (platform === "x"){
+        // Keep it tight for X
+        const lines = [];
+        lines.push(pattern ? `My Spotify dating pattern: ${pattern} 🚩` : "Spotify Dating Red Flags 🚩");
+        lines.push(scoreLine);
+        if (receiptsLine) lines.push(receiptsLine);
+        lines.push(`Run yours: ${url}`);
+        lines.push(`Tag 3 friends — highest score is the villain.`);
+        return lines.join("\n");
+      }
+
+      // IG / TikTok / default
+      const lines = [];
+      lines.push("🚩 Spotify Dating Red Flags just exposed me.");
+      if (pattern) lines.push(`Biggest pattern: ${pattern}`);
+      lines.push(scoreLine);
+
+      if (topFlags.length){
+        lines.push("");
+        lines.push("Top receipts:");
+        for (const t of topFlags) lines.push(`• ${t}`);
+      }
+      if (receiptsLine){
+        lines.push("");
+        lines.push(receiptsLine);
+      }
+
+      lines.push("");
+      lines.push(`Run yours + post your score:`);
+      lines.push(url);
+      lines.push("");
+      lines.push("CHALLENGE: tag 3 friends. Highest score is the villain.");
+
+      return lines.join("\n");
+    }
+
+    function buildXIntent(){
+      const text = buildShareCaption("x");
+      const intent = new URL("https://twitter.com/intent/tweet");
+      intent.searchParams.set("text", text);
+      return intent.toString();
+    }
+
+    function updateShareKit(){
+      const url = safeNowUrl();
+      if (shareUrlEl) shareUrlEl.textContent = url;
+
+      // Update on-card meta
+      const biggest = lastResult?.biggest || null;
+      const score = computeCompareScore(lastEvidence, biggest);
+      const scoreEl = document.getElementById("shareScore");
+      if (scoreEl) scoreEl.textContent = `Red Flag Score: ${score}/100`;
+
+      // UI microcopy
+      if (shareNote) shareNote.textContent = "Challenge: post your score + biggest pattern and tag 3 friends. Highest score is the villain.";
+      lastShareCaption = buildShareCaption("ig");
+      if (btnShareX) btnShareX.href = buildXIntent();
+      if (shareHint) shareHint.textContent = "Generated from your listening history";
+    }
+
+    /******************************************************************
+     * 11) SCREENSHOT EXPORT
+     ******************************************************************/
+    async function saveCaptureAsImage(){
+      // html2canvas via CDN to keep single-file UX minimal
+      if (!window.html2canvas){
+        await loadScript("https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js");
+      }
+
+      // temporarily force fully opaque backgrounds
+      const oldBg = captureArea.style.background;
+      captureArea.style.background = "#fff";
+      captureArea.style.opacity = "1";
+
+      const canvas = await window.html2canvas(captureArea, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true
+      });
+
+      captureArea.style.background = oldBg;
+
+      const link = document.createElement("a");
+      link.download = "spotify-dating-red-flags.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+
+    function loadScript(src){
+      return new Promise((resolve, reject)=>{
+        const s = document.createElement("script");
+        s.src = src;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    /******************************************************************
+     * 12) EVENTS
+     ******************************************************************/
+    btnLogin.addEventListener("click", startLogin);
+
+    btnLogout.addEventListener("click", ()=>{
+      clearToken();
+      window.location.reload();
+    });
+
+    toneSelect.addEventListener("change", async ()=>{
+      // re-render roast with same evidence
+      if (!lastEvidence) return;
+      const token = getStoredToken();
+      if (!token) return;
+      try{
+        const { buckets, evidence, debug } = await fetchProfileBuckets(token);
+        lastEvidence = evidence;
+        resultsSubtitle.textContent = `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
+        renderRoastFromBuckets(buckets, lastEvidence);
+      }catch(e){
+        showError(String(e.message || e));
+      }
+    });
+
+    sharePreset.addEventListener("change", ()=>{
+      applySharePreset();
+      updateShareKit();
+      showToast("Share format updated");
+    });
+
+    btnCopyCaption.addEventListener("click", async ()=>{
+      await copyText(buildShareCaption("ig"), "Caption copied — now expose your friends.");
+    });
+
+    btnCopyLink.addEventListener("click", async ()=>{
+      await copyText(safeNowUrl(), "Link copied");
+    });
+
+    btnSaveImage.addEventListener("click", async ()=>{
+      try{
+        await saveCaptureAsImage();
+        showToast("Saved image");
+      }catch(e){
+        showError("Image export failed: " + (e.message || e));
+      }
+    });
+
+    btnShareIG.addEventListener("click", ()=>{
+      showToast("Tip: Save the image, then post to IG Stories.");
+    });
+
+    btnShareTT.addEventListener("click", ()=>{
+      showToast("Tip: Save the image, then upload to TikTok.");
+    });
+
+    /******************************************************************
+     * 13) BOOT
+     ******************************************************************/
+    async function boot(){
+      clearError();
+
+      // If we're coming back from OAuth, handle it first
+      const tokenFromOAuth = await handleOAuthReturn();
+      const token = tokenFromOAuth || getStoredToken();
+
+      if (!token){
+        // show login
+        loginCard.style.display = "flex";
+        resultsCard.style.display = "none";
+        return;
+      }
+
+      // show results UI
+      loginCard.style.display = "none";
+      resultsCard.style.display = "block";
+
+      applySharePreset();
+      updateShareKit();
+
+      try{
+        const { buckets, evidence, debug } = await fetchProfileBuckets(token);
+        lastEvidence = evidence;
+        resultsSubtitle.textContent = `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
+        renderRoastFromBuckets(buckets, evidence);
+      }catch(e){
+        // Token may be invalid or user not authorized
+        showError(
+          "Spotify error: " + (e.message || e) +
+          "\n\nIf you’re seeing a 403, make sure your Spotify app is set to “Development Mode” and your friend is added as a test user — or switch the app to Production."
+        );
+        loginCard.style.display = "flex";
+        resultsCard.style.display = "none";
+        clearToken();
+      }
+    }
+
+    window.addEventListener("load", boot);
   </script>
-
-<div class="shareKit">
-
-  <button class="primary">Roast Again</button>
-
-  <div class="shareRow platforms">
-    <a href="#" id="btnShareX">Share to X</a>
-    <button id="btnShareIG">Instagram</button>
-    <button id="btnShareTT">TikTok</button>
-  </div>
-
-  <div class="shareRow actions">
-    <button id="btnCopyCaption" class="primary">Copy Caption</button>
-    <button id="btnSaveImage">Save Share Image</button>
-    <button id="btnCopyLink">Copy Link</button>
-  </div>
-
-  <div class="shareRow format">
-    <label for="sharePreset">Share format</label>
-    <select id="sharePreset">
-      <option>Instagram Post (Square)</option>
-      <option>Instagram Story / TikTok</option>
-      <option>X / Twitter</option>
-    </select>
-  </div>
-
-  <div class="shareNote">
-    ⚠️ Compare with friends. Someone will be worse than you.
-  </div>
-
-</div>
-
-<div class="toneRow">
-  <div>TONE</div>
-  <select>
-    <option>Playful</option>
-    <option>Sharp</option>
-  </select>
-</div>
-
-<div class="footer">
-  <div>If you’re mad, take it up with your playlists.</div>
-  <div class="badge">🚩 VERIFIED</div>
-</div>
-
 </body>
 </html>
