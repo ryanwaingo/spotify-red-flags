@@ -1,0 +1,1332 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spotify Dating Red Flags</title>
+  <style>
+    :root{
+      --bg: #FFF7E6;
+      --paper: #FFFFFF;
+      --ink: #111111;
+      --muted: #4D4D4D;
+
+      --red: #E10600;
+      --blue: #0057FF;
+      --yellow: #FFE600;
+      --green: #00C853;
+      --pink: #FF3EB5;
+      --purple: #7C4DFF;
+
+      --b: 3px solid var(--ink);
+      --pad: 22px;
+
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    .wrap{
+      min-height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 14px;
+    }
+
+    .frame{
+      width: min(560px, 100%);
+      border: var(--b);
+      background: var(--paper);
+      position: relative;
+      padding: var(--pad);
+      transform: translateX(-2px) translateY(1px);
+    }
+
+    .stamp{
+      position:absolute;
+      top:-16px;
+      right:14px;
+      border: var(--b);
+      background: var(--pink);
+      color: var(--ink);
+      padding: 8px 10px;
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 12px;
+      transform: rotate(2deg);
+      user-select:none;
+    }
+
+    .header{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom: 14px;
+    }
+
+    .title{
+      font-weight: 950;
+      letter-spacing: -0.03em;
+      line-height: 1.02;
+      font-size: 24px;
+      margin: 0;
+    }
+
+    .subtitle{
+      margin-top: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.25;
+    }
+
+    .bar{
+      height: 10px;
+      border: var(--b);
+      background: var(--yellow);
+      margin: 10px 0 18px;
+      transform: translateX(1px);
+    }
+
+    button{
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      padding: 12px 12px;
+      border: var(--b);
+      background: #fff;
+      color: var(--ink);
+      cursor:pointer;
+    }
+    button:active{ transform: translateY(1px); }
+
+    .primary{
+      background: var(--ink);
+      color: #fff;
+    }
+    .primary:hover{
+      background: var(--yellow);
+      color: var(--ink);
+    }
+
+    .secondary:hover{
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .note{
+      border: var(--b);
+      background: var(--yellow);
+      padding: 10px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      margin-top: 12px;
+    }
+
+    .toast{
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink);
+      border: var(--b);
+      padding: 8px 10px;
+      background: var(--yellow);
+      display:none;
+    }
+
+    .hidden{ display:none !important; }
+
+    .fadeIn{
+      animation: fadeIn 180ms ease-out both;
+    }
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(6px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    /* RESULTS UI */
+    .openerPanel{
+      border: var(--b);
+      background: var(--blue);
+      color: #fff;
+      padding: 16px 14px;
+      position: relative;
+      transform: translateX(-1px);
+      overflow:hidden;
+    }
+    .openerPanel::before{
+      content:"";
+      position:absolute;
+      left:-10px;
+      top:-10px;
+      width:18px;
+      height:18px;
+      border: var(--b);
+      background: var(--yellow);
+    }
+    .opener{
+      font-weight: 950;
+      letter-spacing: -0.05em;
+      line-height: 1.05;
+      font-size: 38px;
+      margin: 0;
+    }
+    .flag{
+      margin-right: 10px;
+      color: var(--yellow);
+    }
+
+    .rule{
+      height:0;
+      border:none;
+      border-top: var(--b);
+      margin: 16px 0;
+    }
+
+    .list{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .list li{
+      border: var(--b);
+      padding: 10px 10px;
+      font-size: 18px;
+      line-height: 1.22;
+      letter-spacing: -0.01em;
+      background: #fff;
+      transform: translateX(1px);
+    }
+    .list li:nth-child(2n){ transform: translateX(-1px); }
+
+    .list li:nth-child(1){ background: var(--yellow); }
+    .list li:nth-child(2){ background: var(--green); color: var(--ink); }
+    .list li:nth-child(3){ background: var(--paper); }
+    .list li:nth-child(4){ background: var(--purple); color: #fff; }
+    .list li:nth-child(5){ background: var(--pink); color: var(--ink); }
+    .list li:nth-child(6){ background: var(--yellow); }
+    .list li:nth-child(7){ background: var(--green); color: var(--ink); }
+
+    /* Evidence line */
+    .because{
+      margin-top: 6px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.25;
+      opacity: 0.9;
+    }
+
+    /* Role-based colors (override nth-child chaos) */
+    .list li.role-core { background: var(--yellow) !important; color: var(--ink) !important; }
+    .list li.role-core.alt { background: var(--green) !important; color: var(--ink) !important; }
+    .list li.role-close { background: var(--pink) !important; color: var(--ink) !important; }
+
+    .list .flag{ color: var(--red); }
+    .list li:nth-child(4) .flag{ color: var(--yellow); }
+
+    .insight{
+      margin-top: 16px;
+      border: var(--b);
+      background: var(--yellow);
+      padding: 14px;
+      position: relative;
+      transform: translateX(1px);
+    }
+    .insight::after{
+      content:"";
+      position:absolute;
+      right:-10px;
+      bottom:-10px;
+      width:18px;
+      height:18px;
+      border: var(--b);
+      background: var(--red);
+    }
+    .insight .label{
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .insight .line{
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .actions{
+      margin-top: 16px;
+      border: var(--b);
+      background: #fff;
+      padding: 12px;
+      display:grid;
+      gap: 10px;
+      transform: translateX(-1px);
+    }
+
+    .toneRow{
+      border: var(--b);
+      padding: 10px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+      background: var(--green);
+    }
+    .toneRow .label{
+      font-family: var(--mono);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--ink);
+      white-space:nowrap;
+    }
+    select{
+      font-family: var(--mono);
+      font-weight: 900;
+      border: var(--b);
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 10px;
+      cursor:pointer;
+    }
+
+    .micro{
+      margin-top: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink);
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      border-top: var(--b);
+      padding-top: 12px;
+      align-items:flex-start;
+    }
+    .micro .right{
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 11px;
+      background: var(--pink);
+      border: var(--b);
+      padding: 6px 8px;
+      transform: rotate(-1deg);
+      user-select:none;
+    }
+
+    @media (max-width:420px){
+      .frame{ padding:18px; }
+      .opener{ font-size: 32px; }
+      .list li{ font-size: 17px; }
+    }
+
+    .shareCard{
+      border: var(--b);
+      background:#fff;
+      padding: 14px;
+      margin-top: 14px;
+    }
+    .shareMeta{
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      border-bottom: var(--b);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      align-items:flex-start;
+    }
+    .shareBrand{
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    .shareHint{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.75;
+      text-align:right;
+      max-width: 240px;
+    }
+    .shareFooter{
+      margin-top: 12px;
+      border-top: var(--b);
+      padding-top: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.85;
+      display:flex;
+      justify-content:flex-end;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .shareKit{
+      border: var(--b);
+      background:#fff;
+      padding: 12px;
+      display:grid;
+      gap: 10px;
+    }
+    .shareRow{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .shareNote{
+      font-family: var(--mono);
+      font-size: 12px;
+      opacity: 0.8;
+    }
+    .shareRow a.secondary{
+      text-align:center;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+    }
+    @media (max-width:520px){
+      .shareRow{ grid-template-columns: 1fr; }
+      .shareHint{ text-align:left; max-width:none; }
+      .shareMeta{ flex-direction:column; }
+      .shareFooter{ justify-content:flex-start; }
+    }
+
+    /* =========================================================
+       SHARE UI LAYOUT FIX (scoped, no global look/feel changes)
+       ========================================================= */
+
+    .actions .shareKit{
+      position: relative;
+      overflow: visible;
+      min-width: 0;
+    }
+
+    .actions .shareKit .shareRow{
+      align-items: stretch;
+    }
+    .actions .shareKit .shareRow > *{
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .actions .shareKit a,
+    .actions .shareKit button{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      white-space: nowrap;
+      min-height: 48px;
+      line-height: 1;
+    }
+
+    .actions .shareKit a{
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      padding: 12px 12px;
+      border: var(--b);
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    #btnSaveImage{
+      position: static !important;
+      inset: auto !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+
+    .actions .shareKit .primary{
+      background: var(--ink);
+      color: #fff;
+    }
+    .actions .shareKit .primary:hover{
+      background: var(--yellow);
+      color: var(--ink);
+    }
+    .actions .shareKit .secondary:hover{
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .toneRow select{
+      width: min(240px, 100%);
+    }
+    @media (max-width:520px){
+      .toneRow{
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .toneRow .label{
+        width: 100%;
+      }
+      .toneRow select{
+        width: 100%;
+      }
+    }
+
+    /* =========================================================
+       SHARE IMAGE CAPTURE FIX (html2canvas)
+       - html2canvas can sometimes "wash out" backgrounds when transforms
+         and opacity are involved (GPU compositing).
+       - We fix this in the CLONED DOM only by:
+         1) disabling transforms
+         2) forcing opacity to 1
+         3) forcing solid background colors on the key blocks
+       ========================================================= */
+
+    .captureMode #shareCard,
+    .captureMode #shareCard *{
+      transform: none !important;
+      filter: none !important;
+      mix-blend-mode: normal !important;
+      opacity: 1 !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    /* Force solid fills for the colored blocks in the share image */
+    .captureMode #shareCard .openerPanel{ background: var(--blue) !important; color:#fff !important; }
+    .captureMode #shareCard .openerPanel::before{ background: var(--yellow) !important; }
+    .captureMode #shareCard .list li.role-core{ background: var(--yellow) !important; color: var(--ink) !important; }
+    .captureMode #shareCard .list li.role-core.alt{ background: var(--green) !important; color: var(--ink) !important; }
+    .captureMode #shareCard .list li.role-close{ background: var(--pink) !important; color: var(--ink) !important; }
+    .captureMode #shareCard .insight{ background: var(--yellow) !important; color: var(--ink) !important; }
+    .captureMode #shareCard .insight::after{ background: var(--red) !important; }
+
+    /* Keep borders crisp */
+    .captureMode #shareCard,
+    .captureMode #shareCard .openerPanel,
+    .captureMode #shareCard .list li,
+    .captureMode #shareCard .insight{
+      border-color: var(--ink) !important;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <section class="frame">
+      <div class="stamp" id="stampText">WELCOME</div>
+
+      <!-- LOGIN VIEW -->
+      <div id="loginView">
+        <header class="header">
+          <div>
+            <h1 class="title">Spotify Dating Red Flags 🚩</h1>
+            <div class="subtitle">Log in, get roasted, screenshot, repeat.</div>
+          </div>
+          <button id="btnLogout" class="secondary hidden" type="button">Log out</button>
+        </header>
+
+        <div class="bar" aria-hidden="true"></div>
+
+        <button id="btnLogin" class="primary" type="button">Continue with Spotify</button>
+
+        <div class="note">
+          We only read your listening data. We don’t post. We don’t save your password.
+        </div>
+
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      </div>
+
+      <!-- RESULTS VIEW -->
+      <div id="resultsView" class="hidden" aria-label="Results">
+        <header class="header">
+          <div>
+            <h1 class="title">Your Spotify Dating Red Flags 🚩</h1>
+            <div class="subtitle" id="resultsSubtitle">Based on your listening habits. Not serious. Very specific.</div>
+          </div>
+          <button id="btnLogout2" class="secondary" type="button">Log out</button>
+        </header>
+
+        <div class="bar" aria-hidden="true"></div>
+
+        <div id="shareCard" class="shareCard" aria-label="Share card">
+          <div class="shareMeta">
+            <div class="shareBrand">Spotify Dating Red Flags 🚩</div>
+            <div class="shareHint" id="shareHint">Generated from your listening history</div>
+          </div>
+
+          <div id="openerPanel" class="openerPanel">
+            <div id="openerText" class="opener"><span class="flag">🚩</span>Loading…</div>
+          </div>
+
+          <hr id="rule" class="rule" />
+
+          <ul id="flagsList" class="list" aria-label="Red flags"></ul>
+
+          <div id="insightBox" class="insight" role="note" aria-label="Biggest dating pattern">
+            <div class="label">Biggest Dating Pattern This Year</div>
+            <div id="insightLine" class="line">Loading…</div>
+          </div>
+          <div class="shareFooter"><span id="shareUrl"></span></div>
+        </div>
+
+        <div class="actions">
+          <button id="btnRoastAgain" class="primary" type="button">Roast Again</button>
+
+          <div class="shareKit" aria-label="Share kit">
+            <div class="shareRow">
+              <a id="btnShareX" class="secondary" href="#" target="_blank" rel="noopener">Share to X</a>
+              <button id="btnShareIG" class="secondary" type="button">Instagram</button>
+              <button id="btnShareTT" class="secondary" type="button">TikTok</button>
+            </div>
+            <div class="shareRow">
+              <button id="btnCopyCaption" class="primary" type="button">Copy Caption</button>
+              <button id="btnSaveImage" class="secondary" type="button">Save Share Image</button>
+              <button id="btnCopyLink" class="secondary" type="button">Copy Link</button>
+            </div>
+            <div class="shareNote" id="shareNote">Tip: post yours and tag 3 friends to compare.</div>
+          </div>
+
+          <div class="toneRow" aria-label="Tone selector">
+            <div class="label">Tone</div>
+            <select id="toneSelect">
+              <option value="playful" selected>Playful</option>
+              <option value="sharp">Sharp</option>
+            </select>
+          </div>
+
+          <div id="toast2" class="toast" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="micro">
+          <div class="left">If you’re mad, take it up with your playlists.</div>
+          <div class="right">🚩 VERIFIED</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+  <script>
+/* =========================================================
+   Spotify Dating Red Flags — Frontend-only (GitHub Pages)
+   ========================================================= */
+
+(function(){
+  function flash(msg){
+    try{
+      const t = document.getElementById("toast") || document.getElementById("toast2");
+      if (t){
+        t.style.display = "block";
+        t.textContent = msg;
+      }
+    }catch(_){}
+  }
+  window.addEventListener("error", (e)=> {
+    flash("JS error: " + (e?.message || "Unknown error") + " (open DevTools Console)");
+  });
+  window.addEventListener("unhandledrejection", (e)=> {
+    const msg = (e?.reason && (e.reason.message || String(e.reason))) || "Unhandled promise rejection";
+    flash("JS error: " + msg + " (open DevTools Console)");
+  });
+})();
+
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    const SPOTIFY_CLIENT_ID = "ad08cfcd496348e299ba9a840227954d";
+    const REDIRECT_URI = window.location.origin + window.location.pathname;
+
+    const SCOPES = [
+      "user-top-read",
+      "user-read-recently-played"
+    ];
+
+    const JOKES_CSV = `parameter,bucket,tone,priority,joke_text,notes
+obscurity,mainstream,playful,2,"Says ‘I just like good music’ and lets Spotify handle the rest.",""
+obscurity,mainstream,playful,2,"Claims they don’t follow trends. Quietly follows all of them.",""
+obscurity,mainstream,playful,3,"Comfortable taste. Low emotional risk.",""
+obscurity,mainstream,playful,3,"Prefers familiarity over surprise.",""
+obscurity,mainstream,playful,3,"Trusts charts more than instincts.",""
+obscurity,mainstream,playful,3,"Lets popularity do the filtering.",""
+obscurity,mainstream,playful,3,"Avoids musical friction.",""
+obscurity,mainstream,playful,3,"Believes good taste should be easy.",""
+obscurity,taste_curious,playful,2,"Likes popular music but wants credit for finding it early.",""
+obscurity,taste_curious,playful,2,"Balances discovery with vibes. Hates being called predictable.",""
+obscurity,taste_curious,playful,3,"Dabbles in niche. Retreats to hits.",""
+obscurity,taste_curious,playful,3,"Explores just enough to feel interesting.",""
+obscurity,taste_curious,playful,3,"Samples the underground. Lives upstairs.",""
+obscurity,taste_curious,playful,3,"Wants novelty with a safety net.",""
+obscurity,taste_curious,playful,3,"Curates discovery carefully.",""
+obscurity,obscure,playful,1,"Listens to artists with 14 followers and still calls it ‘vibes’.",""
+obscurity,obscure,playful,2,"Treats obscurity like a personality trait.",""
+obscurity,obscure,playful,2,"Has beef with anything that charts.",""
+obscurity,obscure,playful,3,"Makes ‘deep cuts’ their whole brand.",""
+obscurity,obscure,playful,3,"Finds songs like they’re secret messages.",""
+obscurity,obscure,playful,3,"Thinks mainstream is a red flag.",""
+repetition,craves_variety,playful,2,"Swears they love variety. Still plays the same song 6 times in a day.",""
+repetition,craves_variety,playful,3,"Flirts with new songs then goes back to the ex.",""
+repetition,craves_variety,playful,3,"Can’t commit to a sound for more than 3 tracks.",""
+repetition,balanced,playful,2,"Has range. Unfortunately so do their mixed signals.",""
+repetition,balanced,playful,3,"Healthy rotation. Slightly avoidant.",""
+repetition,defaults_to_safety,playful,1,"Plays the same 3 songs like it’s a coping mechanism.",""
+repetition,defaults_to_safety,playful,2,"Emotionally available to exactly one chorus.",""
+repetition,defaults_to_safety,playful,2,"Believes healing is just re-playing the bridge.",""
+time_of_day,morning,playful,2,"A morning listener. Has their life together… suspiciously.",""
+time_of_day,day,playful,2,"Daytime listener. Keeps it functional. Keeps it distant.",""
+time_of_day,night,playful,1,"Late-night listener. Texts ‘you up?’ with a playlist link.",""
+time_of_day,late_night,playful,1,"After-midnight listener. Falls in love with the idea of someone.",""
+insight,any,playful,1,"Craves variety, defaults to safety.",""
+insight,any,playful,1,"Public taste. Private feelings.",""
+insight,any,playful,1,"Runs on routine. Avoids vulnerability.",""
+insight,any,playful,1,"Processes emotions exclusively through headphones.",""
+obscurity,mainstream,sharp,2,"Your taste is algorithm-approved and emotionally risk-averse.",""
+obscurity,taste_curious,sharp,2,"You want credit for being interesting without doing the work.",""
+obscurity,obscure,sharp,2,"You use obscurity to avoid being understood.",""
+repetition,craves_variety,sharp,2,"You call it variety. It’s commitment issues.",""
+repetition,balanced,sharp,2,"You’re stable. You still won’t text back.",""
+repetition,defaults_to_safety,sharp,2,"You loop the same song because change scares you.",""
+time_of_day,morning,sharp,2,"Morning music. Controlled personality. Unavailable heart.",""
+time_of_day,day,sharp,2,"Daytime listening. You avoid feelings until the meeting ends.",""
+time_of_day,night,sharp,2,"Night listener. Romantic until accountability shows up.",""
+time_of_day,late_night,sharp,2,"After midnight you become a different person (worse).",""
+insight,any,sharp,1,"Your vibe is chaos with a comfort blanket.",""
+insight,any,sharp,1,"You want novelty, but only on your terms.",""
+insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.",""
+`;
+
+    const loginView = document.getElementById("loginView");
+    const resultsView = document.getElementById("resultsView");
+    const stampText = document.getElementById("stampText");
+
+    const btnLogin = document.getElementById("btnLogin");
+    const btnLogout = document.getElementById("btnLogout");
+    const btnLogout2 = document.getElementById("btnLogout2");
+
+    const openerText = document.getElementById("openerText");
+    const flagsList = document.getElementById("flagsList");
+    const insightLine = document.getElementById("insightLine");
+    const btnRoastAgain = document.getElementById("btnRoastAgain");
+
+    const btnShareX = document.getElementById("btnShareX");
+    const btnShareIG = document.getElementById("btnShareIG");
+    const btnShareTT = document.getElementById("btnShareTT");
+    const btnCopyCaption = document.getElementById("btnCopyCaption");
+    const btnSaveImage = document.getElementById("btnSaveImage");
+    const btnCopyLink = document.getElementById("btnCopyLink");
+    const shareUrlEl = document.getElementById("shareUrl");
+    const shareHint = document.getElementById("shareHint");
+    const shareNote = document.getElementById("shareNote");
+    const shareCard = document.getElementById("shareCard");
+    let lastShareCaption = "";
+
+    const toneSelect = document.getElementById("toneSelect");
+    const toast = document.getElementById("toast");
+    const toast2 = document.getElementById("toast2");
+    const ruleEl = document.getElementById("rule");
+    const insightBox = document.getElementById("insightBox");
+
+    function showToast(el, msg){
+      if (!el) return;
+      el.style.display = "block";
+      el.textContent = msg;
+      setTimeout(()=> {
+        if(el.textContent === msg) {
+          el.textContent = "";
+          el.style.display = "none";
+        }
+      }, 3500);
+    }
+
+    if (!btnLogin){
+      showToast(toast, "JS loaded, but #btnLogin not found. Check your HTML.");
+      return;
+    }
+
+    function splitCSVLine(line) {
+      const out = [];
+      let cur = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i+1] === '"') { cur += '"'; i++; }
+          else inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          out.push(cur);
+          cur = "";
+        } else {
+          cur += ch;
+        }
+      }
+      out.push(cur);
+      return out;
+    }
+
+    function parseCSV(csvText) {
+      const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
+      const header = splitCSVLine(lines[0]).map(h => h.trim());
+      const rows = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const cols = splitCSVLine(lines[i]);
+        const obj = {};
+        header.forEach((h, idx) => obj[h] = (cols[idx] ?? "").trim());
+        obj.priority = Number(obj.priority || 3);
+        rows.push(obj);
+      }
+      return rows;
+    }
+
+    const jokesTable = parseCSV(JOKES_CSV);
+
+    function base64urlencode(arrayBuffer) {
+      const bytes = new Uint8Array(arrayBuffer);
+      let str = "";
+      for (const b of bytes) str += String.fromCharCode(b);
+      return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+    }
+
+    async function sha256(plain) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(plain);
+      return await crypto.subtle.digest("SHA-256", data);
+    }
+
+    function randomString(length = 64) {
+      const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+      let result = "";
+      const values = crypto.getRandomValues(new Uint8Array(length));
+      for (let i = 0; i < values.length; i++) result += charset[values[i] % charset.length];
+      return result;
+    }
+
+    function getRedirectUriForOAuth(){
+      const u = new URL(window.location.href);
+      u.searchParams.delete("code");
+      u.searchParams.delete("state");
+      u.searchParams.delete("error");
+      u.searchParams.delete("error_description");
+      return u.origin + u.pathname;
+    }
+
+    async function loginSpotify() {
+      showToast(toast, "Redirecting to Spotify…");
+
+      const redirectUri = getRedirectUriForOAuth();
+      localStorage.setItem("oauth_redirect_uri", redirectUri);
+
+      const verifier = randomString(64);
+      const challenge = base64urlencode(await sha256(verifier));
+
+      localStorage.setItem("pkce_verifier", verifier);
+      try { sessionStorage.setItem("pkce_verifier", verifier); } catch(_) {}
+
+      const params = new URLSearchParams({
+        client_id: SPOTIFY_CLIENT_ID,
+        response_type: "code",
+        redirect_uri: redirectUri,
+        code_challenge_method: "S256",
+        code_challenge: challenge,
+        scope: SCOPES.join(" ")
+      });
+
+      window.location.assign("https://accounts.spotify.com/authorize?" + params.toString());
+    }
+
+    async function exchangeCodeForToken(code) {
+      const redirectUri = localStorage.getItem("oauth_redirect_uri") || REDIRECT_URI;
+
+      let verifier = null;
+      try { verifier = sessionStorage.getItem("pkce_verifier"); } catch(_) {}
+      if (!verifier) verifier = localStorage.getItem("pkce_verifier");
+
+      if (!verifier) {
+        throw new Error("Login session expired (missing PKCE verifier). Click Continue with Spotify again.");
+      }
+
+      const body = new URLSearchParams({
+        client_id: SPOTIFY_CLIENT_ID,
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: redirectUri,
+        code_verifier: verifier
+      });
+
+      const res = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error_description || data?.error || "Token exchange failed");
+      storeToken(data.access_token, data.expires_in);
+
+      window.history.replaceState({}, document.title, redirectUri);
+      return data.access_token;
+    }
+
+    function storeToken(token, expiresIn) {
+      const exp = Date.now() + (expiresIn * 1000);
+      localStorage.setItem("access_token", token);
+      localStorage.setItem("token_exp", String(exp));
+    }
+
+    function getStoredToken() {
+      const token = localStorage.getItem("access_token");
+      const exp = Number(localStorage.getItem("token_exp") || 0);
+      if (!token) return null;
+      if (Date.now() > exp) return null;
+      return token;
+    }
+
+    function logout() {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("token_exp");
+      localStorage.removeItem("pkce_verifier");
+      localStorage.removeItem("oauth_redirect_uri");
+      try { sessionStorage.removeItem("pkce_verifier"); } catch(_) {}
+      lastBuckets = null;
+      lastResult = null;
+      lastEvidence = null;
+      switchToLogin();
+      showToast(toast, "Logged out.");
+    }
+
+    async function spotifyGET(token, url) {
+      const res = await fetch(url, { headers: { Authorization: "Bearer " + token } });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`Spotify ${res.status}: ${t}`);
+      }
+      return await res.json();
+    }
+
+    function mean(arr){ return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
+
+    async function fetchProfileBuckets(token){
+      const recent = await spotifyGET(token, "https://api.spotify.com/v1/me/player/recently-played?limit=50");
+      const items = recent?.items || [];
+      const plays = items.map(it => ({
+        track: it.track,
+        played_at: it.played_at,
+        artist: it.track?.artists?.[0] || null
+      })).filter(p => p.track && p.artist);
+
+      const recentPlays = plays.length;
+
+      const trackCounts = new Map();
+      for (const p of plays) {
+        const id = p.track.id;
+        trackCounts.set(id, (trackCounts.get(id) || 0) + 1);
+      }
+      let maxRepeat = 0;
+      let topTrackId = null;
+      for (const [id, c] of trackCounts.entries()) {
+        if (c > maxRepeat){ maxRepeat = c; topTrackId = id; }
+      }
+
+      const hourCounts = Array.from({length:24}, ()=>0);
+      for (const p of plays){
+        const h = new Date(p.played_at).getHours();
+        hourCounts[h] += 1;
+      }
+      const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
+
+      const topTracks = await spotifyGET(token, "https://api.spotify.com/v1/me/top/tracks?time_range=short_term&limit=30");
+      const top = topTracks?.items || [];
+      const artistIds = Array.from(new Set(top.flatMap(t => (t.artists||[]).map(a=>a.id)).filter(Boolean))).slice(0, 50);
+
+      let avgPopularity = 50;
+      if (artistIds.length){
+        const artists = await spotifyGET(token, "https://api.spotify.com/v1/artists?ids=" + artistIds.join(","));
+        const pops = (artists?.artists || []).map(a => a.popularity).filter(n => typeof n === "number");
+        avgPopularity = Math.round(mean(pops));
+      }
+
+      const buckets = {};
+      if (maxRepeat >= 6) buckets.repetition = "defaults_to_safety";
+      else if (maxRepeat <= 2) buckets.repetition = "craves_variety";
+      else buckets.repetition = "balanced";
+
+      let tod = "day";
+      if (peakHour >= 5 && peakHour <= 10) tod = "morning";
+      if (peakHour >= 19 && peakHour <= 23) tod = "night";
+      if (peakHour >= 0 && peakHour <= 3) tod = "late_night";
+      buckets.time_of_day = tod;
+
+      if (avgPopularity >= 75) buckets.obscurity = "mainstream";
+      else if (avgPopularity >= 45) buckets.obscurity = "taste_curious";
+      else buckets.obscurity = "obscure";
+
+      const evidence = {
+        repetition: {
+          maxRepeat,
+          topTrack: plays.find(p => p.track.id === topTrackId)?.track || null
+        },
+        time_of_day: { peakHour, hourCounts },
+        obscurity: { avgPopularity }
+      };
+
+      const debug = { recentPlays, maxRepeat, peakHour, avgPopularity };
+      return { buckets, evidence, debug };
+    }
+
+    function pickRows(parameter, bucket, tone){
+      const rows = jokesTable.filter(r =>
+        r.parameter === parameter &&
+        (r.bucket === bucket || r.bucket === "any") &&
+        r.tone === tone
+      );
+      return rows.slice().sort((a,b)=>a.priority-b.priority);
+    }
+
+    function randomPick(arr){ return arr.length ? arr[Math.floor(Math.random()*arr.length)] : null; }
+
+    function generateRoast(buckets, tone){
+      const ordered = [];
+      const params = ["obscurity","repetition","time_of_day"];
+      for (const p of params){
+        const bucket = buckets[p];
+        const pick = randomPick(pickRows(p, bucket, tone));
+        if (pick) ordered.push(pick);
+      }
+      const insightPick = randomPick(pickRows("insight", "any", tone));
+      const insight = insightPick?.joke_text || "Your vibe is complicated.";
+      if (!ordered.length) ordered.push({ joke_text:"Data unavailable. Still suspicious." });
+      return { ordered, insight };
+    }
+
+    function escapeHTML(s){
+      return (s||"").replace(/[&<>"']/g, (c)=>({
+        "&":"&amp;","<":"&lt;",">":"&gt;", "\"":"&quot;","'":"&#39;"
+      }[c]));
+    }
+
+    function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+    function clearResults(){
+      openerText.innerHTML = `<span class="flag">🚩</span>Loading…`;
+      flagsList.innerHTML = "";
+      insightLine.textContent = "Loading…";
+      ruleEl.classList.add("hidden");
+      flagsList.classList.add("hidden");
+      insightBox.classList.add("hidden");
+    }
+
+    function buildBecauseLine(row, evidence){
+      if (!row || !evidence) return "";
+      const p = row.parameter;
+      if (p === "repetition"){
+        const max = evidence.repetition?.maxRepeat ?? 0;
+        const t = evidence.repetition?.topTrack;
+        if (!t) return max ? `because your #1 track was played ${max}× recently.` : "";
+        return `because your #1 track (“${t.name}” by ${t.artists?.[0]?.name || "Unknown"} ) was played ${max}× in your last 50 listens.`;
+      }
+      if (p === "time_of_day"){
+        const h = evidence.time_of_day?.peakHour;
+        if (typeof h !== "number") return "";
+        const label =
+          (h>=0 && h<=3) ? "after midnight" :
+          (h>=5 && h<=10) ? "morning" :
+          (h>=19 && h<=23) ? "night" : "day";
+        return `because your listening peaks around ${h}:00 (${label}).`;
+      }
+      if (p === "obscurity"){
+        const pop = evidence.obscurity?.avgPopularity;
+        if (typeof pop !== "number") return "";
+        return `because your average artist popularity is ${pop}/100.`;
+      }
+      return "";
+    }
+
+    let lastBuckets = null;
+    let lastEvidence = null;
+    let lastResult = null;
+
+    async function renderRoastFromBuckets(buckets, evidence){
+      clearResults();
+      const tone = toneSelect.value;
+      const { ordered, insight } = generateRoast(buckets, tone);
+      lastResult = { ordered, insight, tone };
+      lastBuckets = buckets;
+
+      const opener = ordered[0]?.joke_text || "Data unavailable. Still suspicious.";
+      const openerRow = ordered[0] || null;
+      const openerBecause = buildBecauseLine(openerRow, evidence);
+      openerText.innerHTML =
+        `<span class="flag">🚩</span>${escapeHTML(opener)}${
+          openerBecause ? `<div class="because">${escapeHTML(openerBecause)}</div>` : ""
+        }`;
+      await sleep(700);
+
+      ruleEl.classList.remove("hidden");
+      flagsList.classList.remove("hidden");
+
+      const rest = ordered.slice(1);
+      for (let i=0;i<rest.length;i++){
+        const li = document.createElement("li");
+        li.className = "fadeIn";
+        const isLast = (i === rest.length - 1);
+        if (isLast) li.classList.add("role-close");
+        else { li.classList.add("role-core"); if (i % 2 === 1) li.classList.add("alt"); }
+
+        const because = buildBecauseLine(rest[i], evidence);
+        li.innerHTML =
+          `<span class="flag">🚩</span>${escapeHTML(rest[i].joke_text)}${
+            because ? `<div class="because">${escapeHTML(because)}</div>` : ""
+          }`;
+        flagsList.appendChild(li);
+        await sleep(200);
+      }
+
+      insightLine.textContent = insight;
+      insightBox.classList.remove("hidden");
+      insightBox.classList.add("fadeIn");
+      updateShareKit();
+    }
+
+    function safeNowUrl(){
+      const u = new URL(window.location.href);
+      u.searchParams.delete("code");
+      u.searchParams.delete("state");
+      u.searchParams.delete("error");
+      u.searchParams.delete("error_description");
+      return u.origin + u.pathname;
+    }
+
+    function buildShareCaption(){
+      const url = safeNowUrl();
+      const pattern = (insightLine?.textContent || "").trim();
+      const openerMain = (lastResult?.ordered?.[0]?.joke_text || "").trim();
+
+      const firstBecause =
+        document.querySelector("#openerText .because")?.textContent?.trim() ||
+        document.querySelector("#flagsList .because")?.textContent?.trim() ||
+        "";
+
+      const pieces = [];
+      if (pattern) pieces.push(`Spotify just exposed my dating pattern: ${pattern} 🚩`);
+      else pieces.push("Spotify Dating Red Flags 🚩");
+      if (openerMain) pieces.push(openerMain);
+      if (firstBecause){
+        const cleaned = firstBecause.replace(/^because\s*/i,"");
+        pieces.push(`receipts: ${cleaned}`);
+      }
+      pieces.push(`Run yours: ${url}`);
+      return pieces.join("\n");
+    }
+
+    function buildXIntent(){
+      const url = safeNowUrl();
+      const pattern = (insightLine?.textContent || "").trim();
+
+      const firstBecause =
+        document.querySelector("#openerText .because")?.textContent?.trim() ||
+        document.querySelector("#flagsList .because")?.textContent?.trim() ||
+        "";
+
+      let text = "Spotify Dating Red Flags 🚩";
+      if (pattern) text = `My Spotify dating pattern: ${pattern} 🚩`;
+
+      if (firstBecause){
+        const cleaned = firstBecause.replace(/^because\s*/i,"");
+        text += `\nreceipts: ${cleaned}`;
+      }
+      text += `\n${url}`;
+
+      const intent = new URL("https://twitter.com/intent/tweet");
+      intent.searchParams.set("text", text);
+      return intent.toString();
+    }
+
+    function updateShareKit(){
+      const url = safeNowUrl();
+      if (shareUrlEl) shareUrlEl.textContent = url;
+
+      if (shareNote) {
+        shareNote.textContent = "Compare with friends: post yours, then tag 2 friends and decide who’s the bigger 🚩.";
+      }
+      if (shareHint) {
+        shareHint.textContent = "Screenshot-ready. Made from your recent listening.";
+      }
+
+      lastShareCaption = buildShareCaption();
+      if (btnShareX) btnShareX.href = buildXIntent();
+    }
+
+    async function copyText(textToCopy, okMsg){
+      try{
+        await navigator.clipboard.writeText(textToCopy);
+        showToast(toast2, okMsg || "Copied.");
+      }catch(e){
+        window.prompt("Copy this:", textToCopy);
+      }
+    }
+
+    async function renderCanvasWithFallback(optionsPrimary, optionsFallback){
+      try{
+        return await html2canvas(shareCard, optionsPrimary);
+      }catch(e){
+        console.warn("html2canvas primary render failed, retrying fallback:", e);
+        return await html2canvas(shareCard, optionsFallback);
+      }
+    }
+
+    async function saveShareImage(){
+      if (!shareCard || typeof html2canvas !== "function"){
+        showToast(toast2, "Share image unavailable.");
+        return;
+      }
+      showToast(toast2, "Generating image…");
+      updateShareKit();
+
+      const scale = Math.min(2, window.devicePixelRatio || 1);
+
+      const base = {
+        backgroundColor: "#ffffff",
+        scale,
+        useCORS: true,
+        onclone: (doc) => {
+          doc.body.classList.add("captureMode");
+        }
+      };
+
+      // Primary: foreignObjectRendering often preserves “flat” color fills better.
+      const primary = { ...base, foreignObjectRendering: true };
+      // Fallback: default renderer (more compatible on some browsers).
+      const fallback = { ...base, foreignObjectRendering: false };
+
+      const canvas = await renderCanvasWithFallback(primary, fallback);
+
+      const dataUrl = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "spotify-dating-red-flags.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast(toast2, "Saved image. Post it and cause problems.");
+    }
+
+    function openInstagram(){
+      copyText(lastShareCaption, "Caption copied. Paste it in Instagram.");
+      window.open("https://www.instagram.com/", "_blank", "noopener");
+    }
+
+    function openTikTok(){
+      copyText(lastShareCaption, "Caption copied. Paste it in TikTok.");
+      window.open("https://www.tiktok.com/upload", "_blank", "noopener");
+    }
+
+    function switchToLogin(){
+      stampText.textContent = "WELCOME";
+      loginView.classList.remove("hidden");
+      resultsView.classList.add("hidden");
+      btnLogout.classList.add("hidden");
+    }
+
+    function switchToResults(){
+      stampText.textContent = "RESULTS";
+      loginView.classList.add("hidden");
+      resultsView.classList.remove("hidden");
+    }
+
+    async function boot(){
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("code");
+      let token = getStoredToken();
+
+      if (code) {
+        try{
+          token = await exchangeCodeForToken(code);
+        }catch(e){
+          showToast(toast, "Login failed: " + (e?.message || "Unknown") + " — check Redirect URI matches exactly.");
+          switchToLogin();
+          return;
+        }
+      }
+
+      if (token) {
+        try{
+          btnLogout.classList.remove("hidden");
+          switchToResults();
+          const { buckets, evidence, debug } = await fetchProfileBuckets(token);
+          lastEvidence = evidence;
+          showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
+          document.getElementById("resultsSubtitle").textContent =
+            `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
+          await renderRoastFromBuckets(buckets, lastEvidence);
+        }catch(e){
+          console.error(e);
+          showToast(toast, "Spotify error: " + (e?.message || "Unknown"));
+          switchToLogin();
+        }
+      } else {
+        switchToLogin();
+      }
+    }
+
+    btnLogin.addEventListener("click", loginSpotify);
+    btnLogout.addEventListener("click", logout);
+    btnLogout2.addEventListener("click", logout);
+
+    btnRoastAgain.addEventListener("click", async () => {
+      const token = getStoredToken();
+      if (!token) return;
+      try {
+        const { buckets, evidence, debug } = await fetchProfileBuckets(token);
+        lastEvidence = evidence;
+        showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
+        document.getElementById("resultsSubtitle").textContent =
+          `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
+        await renderRoastFromBuckets(buckets, lastEvidence);
+      } catch (e) {
+        console.error(e);
+        showToast(toast2, "Spotify error: " + (e?.message || "Unknown"));
+      }
+    });
+
+    btnCopyCaption?.addEventListener("click", () => copyText(lastShareCaption || buildShareCaption(), "Caption copied."));
+    btnCopyLink?.addEventListener("click", () => copyText(safeNowUrl(), "Link copied."));
+    btnSaveImage?.addEventListener("click", saveShareImage);
+    btnShareIG?.addEventListener("click", openInstagram);
+    btnShareTT?.addEventListener("click", openTikTok);
+
+    toneSelect.addEventListener("change", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
+
+    showToast(toast, "✅ JS loaded. Redirect URI: " + getRedirectUriForOAuth());
+    boot();
+  } catch (e) {
+    const t = document.getElementById("toast") || document.getElementById("toast2");
+    if (t) { t.style.display = "block"; t.textContent = "JS error: " + (e?.message || String(e)); }
+    console.error(e);
+  }
+});
+</script>
+</body>
+</html>
