@@ -32,916 +32,918 @@
       background: var(--bg);
       color: var(--ink);
       font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
     }
-    a{ color:inherit; }
 
     .wrap{
-      max-width: 1020px;
-      margin: 0 auto;
-      padding: 28px 18px 40px;
+      min-height: 100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 28px 14px;
     }
 
-    .shell{
-      background: var(--paper);
+    .frame{
+      width: min(560px, 100%);
       border: var(--b);
-      box-shadow: 0 10px 0 rgba(0,0,0,0.06);
+      background: var(--paper);
+      position: relative;
+      padding: var(--pad);
+      transform: translateX(-2px) translateY(1px);
     }
 
-    .topbar{
+    .stamp{
+      position:absolute;
+      top:-16px;
+      right:14px;
+      border: var(--b);
+      background: var(--pink);
+      color: var(--ink);
+      padding: 8px 10px;
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 12px;
+      transform: rotate(2deg);
+      user-select:none;
+    }
+
+    .header{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap: 14px;
-      padding: 18px var(--pad) 0;
+      gap:12px;
+      margin-bottom: 14px;
     }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      font-family: var(--mono);
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      font-size: 16px;
-    }
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      border: var(--b);
-      background: var(--pink);
-      padding: 6px 10px;
-      font-family: var(--mono);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      font-size: 12px;
-      margin-left: 10px;
-      position: relative;
-      top: -8px;
+
+    .title{
+      font-weight: 950;
+      letter-spacing: -0.03em;
+      line-height: 1.02;
+      font-size: 24px;
+      margin: 0;
     }
 
     .subtitle{
+      margin-top: 8px;
       font-family: var(--mono);
       font-size: 12px;
-      opacity: .85;
-      margin-top: 6px;
-      line-height: 1.2;
-    }
-
-    .metaRight{
-      display:flex;
-      align-items:flex-start;
-      gap: 10px;
-    }
-
-    .btn{
-      font-family: var(--mono);
-      font-weight: 900;
-      font-size: 14px;
-      padding: 12px 14px;
-      border: var(--b);
-      background: #fff;
-      cursor: pointer;
-      user-select:none;
-      line-height: 1;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-    }
-    .btn.primary{
-      background: #111;
-      color: #fff;
-    }
-    .btn.primary:hover{ background: var(--yellow); color: #111; }
-    .btn.secondary:hover{ background: var(--yellow); }
-
-    .divider{
-      margin: 14px var(--pad) 16px;
-      height: 7px;
-      background: var(--yellow);
-      border: var(--b);
-    }
-
-    .panel{
-      padding: 0 var(--pad) var(--pad);
-    }
-
-    .hero{
-      display:grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 18px;
-      align-items: start;
-    }
-    @media (max-width: 860px){
-      .hero{ grid-template-columns: 1fr; }
-    }
-
-    .card{
-      border: var(--b);
-      background: #fff;
-      padding: 16px;
-    }
-
-    .loginCard{
-      display:flex;
-      flex-direction:column;
-      gap: 14px;
-    }
-    .loginTitle{
-      font-family: var(--mono);
-      font-weight: 900;
-      font-size: 42px;
-      line-height: 1;
-      margin: 0;
-    }
-    .loginSub{
-      font-family: var(--mono);
-      font-size: 16px;
-      opacity: .85;
-      margin: 0;
+      color: var(--muted);
       line-height: 1.25;
     }
 
-    .notice{
+    .bar{
+      height: 10px;
+      border: var(--b);
+      background: var(--yellow);
+      margin: 10px 0 18px;
+      transform: translateX(1px);
+    }
+
+    button{
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      padding: 12px 12px;
+      border: var(--b);
+      background: #fff;
+      color: var(--ink);
+      cursor:pointer;
+    }
+    button:active{ transform: translateY(1px); }
+
+    .primary{
+      background: var(--ink);
+      color: #fff;
+    }
+    .primary:hover{
+      background: var(--yellow);
+      color: var(--ink);
+    }
+
+    .secondary:hover{
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .note{
+      border: var(--b);
+      background: var(--yellow);
+      padding: 10px 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      margin-top: 12px;
+    }
+
+    .toast{
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink);
+      border: var(--b);
+      padding: 8px 10px;
+      background: var(--yellow);
+      display:none;
+    }
+
+    .hidden{ display:none !important; }
+
+    .fadeIn{
+      animation: fadeIn 180ms ease-out both;
+    }
+    @keyframes fadeIn{
+      from{ opacity:0; transform: translateY(6px); }
+      to{ opacity:1; transform: translateY(0); }
+    }
+
+    /* RESULTS UI */
+    .openerPanel{
+      border: var(--b);
+      background: var(--blue);
+      color: #fff;
+      padding: 16px 14px;
+      position: relative;
+      transform: translateX(-1px);
+      overflow:hidden;
+    }
+    .openerPanel::before{
+      content:"";
+      position:absolute;
+      left:-10px;
+      top:-10px;
+      width:18px;
+      height:18px;
+      border: var(--b);
+      background: var(--yellow);
+    }
+    .opener{
+      font-weight: 950;
+      letter-spacing: -0.05em;
+      line-height: 1.05;
+      font-size: 38px;
+      margin: 0;
+    }
+    .flag{
+      margin-right: 10px;
+      color: var(--yellow);
+    }
+
+    .rule{
+      height:0;
+      border:none;
+      border-top: var(--b);
+      margin: 16px 0;
+    }
+
+    .list{
+      margin:0;
+      padding:0;
+      list-style:none;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+    }
+    .list li{
+      border: var(--b);
+      padding: 10px 10px;
+      font-size: 18px;
+      line-height: 1.22;
+      letter-spacing: -0.01em;
+      background: #fff;
+      transform: translateX(1px);
+    }
+    .list li:nth-child(2n){ transform: translateX(-1px); }
+
+    .list li:nth-child(1){ background: var(--yellow); }
+    .list li:nth-child(2){ background: var(--green); color: var(--ink); }
+    .list li:nth-child(3){ background: var(--paper); }
+    .list li:nth-child(4){ background: var(--purple); color: #fff; }
+    .list li:nth-child(5){ background: var(--pink); color: var(--ink); }
+    .list li:nth-child(6){ background: var(--yellow); }
+.list li:nth-child(7){ background: var(--green); color: var(--ink); }
+
+/* Evidence line */
+.because{
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.25;
+  opacity: 0.9;
+}
+
+/* Role-based colors (override nth-child chaos) */
+.list li.role-core { background: var(--yellow) !important; color: var(--ink) !important; }
+.list li.role-core.alt { background: var(--green) !important; color: var(--ink) !important; }
+.list li.role-close { background: var(--pink) !important; color: var(--ink) !important; }
+
+
+    .list .flag{ color: var(--red); }
+    .list li:nth-child(4) .flag{ color: var(--yellow); }
+
+    .insight{
+      margin-top: 16px;
       border: var(--b);
       background: var(--yellow);
       padding: 14px;
-      font-family: var(--mono);
-      font-weight: 800;
-      line-height: 1.25;
-    }
-    .notice small{
-      display:block;
-      margin-top: 6px;
-      font-weight: 700;
-      opacity: .9;
-    }
-
-    .errorBox{
-      border: var(--b);
-      background: #fff;
-      padding: 12px 14px;
-      font-family: var(--mono);
-      font-size: 13px;
-      display:none;
-      white-space: pre-wrap;
-    }
-
-    .resultsHeader{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-    .resultsTitle{
-      font-family: var(--mono);
-      font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      margin: 0;
-      font-size: 14px;
-    }
-    .resultsSubtitle{
-      font-family: var(--mono);
-      font-size: 12px;
-      opacity: .85;
-      margin: 0;
-      line-height: 1.2;
-    }
-
-    .shareCard{
-      background: #fff;
-      border: var(--b);
-      padding: 16px;
-    }
-
-    /* the screenshot area */
-    #captureArea{
-      width: 100%;
-      background: #fff;
-      border: var(--b);
-      padding: 16px;
       position: relative;
-      overflow: hidden;
-      opacity: 1 !important;
+      transform: translateX(1px);
     }
-
-    .captureTop{
-      display:flex;
-      justify-content:space-between;
-      gap: 12px;
-      align-items:flex-start;
+    .insight::after{
+      content:"";
+      position:absolute;
+      right:-10px;
+      bottom:-10px;
+      width:18px;
+      height:18px;
+      border: var(--b);
+      background: var(--red);
+    }
+    .insight .label{
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--ink);
       margin-bottom: 10px;
     }
-    .captureBrand{
-      font-family: var(--mono);
+    .insight .line{
+      font-size: 20px;
       font-weight: 900;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-      font-size: 12px;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .actions{
+      margin-top: 16px;
+      border: var(--b);
+      background: #fff;
+      padding: 12px;
+      display:grid;
+      gap: 10px;
+      transform: translateX(-1px);
+    }
+
+    .toneRow{
+      border: var(--b);
+      padding: 10px 12px;
       display:flex;
       align-items:center;
-      gap: 8px;
+      justify-content:space-between;
+      gap: 10px;
+      background: var(--green);
+    }
+    .toneRow .label{
+      font-family: var(--mono);
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--ink);
+      white-space:nowrap;
+    }
+    select{
+      font-family: var(--mono);
+      font-weight: 900;
+      border: var(--b);
+      background: #fff;
+      color: var(--ink);
+      padding: 8px 10px;
+      cursor:pointer;
+    }
+
+    .micro{
+      margin-top: 12px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink);
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      border-top: var(--b);
+      padding-top: 12px;
+      align-items:flex-start;
+    }
+    .micro .right{
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 11px;
+      background: var(--pink);
+      border: var(--b);
+      padding: 6px 8px;
+      transform: rotate(-1deg);
+      user-select:none;
+    }
+
+    @media (max-width:420px){
+      .frame{ padding:18px; }
+      .opener{ font-size: 32px; }
+      .list li{ font-size: 17px; }
+    }
+  
+    .shareCard{
+      border: var(--b);
+      background:#fff;
+      padding: 14px;
+      margin-top: 14px;
+    }
+    .shareMeta{
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      border-bottom: var(--b);
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+      align-items:flex-start;
+    }
+    .shareBrand{
+      font-family: var(--mono);
+      font-weight: 900;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-size: 12px;
     }
     .shareHint{
       font-family: var(--mono);
       font-size: 12px;
-      opacity: .75;
+      opacity: 0.75;
       text-align:right;
       max-width: 240px;
     }
-    .shareScore{
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 900;
-      opacity: 0.9;
-      margin-top: 2px;
-    }
-
-    .bar{
-      height: 6px;
-      background: var(--ink);
-      border: 0;
-      margin: 10px 0 12px;
-    }
-
-    .flagBlock{
-      border: var(--b);
-      padding: 16px;
-      margin: 10px 0;
-      position: relative;
-      opacity: 1 !important;
-      background: #fff !important;
-    }
-    .flagBlock .flag{
-      position:absolute;
-      left: 12px;
-      top: 12px;
-      font-size: 18px;
-    }
-    .flagBlock h2{
-      margin: 0;
-      padding-left: 30px;
-      font-family: var(--sans);
-      font-weight: 900;
-      font-size: 40px;
-      line-height: 1.05;
-    }
-    .flagBlock .because{
-      font-family: var(--mono);
-      font-size: 12px;
-      margin-top: 10px;
-      padding-left: 30px;
-      opacity: .85;
-    }
-
-    .flag-yellow{ background: rgba(255,230,0,0.55); }
-    .flag-pink{ background: rgba(255,62,181,0.55); }
-    .flag-blue{ background: rgba(0,87,255,0.85); color:#fff; }
-    .flag-blue .because{ color:#fff; opacity:.9; }
-
-    .bigPattern{
-      border: var(--b);
-      background: rgba(255,230,0,0.65);
-      padding: 16px;
+    .shareFooter{
       margin-top: 12px;
-      opacity: 1 !important;
-    }
-    .bigPattern .label{
-      font-family: var(--mono);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      font-size: 12px;
-      opacity: .8;
-      margin-bottom: 6px;
-    }
-    .bigPattern .text{
-      font-family: var(--sans);
-      font-weight: 900;
-      font-size: 26px;
-      line-height: 1.1;
-    }
-    .bigPattern .because{
+      border-top: var(--b);
+      padding-top: 10px;
       font-family: var(--mono);
       font-size: 12px;
-      margin-top: 10px;
-      opacity: .85;
-    }
-
-    .urlFooter{
-      margin-top: 14px;
-      font-family: var(--mono);
-      font-size: 12px;
-      opacity: .75;
-      text-align: right;
-    }
-
-    .controlsCard{
-      border: var(--b);
-      background: #fff;
-      padding: 0;
-    }
-    .controlsTop{
-      background: #111;
-      color:#fff;
-      padding: 14px 16px;
-      font-family: var(--mono);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      text-align:center;
-      font-size: 18px;
-    }
-    .controlsInner{
-      padding: 14px;
+      opacity: 0.85;
       display:flex;
-      flex-direction:column;
-      gap: 12px;
+      justify-content:flex-end;
     }
 
-    /* share kit layout (fixed) */
     .shareKit{
       border: var(--b);
-      padding: 14px;
-      background: #fff;
-      display:flex;
-      flex-direction:column;
+      background:#fff;
+      padding: 12px;
+      display:grid;
       gap: 10px;
     }
     .shareRow{
       display:grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      align-items: stretch;
-    }
-    @media (max-width: 720px){
-      .shareRow{ grid-template-columns: 1fr; }
-    }
-    .shareRow a,
-    .shareRow button{
-      width: 100%;
-      text-decoration:none;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      border: var(--b);
-      padding: 12px 10px;
-      font-family: var(--mono);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      background:#fff;
-      cursor:pointer;
-      line-height:1;
-    }
-    .shareRow a.secondary,
-    .shareRow button.secondary{
-      background:#fff;
-      color:#111;
-    }
-    .shareRow a.primary,
-    .shareRow button.primary{
-      background:#111;
-      color:#fff;
-    }
-    .shareRow a:hover,
-    .shareRow button:hover{
-      background: var(--yellow);
-      color:#111;
-    }
-
-    .sharePresetRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
       gap: 10px;
-      flex-wrap: wrap;
-      margin-top: 2px;
     }
-    .sharePresetLabel{
-      font-family: var(--mono);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      font-size: 12px;
-    }
-    .sharePreset{
-      flex: 1 1 280px;
-      max-width: 100%;
-      font-family: var(--mono);
-      font-weight: 900;
-      border: 2px solid #111;
-      padding: 12px 10px;
-      background:#fff;
-      cursor:pointer;
-    }
-
     .shareNote{
       font-family: var(--mono);
       font-size: 12px;
-      opacity: .8;
+      opacity: 0.8;
     }
-
-    .toneRow{
-      border: var(--b);
-      background: rgba(0,200,83,0.65);
-      padding: 12px;
-      display:flex;
+    .shareRow a.secondary{
+      text-align:center;
+      display:inline-flex;
       align-items:center;
-      justify-content:space-between;
-      gap: 12px;
+      justify-content:center;
+      text-decoration:none;
     }
-    .toneLabel{
-      font-family: var(--mono);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
-    #toneSelect{
-      font-family: var(--mono);
-      font-weight: 900;
-      border: var(--b);
-      padding: 10px 12px;
-      background:#fff;
-      cursor:pointer;
-      min-width: 160px;
+    @media (max-width:520px){
+      .shareRow{ grid-template-columns: 1fr; }
+      .shareHint{ text-align:left; max-width:none; }
+      .shareMeta{ flex-direction:column; }
+      .shareFooter{ justify-content:flex-start; }
     }
 
-    .bottomLine{
-      margin-top: 10px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap: 10px;
-      font-family: var(--mono);
-      padding: 10px 14px;
-    }
-    .verifiedBadge{
-      border: var(--b);
-      background: var(--pink);
-      padding: 8px 12px;
-      font-family: var(--mono);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      display:flex;
-      align-items:center;
-      gap: 8px;
-      white-space: nowrap;
-    }
+  
+/* ===========================
+   SHARE IMAGE POLISH
+=========================== */
+.sharePresetRow{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin:10px 0 6px;
+  flex-wrap:wrap;
+}
+.sharePresetLabel{ font-weight:700; }
+.sharePreset{
+  padding:8px 10px;
+  border:2px solid #111;
+  border-radius:10px;
+  background:#fff;
+  font-weight:700;
+}
+#shareCard.captureMode{
+  opacity:1 !important;
+  filter:none !important;
+}
+#shareCard.captureMode *{
+  opacity:1 !important;
+  filter:none !important;
+}
+/* Fixed canvas sizes for different platforms */
+/* Capture frame exists but has NO layout impact by default */
+#shareCaptureFrame{
+  margin:0;
+  background:transparent;
+}
 
-    .toast{
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      background:#111;
-      color:#fff;
-      border: var(--b);
-      padding: 10px 12px;
-      font-family: var(--mono);
-      font-weight: 900;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      font-size: 12px;
-      opacity: 0;
-      pointer-events:none;
-      transition: opacity .18s ease;
-      z-index: 9999;
-    }
-    .toast.show{ opacity: 1; }
-  </style>
+/* Only when actively capturing */
+#shareCaptureFrame.isCapturing{
+  background:#fff;
+  margin:0 auto;
+  display:flex;
+  align-items:stretch;
+  justify-content:center;
+}
 
-  <script>
-    // Prevent Safari BFCache weirdness with stale hash/callback state
-    window.addEventListener("pageshow", (e)=> {
-      if (e.persisted) {
-        // On BFCache restore, ensure the app re-renders properly.
-        setTimeout(()=> {
-          try { window.dispatchEvent(new Event("load")); } catch {}
-        }, 0);
-      }
-    });
-  </script>
+#shareCaptureFrame.isCapturing.format-ig_square{
+  width:1080px;
+  height:1080px;
+}
+#shareCaptureFrame.isCapturing.format-ig_story{
+  width:1080px;
+  height:1920px;
+}
+#shareCaptureFrame.isCapturing.format-x_landscape{
+  width:1200px;
+  height:675px;
+}
 
+
+/* Make the share card fill the capture frame */
+#shareCaptureFrame .shareCard{
+  width:100%;
+  height:100%;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  padding:40px;
+}
+#shareCaptureFrame .footerUrl{
+  margin-top:auto;
+  padding-top:18px;
+  font-weight:800;
+}
+
+</style>
 </head>
-<body>
-  <div class="wrap">
-    <div class="shell">
 
-      <div class="topbar">
-        <div>
-          <div class="brand">
-            Spotify Dating Red Flags <span aria-hidden="true">🚩</span>
-            <span class="tag">WELCOME</span>
+<body>
+  <main class="wrap">
+    <section class="frame">
+      <div class="stamp" id="stampText">WELCOME</div>
+
+      <!-- LOGIN VIEW -->
+      <div id="loginView">
+        <header class="header">
+          <div>
+            <h1 class="title">Spotify Dating Red Flags 🚩</h1>
+            <div class="subtitle">Log in, get roasted, screenshot, repeat.</div>
           </div>
-          <div class="subtitle">Log in, get roasted, screenshot, repeat.</div>
+          <button id="btnLogout" class="secondary hidden" type="button">Log out</button>
+        </header>
+
+        <div class="bar" aria-hidden="true"></div>
+
+        <button id="btnLogin" class="primary" type="button">Continue with Spotify</button>
+
+        <div class="note">
+          We only read your listening data. We don’t post. We don’t save your password.
         </div>
+
+        <div id="toast" class="toast" role="status" aria-live="polite"></div>
       </div>
 
-      <div class="divider"></div>
+      <!-- RESULTS VIEW -->
+      <div id="resultsView" class="hidden" aria-label="Results">
+        <header class="header">
+          <div>
+            <h1 class="title">Your Spotify Dating Red Flags 🚩</h1>
+            <div class="subtitle" id="resultsSubtitle">Based on your listening habits. Not serious. Very specific.</div>
+          </div>
+          <button id="btnLogout2" class="secondary" type="button">Log out</button>
+        </header>
 
-      <div class="panel">
-        <div class="hero">
+        <div class="bar" aria-hidden="true"></div>
 
-          <!-- LEFT: LOGIN / EXPLAINER -->
-          <div class="card loginCard" id="loginCard">
-            <h1 class="loginTitle">Spotify Dating Red Flags</h1>
-            <p class="loginSub">We read your listening history and generate your most questionable dating patterns… with receipts.</p>
-
-            <button class="btn primary" id="btnLogin">Continue with Spotify</button>
-
-            <div class="notice">
-              We only read your listening data. We don’t post. We don’t save your password.
-              <small>We store a short-lived access token in your browser storage so you can see results.</small>
-            </div>
-
-            <div class="errorBox" id="errorBox"></div>
+        <div id="shareCaptureFrame" class="format-ig_square">
+<div id="shareCard" class="shareCard" aria-label="Share card">
+          <div class="shareMeta">
+            <div class="shareBrand">Spotify Dating Red Flags 🚩</div>
+            <div class="shareHint" id="shareHint">Generated from your listening history</div>
           </div>
 
-          <!-- RIGHT: RESULTS -->
-          <div class="card" id="resultsCard" style="display:none;">
-            <div class="resultsHeader">
-              <div>
-                <h2 class="resultsTitle">Your Spotify Dating Red Flags 🚩</h2>
-                <p class="resultsSubtitle" id="resultsSubtitle">Based on your listening habits.</p>
-              </div>
-              <div class="metaRight">
-                <button class="btn secondary" id="btnLogout">Log out</button>
-              </div>
-            </div>
+          <div id="openerPanel" class="openerPanel">
+          <div id="openerText" class="opener"><span class="flag">🚩</span>Loading…</div>
+        </div>
 
-            <div class="shareCard">
-              <div id="captureArea">
-                <div class="captureTop">
-                  <div class="captureBrand">SPOTIFY DATING RED FLAGS <span aria-hidden="true">🚩</span></div>
-                  <div class="shareHint">
-              <div id="shareHint">Generated from your listening history</div>
-              <div id="shareScore" class="shareScore"></div>
-            </div>
-                </div>
-                <div class="bar"></div>
+        <hr id="rule" class="rule" />
 
-                <!-- Opener / headline -->
-                <div class="flagBlock flag-blue" id="openerBlock">
-                  <div class="flag" aria-hidden="true">🚩</div>
-                  <h2 id="openerText">Loading your flags…</h2>
-                  <div class="because" id="openerBecause"></div>
-                </div>
+        <ul id="flagsList" class="list" aria-label="Red flags"></ul>
 
-                <!-- 2 extra flags -->
-                <ul id="flagsList" style="list-style:none; padding:0; margin:0;">
-                  <!-- inserted by JS -->
-                </ul>
+        <div id="insightBox" class="insight" role="note" aria-label="Biggest dating pattern">
+          <div class="label">Biggest Dating Pattern This Year</div>
+          <div id="insightLine" class="line">Loading…</div>
+        </div>
+          <div class="shareFooter"><span id="shareUrl"></span></div>
+        </div>
+</div><!-- /#shareCaptureFrame -->
 
-                <!-- Biggest Dating Pattern -->
-                <div class="bigPattern" id="bigPatternBlock">
-                  <div class="label">BIGGEST DATING PATTERN THIS YEAR</div>
-                  <div class="text" id="insightLine">Calculating…</div>
-                  <div class="because" id="insightBecause"></div>
-                </div>
 
-                <div class="urlFooter" id="shareUrl">—</div>
-              </div>
 
-              <!-- controls -->
-              <div class="controlsCard" style="margin-top:16px;">
-                <div class="controlsTop">Roast Again</div>
-                <div class="controlsInner">
-
-                  <div class="shareKit" aria-label="Share kit">
+        <div class="actions">
+          <button id="btnRoastAgain" class="primary" type="button">Roast Again</button>
+                    <div class="shareKit" aria-label="Share kit">
             <div class="shareRow">
               <a id="btnShareX" class="secondary" href="#" target="_blank" rel="noopener">Share to X</a>
               <button id="btnShareIG" class="secondary" type="button">Instagram</button>
               <button id="btnShareTT" class="secondary" type="button">TikTok</button>
             </div>
-
             <div class="shareRow">
               <button id="btnCopyCaption" class="primary" type="button">Copy Caption</button>
+        <div class="sharePresetRow">
+          <label for="sharePreset" class="sharePresetLabel">Share format</label>
+          <select id="sharePreset" class="sharePreset">
+            <option value="ig_square">Instagram Post (Square)</option>
+            <option value="ig_story">Instagram Story / TikTok (Vertical)</option>
+            <option value="x_landscape">X / Twitter (Landscape)</option>
+          </select>
+        </div>
+        
               <button id="btnSaveImage" class="secondary" type="button">Save Share Image</button>
               <button id="btnCopyLink" class="secondary" type="button">Copy Link</button>
             </div>
-
-            <div class="sharePresetRow">
-              <label for="sharePreset" class="sharePresetLabel">Share format</label>
-              <select id="sharePreset" class="sharePreset">
-                <option value="ig_square">Instagram Post (Square)</option>
-                <option value="ig_story">Instagram Story / TikTok (Vertical)</option>
-                <option value="x_landscape">X / Twitter (Landscape)</option>
-              </select>
-            </div>
-
-            <div class="shareNote" id="shareNote">Challenge: post your score + biggest pattern and tag 3 friends.</div>
-</div>
-
-
-                  <div class="toneRow">
-                    <div class="toneLabel">TONE</div>
-                    <select id="toneSelect">
-                      <option value="playful">Playful</option>
-                      <option value="sharp">Sharp</option>
-                    </select>
-                  </div>
-
-                  <div class="bottomLine">
-                    <div>If you’re mad, take it up with your playlists.</div>
-                    <div class="verifiedBadge"><span aria-hidden="true">🚩</span> VERIFIED</div>
-                  </div>
-
-                </div>
-              </div>
-
-            </div>
-
+            <div class="shareNote" id="shareNote">Tip: post yours and tag 3 friends to compare.</div>
           </div>
 
+
+          <div class="toneRow" aria-label="Tone selector">
+            <div class="label">Tone</div>
+            <select id="toneSelect">
+              <option value="playful" selected>Playful</option>
+              <option value="sharp">Sharp</option>
+            </select>
+          </div>
+
+          <div id="toast2" class="toast" role="status" aria-live="polite"></div>
+        </div>
+
+        <div class="micro">
+          <div class="left">If you’re mad, take it up with your playlists.</div>
+          <div class="right">🚩 VERIFIED</div>
         </div>
       </div>
+    </section>
+  </main>
 
-    </div>
-  </div>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-  <div class="toast" id="toast">Copied</div>
+    
 
   <script>
-    /******************************************************************
-     * 1) CONFIG — set your Spotify app details
-     ******************************************************************/
-    const SPOTIFY_CLIENT_ID = "ad08cfcd496348e299ba9a840227954d"; // <-- replace this
-    const SPOTIFY_SCOPES = [
-      "user-read-recently-played",
-      "user-top-read"
+/* =========================================================
+   Spotify Dating Red Flags — Frontend-only (GitHub Pages)
+   FIXES INCLUDED:
+   - Removes stray '});' / duplicated blocks that broke JS
+   - Makes toast actually visible (your CSS had display:none)
+   - Stores exact redirect_uri used during authorize + token exchange
+   - Stores PKCE verifier in BOTH sessionStorage + localStorage
+   ========================================================= */
+
+(function(){
+  function flash(msg){
+    try{
+      const t = document.getElementById("toast") || document.getElementById("toast2");
+      if (t){
+        t.style.display = "block";
+        t.textContent = msg;
+      }
+    }catch(_){}
+  }
+  window.addEventListener("error", (e)=> {
+    flash("JS error: " + (e?.message || "Unknown error") + " (open DevTools Console)");
+  });
+  window.addEventListener("unhandledrejection", (e)=> {
+    const msg = (e?.reason && (e.reason.message || String(e.reason))) || "Unhandled promise rejection";
+    flash("JS error: " + msg + " (open DevTools Console)");
+  });
+})();
+
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    /***********************
+     * 0) YOU MUST SET THIS
+     ***********************/
+    const SPOTIFY_CLIENT_ID = "ad08cfcd496348e299ba9a840227954d";
+
+    // NOTE: We'll still compute this, but we ALSO persist the exact one used during authorize.
+    const REDIRECT_URI = window.location.origin + window.location.pathname;
+
+    const SCOPES = [
+      "user-top-read",
+      "user-read-recently-played"
     ];
+
+    /******************************************************************
+     * 1) JOKES CSV
+     ******************************************************************/
+    const JOKES_CSV = `parameter,bucket,tone,priority,joke_text,notes
+obscurity,mainstream,playful,2,"Says ‘I just like good music’ and lets Spotify handle the rest.",""
+obscurity,mainstream,playful,2,"Claims they don’t follow trends. Quietly follows all of them.",""
+obscurity,mainstream,playful,3,"Comfortable taste. Low emotional risk.",""
+obscurity,mainstream,playful,3,"Prefers familiarity over surprise.",""
+obscurity,mainstream,playful,3,"Trusts charts more than instincts.",""
+obscurity,mainstream,playful,3,"Lets popularity do the filtering.",""
+obscurity,mainstream,playful,3,"Avoids musical friction.",""
+obscurity,mainstream,playful,3,"Believes good taste should be easy.",""
+obscurity,taste_curious,playful,2,"Likes popular music but wants credit for finding it early.",""
+obscurity,taste_curious,playful,2,"Balances discovery with vibes. Hates being called predictable.",""
+obscurity,taste_curious,playful,3,"Dabbles in niche. Retreats to hits.",""
+obscurity,taste_curious,playful,3,"Explores just enough to feel interesting.",""
+obscurity,taste_curious,playful,3,"Samples the underground. Lives upstairs.",""
+obscurity,taste_curious,playful,3,"Wants novelty with a safety net.",""
+obscurity,taste_curious,playful,3,"Curates discovery carefully.",""
+obscurity,obscure,playful,1,"Listens to artists with 14 followers and still calls it ‘vibes’.",""
+obscurity,obscure,playful,2,"Treats obscurity like a personality trait.",""
+obscurity,obscure,playful,2,"Has beef with anything that charts.",""
+obscurity,obscure,playful,3,"Makes ‘deep cuts’ their whole brand.",""
+obscurity,obscure,playful,3,"Finds songs like they’re secret messages.",""
+obscurity,obscure,playful,3,"Thinks mainstream is a red flag.",""
+repetition,craves_variety,playful,2,"Swears they love variety. Still plays the same song 6 times in a day.",""
+repetition,craves_variety,playful,3,"Flirts with new songs then goes back to the ex.",""
+repetition,craves_variety,playful,3,"Can’t commit to a sound for more than 3 tracks.",""
+repetition,balanced,playful,2,"Has range. Unfortunately so do their mixed signals.",""
+repetition,balanced,playful,3,"Healthy rotation. Slightly avoidant.",""
+repetition,defaults_to_safety,playful,1,"Plays the same 3 songs like it’s a coping mechanism.",""
+repetition,defaults_to_safety,playful,2,"Emotionally available to exactly one chorus.",""
+repetition,defaults_to_safety,playful,2,"Believes healing is just re-playing the bridge.",""
+time_of_day,morning,playful,2,"A morning listener. Has their life together… suspiciously.",""
+time_of_day,day,playful,2,"Daytime listener. Keeps it functional. Keeps it distant.",""
+time_of_day,night,playful,1,"Late-night listener. Texts ‘you up?’ with a playlist link.",""
+time_of_day,late_night,playful,1,"After-midnight listener. Falls in love with the idea of someone.",""
+insight,any,playful,1,"Craves variety, defaults to safety.",""
+insight,any,playful,1,"Public taste. Private feelings.",""
+insight,any,playful,1,"Runs on routine. Avoids vulnerability.",""
+insight,any,playful,1,"Processes emotions exclusively through headphones.",""
+obscurity,mainstream,sharp,2,"Your taste is algorithm-approved and emotionally risk-averse.",""
+obscurity,taste_curious,sharp,2,"You want credit for being interesting without doing the work.",""
+obscurity,obscure,sharp,2,"You use obscurity to avoid being understood.",""
+repetition,craves_variety,sharp,2,"You call it variety. It’s commitment issues.",""
+repetition,balanced,sharp,2,"You’re stable. You still won’t text back.",""
+repetition,defaults_to_safety,sharp,2,"You loop the same song because change scares you.",""
+time_of_day,morning,sharp,2,"Morning music. Controlled personality. Unavailable heart.",""
+time_of_day,day,sharp,2,"Daytime listening. You avoid feelings until the meeting ends.",""
+time_of_day,night,sharp,2,"Night listener. Romantic until accountability shows up.",""
+time_of_day,late_night,sharp,2,"After midnight you become a different person (worse).",""
+insight,any,sharp,1,"Your vibe is chaos with a comfort blanket.",""
+insight,any,sharp,1,"You want novelty, but only on your terms.",""
+insight,any,sharp,1,"You’re emotionally consistent… at avoiding intimacy.",""
+`;
 
     /******************************************************************
      * 2) DOM
      ******************************************************************/
+    const loginView = document.getElementById("loginView");
+    const resultsView = document.getElementById("resultsView");
+    const stampText = document.getElementById("stampText");
+
     const btnLogin = document.getElementById("btnLogin");
     const btnLogout = document.getElementById("btnLogout");
-    const errorBox = document.getElementById("errorBox");
-    const loginCard = document.getElementById("loginCard");
-    const resultsCard = document.getElementById("resultsCard");
-    const resultsSubtitle = document.getElementById("resultsSubtitle");
+    const btnLogout2 = document.getElementById("btnLogout2");
 
-    const captureArea = document.getElementById("captureArea");
     const openerText = document.getElementById("openerText");
-    const openerBecause = document.getElementById("openerBecause");
     const flagsList = document.getElementById("flagsList");
     const insightLine = document.getElementById("insightLine");
-    const insightBecause = document.getElementById("insightBecause");
+    const btnRoastAgain = document.getElementById("btnRoastAgain");
 
-    const shareUrlEl = document.getElementById("shareUrl");
-    const shareHint = document.getElementById("shareHint");
-    const shareNote = document.getElementById("shareNote");
-
-    const btnCopyCaption = document.getElementById("btnCopyCaption");
-    const btnCopyLink = document.getElementById("btnCopyLink");
-    const btnSaveImage = document.getElementById("btnSaveImage");
+    // Share kit
     const btnShareX = document.getElementById("btnShareX");
     const btnShareIG = document.getElementById("btnShareIG");
     const btnShareTT = document.getElementById("btnShareTT");
-    const sharePreset = document.getElementById("sharePreset");
+    const btnCopyCaption = document.getElementById("btnCopyCaption");
+    const btnSaveImage = document.getElementById("btnSaveImage");
+    const btnCopyLink = document.getElementById("btnCopyLink");
+    const shareUrlEl = document.getElementById("shareUrl");
+    const shareHint = document.getElementById("shareHint");
+    const shareNote = document.getElementById("shareNote");
+    const shareCard = document.getElementById("shareCard");
+    let lastShareCaption = "";
 
     const toneSelect = document.getElementById("toneSelect");
     const toast = document.getElementById("toast");
+    const toast2 = document.getElementById("toast2");
+    const ruleEl = document.getElementById("rule");
+    const insightBox = document.getElementById("insightBox");
+
+    
+    // ===========================
+    // SHARE PRESET (IG / TikTok / X)
+    // ===========================
+    function getSharePreset(){
+      const sel = document.getElementById("sharePreset");
+      return sel ? sel.value : "ig_square";
+    }
+    function applySharePreset(){
+      const frame = document.getElementById("shareCaptureFrame");
+      if (!frame) return;
+      frame.classList.remove("format-ig_square","format-ig_story","format-x_landscape");
+      const preset = getSharePreset();
+      if (preset === "ig_story") frame.classList.add("format-ig_story");
+      else if (preset === "x_landscape") frame.classList.add("format-x_landscape");
+      else frame.classList.add("format-ig_square");
+    }
+
+function showToast(el, msg){
+      if (!el) return;
+      el.style.display = "block";
+      el.textContent = msg;
+      setTimeout(()=>{ 
+        if(el.textContent === msg) { 
+          el.textContent = ""; 
+          el.style.display = "none";
+        }
+      }, 3500);
+    }
+
+    if (!btnLogin){
+      showToast(toast, "JS loaded, but #btnLogin not found. Check your HTML.");
+      return;
+    }
 
     /******************************************************************
-     * 3) UI HELPERS
+     * 3) CSV PARSER
      ******************************************************************/
-    function showError(msg){
-      errorBox.style.display = "block";
-      errorBox.textContent = msg;
-    }
-    function clearError(){
-      errorBox.style.display = "none";
-      errorBox.textContent = "";
-    }
-    function showToast(msg){
-      toast.textContent = msg;
-      toast.classList.add("show");
-      setTimeout(()=>toast.classList.remove("show"), 1700);
-    }
-    async function copyText(text, successMsg="Copied"){
-      try{
-        await navigator.clipboard.writeText(text);
-        showToast(successMsg);
-      }catch(e){
-        // fallback
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        ta.remove();
-        showToast(successMsg);
+    function splitCSVLine(line) {
+      const out = [];
+      let cur = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i+1] === '"') { cur += '"'; i++; }
+          else inQuotes = !inQuotes;
+        } else if (ch === ',' && !inQuotes) {
+          out.push(cur);
+          cur = "";
+        } else {
+          cur += ch;
+        }
       }
+      out.push(cur);
+      return out;
     }
 
-    function safeNowUrl(){
-      const u = new URL(window.location.href);
-      u.hash = "";
-      return u.toString();
+    function parseCSV(csvText) {
+      const lines = csvText.split(/\r?\n/).filter(l => l.trim().length > 0);
+      const header = splitCSVLine(lines[0]).map(h => h.trim());
+      const rows = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const cols = splitCSVLine(lines[i]);
+        const obj = {};
+        header.forEach((h, idx) => obj[h] = (cols[idx] ?? "").trim());
+        obj.priority = Number(obj.priority || 3);
+        rows.push(obj);
+      }
+      return rows;
     }
+
+    const jokesTable = parseCSV(JOKES_CSV);
 
     /******************************************************************
-     * 4) OAUTH — PKCE (no backend)
+     * 4) SPOTIFY AUTH (PKCE)
      ******************************************************************/
-    function base64urlencode(a){
-      return btoa(String.fromCharCode.apply(null, new Uint8Array(a)))
-        .replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    function base64urlencode(arrayBuffer) {
+      const bytes = new Uint8Array(arrayBuffer);
+      let str = "";
+      for (const b of bytes) str += String.fromCharCode(b);
+      return btoa(str).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
     }
 
-    async function sha256(plain){
-      const enc = new TextEncoder().encode(plain);
-      return await crypto.subtle.digest('SHA-256', enc);
+    async function sha256(plain) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(plain);
+      return await crypto.subtle.digest("SHA-256", data);
     }
 
-    function randomString(len=64){
-      const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      let text = "";
-      const vals = crypto.getRandomValues(new Uint8Array(len));
-      for (let i=0; i<len; i++) text += possible[vals[i] % possible.length];
-      return text;
+    function randomString(length = 64) {
+      const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+      let result = "";
+      const values = crypto.getRandomValues(new Uint8Array(length));
+      for (let i = 0; i < values.length; i++) result += charset[values[i] % charset.length];
+      return result;
     }
 
-    function getRedirectUri(){
-      // must exactly match Spotify dashboard redirect URI
+    function getRedirectUriForOAuth(){
       const u = new URL(window.location.href);
-      u.search = "";
-      u.hash = "";
-      return u.toString();
+      u.searchParams.delete("code");
+      u.searchParams.delete("state");
+      u.searchParams.delete("error");
+      u.searchParams.delete("error_description");
+      return u.origin + u.pathname;
     }
 
-    function saveToken(token, expiresIn){
-      const exp = Date.now() + (expiresIn * 1000) - 5000;
-      localStorage.setItem("spotify_access_token", token);
-      localStorage.setItem("spotify_token_exp", String(exp));
-    }
-    function getStoredToken(){
-      const t = localStorage.getItem("spotify_access_token");
-      const exp = Number(localStorage.getItem("spotify_token_exp") || 0);
-      if (!t || !exp) return null;
-      if (Date.now() > exp) return null;
-      return t;
-    }
-    function clearToken(){
-      localStorage.removeItem("spotify_access_token");
-      localStorage.removeItem("spotify_token_exp");
-      localStorage.removeItem("spotify_pkce_verifier");
-      localStorage.removeItem("spotify_pkce_state");
-    }
+    async function loginSpotify() {
+      showToast(toast, "Redirecting to Spotify…");
 
-    async function startLogin(){
-      clearError();
-
-      if (!SPOTIFY_CLIENT_ID || SPOTIFY_CLIENT_ID.includes("ad08cfcd496348e299ba9a840227954d)){
-        showError("Missing Spotify Client ID. Replace SPOTIFY_CLIENT_ID in the code.");
-        return;
-      }
+      const redirectUri = getRedirectUriForOAuth();
+      localStorage.setItem("oauth_redirect_uri", redirectUri);
 
       const verifier = randomString(64);
       const challenge = base64urlencode(await sha256(verifier));
-      const state = randomString(16);
 
-      localStorage.setItem("spotify_pkce_verifier", verifier);
-      localStorage.setItem("spotify_pkce_state", state);
+      localStorage.setItem("pkce_verifier", verifier);
+      try { sessionStorage.setItem("pkce_verifier", verifier); } catch(_) {}
 
-      const auth = new URL("https://accounts.spotify.com/authorize");
-      auth.searchParams.set("client_id", SPOTIFY_CLIENT_ID);
-      auth.searchParams.set("response_type", "code");
-      auth.searchParams.set("redirect_uri", getRedirectUri());
-      auth.searchParams.set("code_challenge_method", "S256");
-      auth.searchParams.set("code_challenge", challenge);
-      auth.searchParams.set("scope", SPOTIFY_SCOPES.join(" "));
-      auth.searchParams.set("state", state);
+      const params = new URLSearchParams({
+        client_id: SPOTIFY_CLIENT_ID,
+        response_type: "code",
+        redirect_uri: redirectUri,
+        code_challenge_method: "S256",
+        code_challenge: challenge,
+        scope: SCOPES.join(" ")
+      });
 
-      window.location.href = auth.toString();
+      window.location.assign("https://accounts.spotify.com/authorize?" + params.toString());
     }
 
-    async function exchangeCodeForToken(code){
-      const verifier = localStorage.getItem("spotify_pkce_verifier");
-      if (!verifier) throw new Error("Missing PKCE verifier (try logging in again).");
+    async function exchangeCodeForToken(code) {
+      const redirectUri = localStorage.getItem("oauth_redirect_uri") || REDIRECT_URI;
 
-      const body = new URLSearchParams();
-      body.set("client_id", SPOTIFY_CLIENT_ID);
-      body.set("grant_type", "authorization_code");
-      body.set("code", code);
-      body.set("redirect_uri", getRedirectUri());
-      body.set("code_verifier", verifier);
+      let verifier = null;
+      try { verifier = sessionStorage.getItem("pkce_verifier"); } catch(_) {}
+      if (!verifier) verifier = localStorage.getItem("pkce_verifier");
+
+      if (!verifier) {
+        throw new Error("Login session expired (missing PKCE verifier). Click Continue with Spotify again.");
+      }
+
+      const body = new URLSearchParams({
+        client_id: SPOTIFY_CLIENT_ID,
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: redirectUri,
+        code_verifier: verifier
+      });
 
       const res = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
-        headers: { "Content-Type":"application/x-www-form-urlencoded" },
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body
       });
 
-      if (!res.ok){
-        const txt = await res.text();
-        throw new Error(`Spotify token error: ${res.status} ${txt}`);
-      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error_description || data?.error || "Token exchange failed");
+      storeToken(data.access_token, data.expires_in);
 
-      const json = await res.json();
-      saveToken(json.access_token, json.expires_in);
-      return json.access_token;
+      window.history.replaceState({}, document.title, redirectUri);
+      return data.access_token;
     }
 
-    async function handleOAuthReturn(){
-      const url = new URL(window.location.href);
-      const code = url.searchParams.get("code");
-      const state = url.searchParams.get("state");
-      const err = url.searchParams.get("error");
+    function storeToken(token, expiresIn) {
+      const exp = Date.now() + (expiresIn * 1000);
+      localStorage.setItem("access_token", token);
+      localStorage.setItem("token_exp", String(exp));
+    }
 
-      if (err){
-        showError("Spotify auth error: " + err);
-        return null;
-      }
+    function getStoredToken() {
+      const token = localStorage.getItem("access_token");
+      const exp = Number(localStorage.getItem("token_exp") || 0);
+      if (!token) return null;
+      if (Date.now() > exp) return null;
+      return token;
+    }
 
-      if (!code) return null;
-
-      const expectedState = localStorage.getItem("spotify_pkce_state");
-      if (expectedState && state && expectedState !== state){
-        showError("Spotify auth error: state mismatch. Try again.");
-        return null;
-      }
-
-      try{
-        const token = await exchangeCodeForToken(code);
-
-        // Clean URL so refresh doesn't re-trigger token exchange
-        url.searchParams.delete("code");
-        url.searchParams.delete("state");
-        window.history.replaceState({}, document.title, url.toString());
-
-        return token;
-      }catch(e){
-        showError(String(e.message || e));
-        return null;
-      }
+    function logout() {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("token_exp");
+      localStorage.removeItem("pkce_verifier");
+      localStorage.removeItem("oauth_redirect_uri");
+      try { sessionStorage.removeItem("pkce_verifier"); } catch(_) {}
+      lastBuckets = null;
+      lastResult = null;
+      lastEvidence = null;
+      switchToLogin();
+      showToast(toast, "Logged out.");
     }
 
     /******************************************************************
-     * 5) SPOTIFY API HELPERS
+     * 5) SPOTIFY DATA + SIGNALS
      ******************************************************************/
-    async function spotifyGET(token, url){
-      const res = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-      if (!res.ok){
-        const txt = await res.text();
-        throw new Error(`Spotify ${res.status}: ${txt || "Request failed"}`);
+    async function spotifyGET(token, url) {
+      const res = await fetch(url, { headers: { Authorization: "Bearer " + token } });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(`Spotify ${res.status}: ${t}`);
       }
       return await res.json();
     }
 
-    function mean(arr){ return arr.reduce((a,b)=>a+b,0)/arr.length; }
-
-    /******************************************************************
-     * 6) SIGNALS + BUCKETS
-     ******************************************************************/
-    // Jokes table: parameter/bucket/tone -> text
-    const jokesTable = [
-      // obscurity
-      { parameter:"obscurity", bucket:"mainstream", tone:"playful", priority:1, joke_text:"Plays it safe. Chooses the crowd over the spark.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
-      { parameter:"obscurity", bucket:"taste_curious", tone:"playful", priority:1, joke_text:"Explores just enough to feel interesting.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
-      { parameter:"obscurity", bucket:"obscure", tone:"playful", priority:1, joke_text:"Treats obscurity like a personality trait.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
-
-      { parameter:"obscurity", bucket:"mainstream", tone:"sharp", priority:1, joke_text:"Main character energy. In the most predictable way.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
-      { parameter:"obscurity", bucket:"taste_curious", tone:"sharp", priority:1, joke_text:"Wants depth, but not enough to be inconvenienced.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
-      { parameter:"obscurity", bucket:"obscure", tone:"sharp", priority:1, joke_text:"Collects niche artists like emotional baggage.", because:e=>`because your average artist popularity is ${e.obscurity.avgPopularity}/100.` },
-
-      // repetition
-      { parameter:"repetition", bucket:"defaults_to_safety", tone:"playful", priority:1, joke_text:"Can’t commit to a sound for more than 3 tracks.", because:e=> {
-        const t = e.repetition.topTrack;
-        if (!t) return "because you replay the same track a lot.";
-        return `because your #1 track (“${t.name}” by ${t.artists?.[0]?.name || "??"}) was played ${e.repetition.maxRepeat}× recently.`;
-      }},
-      { parameter:"repetition", bucket:"balanced", tone:"playful", priority:1, joke_text:"Flirts with new songs then goes back to the ex.", because:e=> {
-        const t = e.repetition.topTrack;
-        if (!t) return "because you replay some tracks, but not too hard.";
-        return `because your #1 track (“${t.name}” by ${t.artists?.[0]?.name || "??"}) was played ${e.repetition.maxRepeat}× in your last 50 listens.`;
-      }},
-      { parameter:"repetition", bucket:"craves_variety", tone:"playful", priority:1, joke_text:"Avoids attachment. Even to songs.", because:e=>`because your most-replayed track was only played ${e.repetition.maxRepeat}× recently.` },
-
-      { parameter:"repetition", bucket:"defaults_to_safety", tone:"sharp", priority:1, joke_text:"Craves variety, defaults to safety.", because:e=> {
-        const t = e.repetition.topTrack;
-        if (!t) return "because you replay the same track a lot.";
-        return `because you looped “${t.name}” (${t.artists?.[0]?.name || "??"}) ${e.repetition.maxRepeat}× recently.`;
-      }},
-      { parameter:"repetition", bucket:"balanced", tone:"sharp", priority:1, joke_text:"Tests the waters, then crawls back to comfort.", because:e=>`because your top track still got replayed ${e.repetition.maxRepeat}×.` },
-      { parameter:"repetition", bucket:"craves_variety", tone:"sharp", priority:1, joke_text:"Commitment-phobic. In 4K.", because:e=>`because you rarely replay the same track (max ${e.repetition.maxRepeat}×).` },
-
-      // time of day
-      { parameter:"time_of_day", bucket:"morning", tone:"playful", priority:1, joke_text:"Morning listener. Romanticizes routines.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00 (morning).` },
-      { parameter:"time_of_day", bucket:"day", tone:"playful", priority:1, joke_text:"Daytime listener. Keeps it functional. Keeps it distant.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00 (day).` },
-      { parameter:"time_of_day", bucket:"night", tone:"playful", priority:1, joke_text:"Night listener. Makes feelings louder after dark.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00 (night).` },
-      { parameter:"time_of_day", bucket:"late_night", tone:"playful", priority:1, joke_text:"Late-night listener. Texts should be reviewed in the morning.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00 (late night).` },
-
-      { parameter:"time_of_day", bucket:"morning", tone:"sharp", priority:1, joke_text:"Wakes up and chooses emotional control.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00.` },
-      { parameter:"time_of_day", bucket:"day", tone:"sharp", priority:1, joke_text:"Keeps it together. Keeps it contained.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00.` },
-      { parameter:"time_of_day", bucket:"night", tone:"sharp", priority:1, joke_text:"After dark, your standards drop.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00.` },
-      { parameter:"time_of_day", bucket:"late_night", tone:"sharp", priority:1, joke_text:"Your worst decisions have a soundtrack.", because:e=>`because your listening peaks around ${e.time_of_day.peakHour}:00.` }
-    ];
+    function mean(arr){ return arr.length ? arr.reduce((a,b)=>a+b,0)/arr.length : 0; }
 
     async function fetchProfileBuckets(token){
       // --- Layer 1: recent behavior (last 50)
@@ -1087,7 +1089,7 @@
     }
 
     /******************************************************************
-     * 7) ROAST GENERATION
+     * 6) ROAST GENERATION
      ******************************************************************/
     function pickRows(parameter, bucket, tone){
       const rows = jokesTable.filter(r =>
@@ -1143,7 +1145,7 @@
           (tone === "sharp")
             ? `Biggest dating pattern: The Phase.`
             : `Biggest dating pattern: The Phase.`,
-          `because only ${overlapRM}/5 of your top recent artists appear in your 6-month top artists — your “right now” taste is drifting.`
+          `because only ${overlapRM}/5 of your top recent artists appear in your 6‑month top artists — your “right now” taste is drifting.`
         );
       }
 
@@ -1155,7 +1157,7 @@
           (tone === "sharp")
             ? `Biggest dating pattern: Predictably consistent.`
             : `Biggest dating pattern: Consistent taste.`,
-          `because ${overlapRM}/5 of your top recent artists also show up in your 6-month top, and ${overlapRL}/5 also show up long-term.`
+          `because ${overlapRM}/5 of your top recent artists also show up in your 6‑month top, and ${overlapRL}/5 also show up long‑term.`
         );
       }
 
@@ -1167,7 +1169,7 @@
           (tone === "sharp")
             ? `Biggest dating pattern: Reinvention (with commitment issues).`
             : `Biggest dating pattern: Reinvention.`,
-          `because only ${overlapML}/15 of your 6-month top artists match your long-term top — your “type” changes.`
+          `because only ${overlapML}/15 of your 6‑month top artists match your long‑term top — your “type” changes.`
         );
       }
 
@@ -1179,7 +1181,7 @@
           (tone === "sharp")
             ? `Biggest dating pattern: Comfort blanket behavior.`
             : `Biggest dating pattern: Comfort blanket.`,
-          `because your #1 track was looped ${maxRepeat}× recently, and your recent artists overlap ${overlapRM}/5 with your 6-month top.`
+          `because your #1 track was looped ${maxRepeat}× recently, and your recent artists overlap ${overlapRM}/5 with your 6‑month top.`
         );
       }
 
@@ -1189,8 +1191,8 @@
           "night",
           72 + (3 - peakHour),
           (tone === "sharp")
-            ? `Biggest dating pattern: After-midnight decision making.`
-            : `Biggest dating pattern: After-midnight energy.`,
+            ? `Biggest dating pattern: After‑midnight decision making.`
+            : `Biggest dating pattern: After‑midnight energy.`,
           `because your listening peaks around ${peakHour}:00 (after midnight).`
         );
       }
@@ -1205,7 +1207,7 @@
             ? `Biggest dating pattern: Mildly avoidant… musically.`
             : `Biggest dating pattern: Your taste has a “default setting.”`,
           (typeof pop === "number")
-            ? `because your average artist popularity is ${pop}/100 across your 6-month top artists.`
+            ? `because your average artist popularity is ${pop}/100 across your 6‑month top artists.`
             : `because we only scanned your recent listening history.`
         );
       }
@@ -1235,186 +1237,146 @@
       }[c]));
     }
 
-    /******************************************************************
-     * 8) RENDER
-     ******************************************************************/
+    function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+    function clearResults(){
+      openerText.innerHTML = `<span class="flag">🚩</span>Loading…`;
+      flagsList.innerHTML = "";
+      insightLine.textContent = "Loading…";
+      ruleEl.classList.add("hidden");
+      flagsList.classList.add("hidden");
+      insightBox.classList.add("hidden");
+    }
+
+    function buildBecauseLine(row, evidence){
+      if (!row || !evidence) return "";
+      const p = row.parameter;
+      if (p === "repetition"){
+        const max = evidence.repetition?.maxRepeat ?? 0;
+        const t = evidence.repetition?.topTrack;
+        if (!t) return max ? `because your #1 track was played ${max}× recently.` : "";
+        return `because your #1 track (“${t.name}” by ${t.artists?.[0]?.name || "Unknown"} ) was played ${max}× in your last 50 listens.`;
+      }
+      if (p === "time_of_day"){
+        const h = evidence.time_of_day?.peakHour;
+        if (typeof h !== "number") return "";
+        const label =
+          (h>=0 && h<=3) ? "after midnight" :
+          (h>=5 && h<=10) ? "morning" :
+          (h>=19 && h<=23) ? "night" : "day";
+        return `because your listening peaks around ${h}:00 (${label}).`;
+      }
+      if (p === "obscurity"){
+        const pop = evidence.obscurity?.avgPopularity;
+        if (typeof pop !== "number") return "";
+        return `because your average artist popularity is ${pop}/100.`;
+      }
+      return "";
+    }
+
+    let lastBuckets = null;
     let lastEvidence = null;
     let lastResult = null;
-    let lastShareCaption = null;
 
-    function renderRoastFromBuckets(buckets, evidence){
+    async function renderRoastFromBuckets(buckets, evidence){
+      clearResults();
       const tone = toneSelect.value;
       const { ordered, biggest } = generateRoast(buckets, evidence, tone);
+      lastResult = { ordered, biggest, tone };
+      lastBuckets = buckets;
 
-      lastEvidence = evidence;
-      lastResult = { ordered, biggest };
+      const opener = ordered[0]?.joke_text || "Data unavailable. Still suspicious.";
+      const openerRow = ordered[0] || null;
+      const openerBecause = buildBecauseLine(openerRow, evidence);
+      openerText.innerHTML =
+        `<span class="flag">🚩</span>${escapeHTML(opener)}${
+          openerBecause ? `<div class="because">${escapeHTML(openerBecause)}</div>` : ""
+        }`;
+      await sleep(700);
 
-      // opener = first joke
-      const opener = ordered[0];
-      openerText.textContent = opener.joke_text;
-      openerBecause.textContent = opener.because ? opener.because(evidence) : "";
+      ruleEl.classList.remove("hidden");
+      flagsList.classList.remove("hidden");
 
-      // flags list = next 2
-      flagsList.innerHTML = "";
-      const colors = ["flag-yellow","flag-pink"];
-      ordered.slice(1,3).forEach((row, idx)=>{
+      const rest = ordered.slice(1);
+      for (let i=0;i<rest.length;i++){
         const li = document.createElement("li");
-        li.className = `flagBlock ${colors[idx % colors.length]}`;
-        li.innerHTML = `
-          <div class="flag" aria-hidden="true">🚩</div>
-          <h2>${escapeHTML(row.joke_text)}</h2>
-          <div class="because">${escapeHTML(row.because ? row.because(evidence) : "")}</div>
-        `;
+        li.className = "fadeIn";
+        const isLast = (i === rest.length - 1);
+        if (isLast) li.classList.add("role-close");
+        else { li.classList.add("role-core"); if (i % 2 === 1) li.classList.add("alt"); }
+
+        const because = buildBecauseLine(rest[i], evidence);
+        li.innerHTML =
+          `<span class="flag">🚩</span>${escapeHTML(rest[i].joke_text)}${
+            because ? `<div class="because">${escapeHTML(because)}</div>` : ""
+          }`;
         flagsList.appendChild(li);
-      });
+        await sleep(200);
+      }
 
-      // biggest pattern
-      insightLine.textContent = biggest?.text || "Biggest dating pattern: ???";
-      insightBecause.textContent = biggest?.because || "";
-
+      insightLine.textContent = (biggest?.text || "Biggest dating pattern: complicated.");
+          // Add/refresh a receipt line under Biggest Dating Pattern
+          const existing = document.getElementById("insightBecause");
+          if (existing) existing.remove();
+          const div = document.createElement("div");
+          div.id = "insightBecause";
+          div.className = "because";
+          div.textContent = biggest?.because || "";
+          if (div.textContent.trim().length) insightBox.appendChild(div);
+      insightBox.classList.remove("hidden");
+      insightBox.classList.add("fadeIn");
       updateShareKit();
     }
 
-    /******************************************************************
-     * 9) SHARE PRESETS (controls screenshot size)
-     ******************************************************************/
-    function applySharePreset(){
-      const v = sharePreset.value;
-      // default sizes
-      captureArea.style.width = "100%";
-      captureArea.style.maxWidth = "100%";
-      captureArea.style.margin = "0";
-
-      if (v === "ig_square"){
-        captureArea.style.width = "920px";
-        captureArea.style.maxWidth = "920px";
-        captureArea.style.margin = "0 auto";
-      } else if (v === "ig_story"){
-        captureArea.style.width = "720px";
-        captureArea.style.maxWidth = "720px";
-        captureArea.style.margin = "0 auto";
-      } else if (v === "x_landscape"){
-        captureArea.style.width = "1000px";
-        captureArea.style.maxWidth = "1000px";
-        captureArea.style.margin = "0 auto";
-      }
+    function safeNowUrl(){
+      const u = new URL(window.location.href);
+      u.searchParams.delete("code");
+      u.searchParams.delete("state");
+      u.searchParams.delete("error");
+      u.searchParams.delete("error_description");
+      return u.origin + u.pathname;
     }
 
-    /******************************************************************
-     * 10) SHARE CAPTION + LINKS (VIRAL + COMPARE)
-     ******************************************************************/
-    function computeCompareScore(evidence, biggest){
-      const ex = evidence?.extended || {};
-      const maxRepeat = evidence?.repetition?.maxRepeat ?? 0;
-      const peakHour = evidence?.time_of_day?.peakHour;
-      const avgPopularity =
-        evidence?.obscurity?.avgPopularity ??
-        evidence?.obscurity?.avgPop ??
-        null;
-
-      const overlapRM = (ex.overlapRecentMedium || []).length;
-      const overlapML = (ex.overlapMediumLong || []).length;
-
-      // Fun but evidence-based composite score (0–100). Higher = more “chaos”.
-      let score = 25;
-
-      // Repetition: looping the same track is a classic red flag.
-      score += Math.min(30, Math.max(0, maxRepeat - 1) * 4);
-
-      // Time-of-day: late night bumps the chaos.
-      if (typeof peakHour === "number"){
-        if (peakHour >= 0 && peakHour <= 3) score += 20;
-        else if (peakHour >= 19 && peakHour <= 23) score += 10;
-        else if (peakHour >= 5 && peakHour <= 10) score += 6;
-      }
-
-      // “Phase” drift: recent taste not matching medium-term identity.
-      if (overlapRM === 0) score += 18;
-      else if (overlapRM === 1) score += 12;
-      else if (overlapRM === 2) score += 6;
-
-      // Reinvention: medium-term differs from long-term.
-      if (overlapML <= 6) score += 12;
-      else if (overlapML <= 10) score += 6;
-
-      // Extreme mainstream OR extreme obscure gets a small bump (not “bad”, just “loudly you”).
-      if (typeof avgPopularity === "number"){
-        if (avgPopularity >= 80 || avgPopularity <= 25) score += 8;
-        else if (avgPopularity >= 70 || avgPopularity <= 35) score += 4;
-      }
-
-      // Blend with the “strength” of the biggest pattern (evidence intensity).
-      if (biggest && typeof biggest.score === "number"){
-        score = Math.round(score * 0.65 + biggest.score * 0.35);
-      } else {
-        score = Math.round(score);
-      }
-
-      return Math.max(0, Math.min(100, score));
-    }
-
-    function buildShareCaption(platform){
+    function buildShareCaption(){
       const url = safeNowUrl();
-      const rawPattern = (insightLine?.textContent || "").trim();
-      const pattern = rawPattern.replace(/^Biggest dating pattern:\s*/i,"").trim();
-      const biggest = lastResult?.biggest || null;
-
-      const score = computeCompareScore(lastEvidence, biggest);
-      const scoreLine = `Red Flag Score: ${score}/100`;
-
-      const topFlags = (lastResult?.ordered || [])
-        .slice(0, 2)
-        .map(x => (x?.joke_text || "").trim())
-        .filter(Boolean);
+      const pattern = (insightLine?.textContent || "").trim();
+      const openerMain = (lastResult?.ordered?.[0]?.joke_text || "").trim();
 
       const firstBecause =
         document.querySelector("#openerText .because")?.textContent?.trim() ||
         document.querySelector("#flagsList .because")?.textContent?.trim() ||
         "";
 
-      const receiptsLine = firstBecause
-        ? ("receipts: " + firstBecause.replace(/^because\s*/i,"").trim())
-        : "";
-
-      // Platform-specific templates
-      if (platform === "x"){
-        // Keep it tight for X
-        const lines = [];
-        lines.push(pattern ? `My Spotify dating pattern: ${pattern} 🚩` : "Spotify Dating Red Flags 🚩");
-        lines.push(scoreLine);
-        if (receiptsLine) lines.push(receiptsLine);
-        lines.push(`Run yours: ${url}`);
-        lines.push(`Tag 3 friends — highest score is the villain.`);
-        return lines.join("\n");
+      const pieces = [];
+      if (pattern) pieces.push(`Spotify just exposed my dating pattern: ${pattern} 🚩`);
+      else pieces.push("Spotify Dating Red Flags 🚩");
+      if (openerMain) pieces.push(openerMain);
+      if (firstBecause){
+        const cleaned = firstBecause.replace(/^because\s*/i,"");
+        pieces.push(`receipts: ${cleaned}`);
       }
-
-      // IG / TikTok / default
-      const lines = [];
-      lines.push("🚩 Spotify Dating Red Flags just exposed me.");
-      if (pattern) lines.push(`Biggest pattern: ${pattern}`);
-      lines.push(scoreLine);
-
-      if (topFlags.length){
-        lines.push("");
-        lines.push("Top receipts:");
-        for (const t of topFlags) lines.push(`• ${t}`);
-      }
-      if (receiptsLine){
-        lines.push("");
-        lines.push(receiptsLine);
-      }
-
-      lines.push("");
-      lines.push(`Run yours + post your score:`);
-      lines.push(url);
-      lines.push("");
-      lines.push("CHALLENGE: tag 3 friends. Highest score is the villain.");
-
-      return lines.join("\n");
+      pieces.push(`Run yours: ${url}`);
+      return pieces.join("\n");
     }
 
     function buildXIntent(){
-      const text = buildShareCaption("x");
+      const url = safeNowUrl();
+      const pattern = (insightLine?.textContent || "").trim();
+
+      const firstBecause =
+        document.querySelector("#openerText .because")?.textContent?.trim() ||
+        document.querySelector("#flagsList .because")?.textContent?.trim() ||
+        "";
+
+      let text = "Spotify Dating Red Flags 🚩";
+      if (pattern) text = `My Spotify dating pattern: ${pattern} 🚩`;
+
+      if (firstBecause){
+        const cleaned = firstBecause.replace(/^because\s*/i,"");
+        text += `\nreceipts: ${cleaned}`;
+      }
+      text += `\n${url}`;
+
       const intent = new URL("https://twitter.com/intent/tweet");
       intent.searchParams.set("text", text);
       return intent.toString();
@@ -1423,156 +1385,182 @@
     function updateShareKit(){
       const url = safeNowUrl();
       if (shareUrlEl) shareUrlEl.textContent = url;
-
-      // Update on-card meta
-      const biggest = lastResult?.biggest || null;
-      const score = computeCompareScore(lastEvidence, biggest);
-      const scoreEl = document.getElementById("shareScore");
-      if (scoreEl) scoreEl.textContent = `Red Flag Score: ${score}/100`;
-
-      // UI microcopy
-      if (shareNote) shareNote.textContent = "Challenge: post your score + biggest pattern and tag 3 friends. Highest score is the villain.";
-      lastShareCaption = buildShareCaption("ig");
+      if (shareNote) shareNote.textContent = "Tip: post yours and tag 3 friends to compare results.";
+      lastShareCaption = buildShareCaption();
       if (btnShareX) btnShareX.href = buildXIntent();
       if (shareHint) shareHint.textContent = "Generated from your listening history";
     }
 
-    /******************************************************************
-     * 11) SCREENSHOT EXPORT
-     ******************************************************************/
-    async function saveCaptureAsImage(){
-      // html2canvas via CDN to keep single-file UX minimal
-      if (!window.html2canvas){
-        await loadScript("https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js");
-      }
-
-      // temporarily force fully opaque backgrounds
-      const oldBg = captureArea.style.background;
-      captureArea.style.background = "#fff";
-      captureArea.style.opacity = "1";
-
-      const canvas = await window.html2canvas(captureArea, {
-        backgroundColor: "#ffffff",
-        scale: 2,
-        useCORS: true
-      });
-
-      captureArea.style.background = oldBg;
-
-      const link = document.createElement("a");
-      link.download = "spotify-dating-red-flags.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    }
-
-    function loadScript(src){
-      return new Promise((resolve, reject)=>{
-        const s = document.createElement("script");
-        s.src = src;
-        s.onload = resolve;
-        s.onerror = reject;
-        document.head.appendChild(s);
-      });
-    }
-
-    /******************************************************************
-     * 12) EVENTS
-     ******************************************************************/
-    btnLogin.addEventListener("click", startLogin);
-
-    btnLogout.addEventListener("click", ()=>{
-      clearToken();
-      window.location.reload();
-    });
-
-    toneSelect.addEventListener("change", async ()=>{
-      // re-render roast with same evidence
-      if (!lastEvidence) return;
-      const token = getStoredToken();
-      if (!token) return;
+    async function copyText(textToCopy, okMsg){
       try{
-        const { buckets, evidence, debug } = await fetchProfileBuckets(token);
-        lastEvidence = evidence;
-        resultsSubtitle.textContent = `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
-        renderRoastFromBuckets(buckets, lastEvidence);
+        await navigator.clipboard.writeText(textToCopy);
+        showToast(toast2, okMsg || "Copied.");
       }catch(e){
-        showError(String(e.message || e));
+        window.prompt("Copy this:", textToCopy);
       }
-    });
+    }
 
-    sharePreset.addEventListener("change", ()=>{
+    async function saveShareImage(){
       applySharePreset();
-      updateShareKit();
-      showToast("Share format updated");
-    });
-
-    btnCopyCaption.addEventListener("click", async ()=>{
-      await copyText(buildShareCaption("ig"), "Caption copied — now expose your friends.");
-    });
-
-    btnCopyLink.addEventListener("click", async ()=>{
-      await copyText(safeNowUrl(), "Link copied");
-    });
-
-    btnSaveImage.addEventListener("click", async ()=>{
-      try{
-        await saveCaptureAsImage();
-        showToast("Saved image");
-      }catch(e){
-        showError("Image export failed: " + (e.message || e));
-      }
-    });
-
-    btnShareIG.addEventListener("click", ()=>{
-      showToast("Tip: Save the image, then post to IG Stories.");
-    });
-
-    btnShareTT.addEventListener("click", ()=>{
-      showToast("Tip: Save the image, then upload to TikTok.");
-    });
-
-    /******************************************************************
-     * 13) BOOT
-     ******************************************************************/
-    async function boot(){
-      clearError();
-
-      // If we're coming back from OAuth, handle it first
-      const tokenFromOAuth = await handleOAuthReturn();
-      const token = tokenFromOAuth || getStoredToken();
-
-      if (!token){
-        // show login
-        loginCard.style.display = "flex";
-        resultsCard.style.display = "none";
+      const frame = document.getElementById("shareCaptureFrame");
+      const shareCard = document.getElementById("shareCard");
+      frame.classList.add("isCapturing");
+      if (!frame || !shareCard){
+        showToast("Share area not found.", "error");
         return;
       }
+      shareCard.classList.add("captureMode");
+      await new Promise(r => setTimeout(r, 60));
 
-      // show results UI
-      loginCard.style.display = "none";
-      resultsCard.style.display = "block";
-
-      applySharePreset();
+      if (!shareCard || typeof html2canvas !== "function"){
+        showToast(toast2, "Share image unavailable.");
+        return;
+      }
+      showToast(toast2, "Generating image…");
       updateShareKit();
 
-      try{
-        const { buckets, evidence, debug } = await fetchProfileBuckets(token);
-        lastEvidence = evidence;
-        resultsSubtitle.textContent = `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
-        renderRoastFromBuckets(buckets, evidence);
-      }catch(e){
-        // Token may be invalid or user not authorized
-        showError(
-          "Spotify error: " + (e.message || e) +
-          "\n\nIf you’re seeing a 403, make sure your Spotify app is set to “Development Mode” and your friend is added as a test user — or switch the app to Production."
-        );
-        loginCard.style.display = "flex";
-        resultsCard.style.display = "none";
-        clearToken();
+      const canvas = await html2canvas(frame, {
+        backgroundColor: "#ffffff",
+        scale: Math.min(2, window.devicePixelRatio || 1),
+        useCORS: true,
+        // IMPORTANT: disable animations/transitions in the cloned DOM so we don't capture mid-fade (Safari especially)
+        onclone: (doc) => {
+          try {
+            const root = doc.getElementById("shareCard") || doc.body;
+            // Kill all CSS animations/transitions
+            const style = doc.createElement("style");
+            style.textContent = `
+              * { animation: none !important; transition: none !important; }
+              .fadeIn { opacity: 1 !important; transform: none !important; }
+            `;
+            doc.head.appendChild(style);
+
+            // Force opaque backgrounds on key boxes (in case any are using alpha)
+            const boxes = root.querySelectorAll(".card, .resultCard, .flagRow, .insightBox, .shareCard, .panel, .box, li, #openerText");
+            boxes.forEach(el => {
+              const cs = doc.defaultView.getComputedStyle(el);
+              if (cs.backgroundColor === "transparent" || cs.backgroundColor === "rgba(0, 0, 0, 0)") return;
+              // If background is rgba with alpha, override to solid by converting to rgb (best-effort)
+              // Most of your design uses solid hex already; this is a safety net.
+              el.style.opacity = "1";
+            });
+          } catch (e) {}
+        }
+      });
+
+      const dataUrl = canvas.toDataURL("image/png");
+      const a = document.createElement("a");
+      a.href = dataUrl;
+      a.download = "spotify-dating-red-flags.png";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast(toast2, "Saved image. Post it and cause problems.");
+    }
+
+    function openInstagram(){
+      copyText(lastShareCaption, "Caption copied. Paste it in Instagram.");
+      window.open("https://www.instagram.com/", "_blank", "noopener");
+    }
+
+    function openTikTok(){
+      copyText(lastShareCaption, "Caption copied. Paste it in TikTok.");
+      window.open("https://www.tiktok.com/upload", "_blank", "noopener");
+    }
+
+    /******************************************************************
+     * 7) UI HELPERS
+     ******************************************************************/
+    function switchToLogin(){
+      stampText.textContent = "WELCOME";
+      loginView.classList.remove("hidden");
+      resultsView.classList.add("hidden");
+      btnLogout.classList.add("hidden");
+    }
+
+    function switchToResults(){
+      stampText.textContent = "RESULTS";
+      loginView.classList.add("hidden");
+      resultsView.classList.remove("hidden");
+    }
+
+    /******************************************************************
+     * 8) APP BOOT
+     ******************************************************************/
+    async function boot(){
+      const url = new URL(window.location.href);
+      const code = url.searchParams.get("code");
+      let token = getStoredToken();
+
+      if (code) {
+        try{
+          token = await exchangeCodeForToken(code);
+        }catch(e){
+          showToast(toast, "Login failed: " + (e?.message || "Unknown") + " — check Redirect URI matches exactly.");
+          switchToLogin();
+          return;
+        }
+      }
+
+      if (token) {
+        try{
+          btnLogout.classList.remove("hidden");
+          switchToResults();
+          const { buckets, evidence, debug } = await fetchProfileBuckets(token);
+          lastEvidence = evidence;
+          showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
+          document.getElementById("resultsSubtitle").textContent =
+            `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
+          await renderRoastFromBuckets(buckets, lastEvidence);
+        }catch(e){
+          console.error(e);
+          showToast(toast, "Spotify error: " + (e?.message || "Unknown"));
+          switchToLogin();
+        }
+      } else {
+        switchToLogin();
       }
     }
 
-    window.addEventListener("load", boot);
-  </script>
+    /******************************************************************
+     * 9) EVENTS
+     ******************************************************************/
+    btnLogin.addEventListener("click", loginSpotify);
+    btnLogout.addEventListener("click", logout);
+    btnLogout2.addEventListener("click", logout);
+
+    btnRoastAgain.addEventListener("click", async () => {
+      const token = getStoredToken();
+      if (!token) return;
+      try {
+        const { buckets, evidence, debug } = await fetchProfileBuckets(token);
+        lastEvidence = evidence;
+        showToast(toast2, `Refetched ${new Date().toLocaleTimeString()} • maxRepeat=${debug.maxRepeat} • peakHour=${debug.peakHour}`);
+        document.getElementById("resultsSubtitle").textContent =
+          `Based on your listening habits. Recent plays scanned: ${debug.recentPlays}.`;
+        await renderRoastFromBuckets(buckets, lastEvidence);
+      } catch (e) {
+        console.error(e);
+        showToast(toast2, "Spotify error: " + (e?.message || "Unknown"));
+      }
+    });
+
+    btnCopyCaption?.addEventListener("click", () => copyText(lastShareCaption || buildShareCaption(), "Caption copied."));
+    btnCopyLink?.addEventListener("click", () => copyText(safeNowUrl(), "Link copied."));
+    btnSaveImage?.addEventListener("click", saveShareImage);
+    btnShareIG?.addEventListener("click", openInstagram);
+    btnShareTT?.addEventListener("click", openTikTok);
+
+    toneSelect.addEventListener("change", () => lastBuckets && renderRoastFromBuckets(lastBuckets, lastEvidence));
+
+    showToast(toast, "✅ JS loaded. Redirect URI: " + getRedirectUriForOAuth());
+    boot();
+  } catch (e) {
+    const t = document.getElementById("toast") || document.getElementById("toast2");
+    if (t) { t.style.display = "block"; t.textContent = "JS error: " + (e?.message || String(e)); }
+    console.error(e);
+  }
+});
+</script>
 </body>
 </html>
